@@ -1,6 +1,6 @@
 ﻿let kickerStatsDataService = (function () {
     let fetchData = function (callback) {
-        fetch('api/values')
+        fetch('api/results')
             .then(function (response) {
                 return response.json();
             })
