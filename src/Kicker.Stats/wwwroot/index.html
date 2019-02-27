@@ -6,12 +6,25 @@
 
     <script src="js/lib/knockout-3.5.0.js"></script>
     <script src="js/statsDataService.js"></script>
+    <script src="js/analysis.js"></script>
     <script src="js/app.js"></script>
 </head>
 <body>
     <h1 data-bind="text: appName"></h1>
 
     <div data-bind="visible: loading">Loading data ...</div>
+
+    <h2>Raw data</h2>
+    <div data-bind="foreach: analysis().rawData">
+        <!--<pre data-bind="text: ko.toJSON($data, null, 2)"></pre>-->
+        <div data-bind="text: date"></div>
+        <span data-bind="text: keeperA"></span>
+        <span data-bind="text: strikerA"></span>
+        <span>vs.</span>
+        <span data-bind="text: keeperB"></span>
+        <span data-bind="text: strikerB"></span>
+        <span data-bind="text: scoreA"></span> - <span data-bind="text: scoreB"></span>
+    </div>
 
     <script>
         let vm = new KickerStatsAppViewModel();
