@@ -15,6 +15,7 @@
         self.team = team;
         self.gamesWon = 0;
         self.gamesPlayed = 0;
+        self.winRatio = 0;
 
         self.addResult = function(ourScore, otherScore) {
             if (ourScore > otherScore) {
@@ -22,6 +23,8 @@
             }
 
             self.gamesPlayed++;
+
+            self.winRatio = self.gamesWon / self.gamesPlayed;
         }
     };
 
