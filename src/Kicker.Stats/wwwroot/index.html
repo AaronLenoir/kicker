@@ -17,7 +17,8 @@
     <h2>Raw data</h2>
     <div data-bind="foreach: analysis().rawData">
         <!--<pre data-bind="text: ko.toJSON($data, null, 2)"></pre>-->
-        <div data-bind="text: date"></div>
+        <div data-bind="text: dataTimestampUtc"></div>
+        <span data-bind="text: date"></span>
         <span data-bind="text: keeperA"></span>
         <span data-bind="text: strikerA"></span>
         <span>vs.</span>

@@ -16,7 +16,11 @@ namespace Kicker.Stats.Models
             StrikerB = strikerB;
             ScoreA = scoreA;
             ScoreB = scoreB;
+
+            DataTimestampUtc = DateTime.UtcNow;
         }
+
+        public DateTime DataTimestampUtc { get; private set; }
 
         public string Date { get; private set; }
 
