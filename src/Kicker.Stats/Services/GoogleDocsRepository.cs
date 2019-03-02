@@ -8,14 +8,37 @@ using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Google.Apis.Util.Store;
 using Kicker.Stats.Models;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Kicker.Stats.Services
 {
     public class GoogleDocsRepository : IGameRepository
     {
-        static readonly string[] Scopes = { SheetsService.Scope.SpreadsheetsReadonly };
+        static readonly string[] _scopes = { SheetsService.Scope.SpreadsheetsReadonly };
+
+        private readonly IMemoryCache _cache;
+
+        static readonly string _cacheKey = "kickerStats";
+
+        public GoogleDocsRepository(IMemoryCache cache)
+        {
+            _cache = cache;
+        }
 
         public IEnumerable<GameResult> GetResults()
+        {
+            IEnumerable<GameResult> result;
+
+            if (!_cache.TryGetValue(_cacheKey, out result))
+            {
+                result = GetResultsFromServer();
+                _cache.Set(_cacheKey, result, TimeSpan.FromMinutes(1));
+            }
+
+            return result;
+        }
+
+        private IEnumerable<GameResult> GetResultsFromServer()
         {
             var result = new List<GameResult>();
 
@@ -23,10 +46,12 @@ namespace Kicker.Stats.Services
 
             var service = GetService(credential);
 
+            var metadata = service.Spreadsheets.DeveloperMetadata;
+
             var request = GetRequest(service);
 
             ValueRange response = request.Execute();
-            
+
             var values = response.Values;
 
             foreach (var row in values)
@@ -65,7 +90,7 @@ namespace Kicker.Stats.Services
             using (var stream = new FileStream("Configuration/service-account-key.json", FileMode.Open, FileAccess.Read))
             {
                 return GoogleCredential.FromStream(stream)
-                    .CreateScoped(Scopes);
+                    .CreateScoped(_scopes);
             }
         }
 
