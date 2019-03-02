@@ -7,7 +7,7 @@ namespace Kicker.Stats.Models
 {
     public class GameResult
     {
-        public GameResult(DateTime date, string keeperA, string strikerA, string keeperB, string strikerB, int scoreA, int scoreB)
+        public GameResult(string date, string keeperA, string strikerA, string keeperB, string strikerB, int scoreA, int scoreB)
         {
             Date = date;
             KeeperA = keeperA;
@@ -18,7 +18,7 @@ namespace Kicker.Stats.Models
             ScoreB = scoreB;
         }
 
-        public DateTime Date { get; private set; }
+        public string Date { get; private set; }
 
         public string KeeperA { get; private set; }
 
