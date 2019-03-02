@@ -15,9 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Configuration\credentials.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Update="Configuration\service-account-key.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
