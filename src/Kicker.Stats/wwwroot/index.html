@@ -113,32 +113,66 @@
         </table>
     </div>
 
-    <h2>All Players</h2>
-    <div data-bind="foreach: analysis().allPlayers">
-        <div data-bind="text: $data"></div>
+    <h2>Game History</h2>
+    <div>
+        <table class="pure-table pure-table-bordered">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Team A (keeper - striker)</th>
+                    <th>Team B (keeper - striker)</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ko foreach: analysis().rawData -->
+                <tr>
+                    <td data-bind="text: date"></td>
+                    <td>
+                        <span data-bind="text: keeperA"></span>
+                        -
+                        <span data-bind="text: strikerA"></span>
+                    </td>
+                    <td>
+                        <span data-bind="text: keeperB"></span>
+                        -
+                        <span data-bind="text: strikerB"></span>
+                    </td>
+                    <td>
+                        <span data-bind="text: scoreA"></span> - <span data-bind="text: scoreB"></span>
+                    </td>
+                </tr>
+                <!-- /ko -->
+            </tbody>
+        </table>
     </div>
 
-    <h2>Raw data</h2>
-    <div data-bind="foreach: analysis().rawData">
-        <!--<pre data-bind="text: ko.toJSON($data, null, 2)"></pre>-->
-        <div data-bind="text: dataTimestampUtc"></div>
-        <span data-bind="text: date"></span>
-        <span data-bind="text: keeperA"></span>
-        <span data-bind="text: strikerA"></span>
-        <span>vs.</span>
-        <span data-bind="text: keeperB"></span>
-        <span data-bind="text: strikerB"></span>
-        <span data-bind="text: scoreA"></span> - <span data-bind="text: scoreB"></span>
-    </div>
+        <h2>All Players</h2>
+        <div data-bind="foreach: analysis().allPlayers">
+            <div data-bind="text: $data"></div>
+        </div>
 
-    <script>
-        let vm = new KickerStatsAppViewModel(kickerStatsDataService);
+        <h2>Raw data</h2>
+        <div data-bind="foreach: analysis().rawData">
+            <!--<pre data-bind="text: ko.toJSON($data, null, 2)"></pre>-->
+            <div data-bind="text: dataTimestampUtc"></div>
+            <span data-bind="text: date"></span>
+            <span data-bind="text: keeperA"></span>
+            <span data-bind="text: strikerA"></span>
+            <span>vs.</span>
+            <span data-bind="text: keeperB"></span>
+            <span data-bind="text: strikerB"></span>
+            <span data-bind="text: scoreA"></span> - <span data-bind="text: scoreB"></span>
+        </div>
 
-        ko.applyBindings(vm);
+        <script>
+            let vm = new KickerStatsAppViewModel(kickerStatsDataService);
 
-        kickerStatsDataService.fetchData(true, function (data) {
-            vm.loadData(data);
-        });
-    </script>
+            ko.applyBindings(vm);
+
+            kickerStatsDataService.fetchData(true, function (data) {
+                vm.loadData(data);
+            });
+        </script>
 </body>
 </html>

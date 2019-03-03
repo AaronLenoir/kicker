@@ -105,7 +105,7 @@
     return function (data) {
         let self = this;
 
-        self.rawData = data;
+        self.rawData = data.reverse();
         self.allPlayers = getAllPlayers(self.rawData);
         self.teamStats = loadTeamStats(self.rawData, self.allPlayers);
         self.teamRanking = loadTeamRanking(self.teamStats);
