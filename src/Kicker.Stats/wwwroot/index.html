@@ -16,6 +16,51 @@
 
     <div data-bind="click: refreshData, hidden: loading" style="cursor: pointer">Refresh data</div>
 
+    <h2>Team Ranking (Top 10)</h2>
+    <table>
+        <tr>
+            <th>Team</th>
+            <th>Score</th>
+        </tr>
+        <!-- ko foreach: analysis().teamRanking -->
+        <tr>
+            <td>
+                <span data-bind="text: team.keeper"></span>
+                <span>-</span>
+                <span data-bind="text: team.striker"></span>
+            </td>
+            <td>
+                <span data-bind="text: score"></span>
+            </td>
+        </tr>
+        <!-- /ko -->
+    </table>
+    <p>
+        Scoring:
+        <ul>
+            <li>Win = 10 points (15 points if 10-0 win)</li>
+            <li>Loss = minus 5 points (minus 10 points if 0-10 loss)</li>
+        </ul>
+    </p>
+
+    <h2>Team Stats</h2>
+    <div data-bind="foreach: analysis().teamStats">
+        <!--<span data-bind="text: team.keeper" /> - <span data-bind="text: team.striker" />-->
+        <div>
+            <span data-bind="text: team.keeper"></span>
+            <span>-</span>
+            <span data-bind="text: team.striker"></span>
+            <span data-bind="text: gamesWon"></span> / <span data-bind="text: gamesPlayed"></span>
+            (<span data-bind="text: winRatio.toFixed(2)"></span> %)
+            Score: <span data-bind="text: score"></span>
+        </div>
+    </div>
+
+    <h2>All Players</h2>
+    <div data-bind="foreach: analysis().allPlayers">
+        <div data-bind="text: $data"></div>
+    </div>
+
     <h2>Raw data</h2>
     <div data-bind="foreach: analysis().rawData">
         <!--<pre data-bind="text: ko.toJSON($data, null, 2)"></pre>-->
@@ -27,23 +72,6 @@
         <span data-bind="text: keeperB"></span>
         <span data-bind="text: strikerB"></span>
         <span data-bind="text: scoreA"></span> - <span data-bind="text: scoreB"></span>
-    </div>
-
-    <h2>All Players</h2>
-    <div data-bind="foreach: analysis().allPlayers">
-        <div data-bind="text: $data"></div>
-    </div>
-
-    <h2>Team Stats</h2>
-    <div data-bind="foreach: analysis().teamStats">
-        <!--<span data-bind="text: team.keeper" /> - <span data-bind="text: team.striker" />-->
-        <div>
-            <span data-bind="text: team.keeper"></span>
-            <span>-</span>
-            <span data-bind="text: team.striker"></span>
-            <span data-bind="text: gamesWon"></span> / <span data-bind="text: gamesPlayed"></span>
-            (<span data-bind="text: winRatio.toFixed(2)"></span> %)
-        </div>
     </div>
 
     <script>

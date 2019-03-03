@@ -16,16 +16,29 @@
         self.gamesWon = 0;
         self.gamesPlayed = 0;
         self.winRatio = 0;
+        self.score = 0;
 
-        self.addResult = function(ourScore, otherScore) {
-            if (ourScore > otherScore) {
+        self.addResult = function (ourScore, otherScore) {
+            let weWon = ourScore > otherScore;
+
+            if (weWon) {
                 self.gamesWon++;
+
+                self.score += 10;
+                if (otherScore === 0) { self.score += 5; }
+            } else {
+                self.score -= 5;
+                if (ourScore === 0) { self.score -= 5; }
             }
 
             self.gamesPlayed++;
 
             self.winRatio = self.gamesWon / self.gamesPlayed;
         }
+    };
+
+    let loadTeamRanking = function (teamStats) {
+        return teamStats.slice(0, 9);
     };
 
     let loadTeamStats = function (rawData, allPlayers) {
@@ -62,6 +75,8 @@
             result.push(teams[key]);
         }
 
+        result.sort(function (a, b) { return b.score - a.score; });
+
         return result;
     };
 
@@ -91,5 +106,6 @@
         self.rawData = data;
         self.allPlayers = getAllPlayers(self.rawData);
         self.teamStats = loadTeamStats(self.rawData, self.allPlayers);
+        self.teamRanking = loadTeamRanking(self.teamStats);
     }
 }());
