@@ -14,6 +14,8 @@
 
     <div data-bind="visible: loading">Loading data ...</div>
 
+    <div data-bind="click: refreshData, hidden: loading" style="cursor: pointer">Refresh data</div>
+
     <h2>Raw data</h2>
     <div data-bind="foreach: analysis().rawData">
         <!--<pre data-bind="text: ko.toJSON($data, null, 2)"></pre>-->
@@ -45,11 +47,11 @@
     </div>
 
     <script>
-        let vm = new KickerStatsAppViewModel();
+        let vm = new KickerStatsAppViewModel(kickerStatsDataService);
 
         ko.applyBindings(vm);
 
-        kickerStatsDataService.fetchData(function (data) {
+        kickerStatsDataService.fetchData(true, function (data) {
             vm.loadData(data);
         });
     </script>

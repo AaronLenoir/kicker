@@ -1,6 +1,6 @@
 ﻿let kickerStatsDataService = (function () {
-    let fetchData = function (callback) {
-        fetch('api/results')
+    let fetchData = function (useCache, callback) {
+        fetch('api/results?useCache=' + useCache)
             .then(function (response) {
                 return response.json();
             })

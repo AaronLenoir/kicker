@@ -27,7 +27,16 @@ namespace Kicker.Stats.Services
 
         public IEnumerable<GameResult> GetResults()
         {
+            return GetResults(true);
+        }
+
+        public IEnumerable<GameResult> GetResults(bool useCache)
+        {
             IEnumerable<GameResult> result;
+
+            if (!useCache) {
+                _cache.Remove(_cacheKey);
+            }
 
             if (!_cache.TryGetValue(_cacheKey, out result))
             {
