@@ -17,16 +17,25 @@
         self.gamesPlayed = 0;
         self.winRatio = 0;
         self.score = 0;
+        self.longestStreak = 0;
+        let _currentStreak = 0;
 
         self.addResult = function (ourScore, otherScore) {
             let weWon = ourScore > otherScore;
 
             if (weWon) {
+                _currentStreak++;
+                if (_currentStreak > self.longestStreak) {
+                    self.longestStreak = _currentStreak;
+                }
+
                 self.gamesWon++;
 
                 self.score += 10;
                 if (otherScore === 0) { self.score += 5; }
             } else {
+                _currentStreak = 0;
+
                 self.score -= 5;
                 if (ourScore === 0) { self.score -= 5; }
             }
