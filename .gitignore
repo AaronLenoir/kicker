@@ -350,3 +350,4 @@ src/Kicker.Stats/out/
 # credentials
 src/Kicker.Stats/Configuration/credentials.json
 src/Kicker.Stats/Configuration/service-account-key.json
+notes/
