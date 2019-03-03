@@ -114,6 +114,46 @@
         </table>
     </div>
 
+    <h2>Elo ratings</h2>
+    <table class="pure-table pure-table-bordered" data-bind="with: analysis().eloRatings">
+        <thead>
+            <tr>
+                <th>Keeper - Striker</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- ko foreach: ratings -->
+            <tr>
+                <td>
+                    <span data-bind="text: team.keeper"></span>
+                    <span>-</span>
+                    <span data-bind="text: team.striker"></span>
+                </td>
+                <td>
+                    <span data-bind="text: rating"></span>
+                </td>
+            </tr>
+            <!-- /ko -->
+        </tbody>
+    </table>
+
+    <div class="pure-g">
+        <div class="pure-u-1-3">
+
+            <p class="note">
+                The Elo rating calculates the expected result of a game between two teams based on their current ratings. By comparing the actual result of the game and the expected result, the rating can be adjusted for next games.
+            </p>
+            <p class="note">
+                The implication is that winning from a team stronger than you is more benificial for your rating than winning from a weaker team.
+            </p>
+            <p class="note">
+                More information: <a href="https://en.wikipedia.org/wiki/Elo_rating_system">Wikipedia: Elo rating system</a>
+            </p>
+
+        </div>
+    </div>
+
     <h2>Game History</h2>
     <div>
         <table class="pure-table pure-table-bordered">
@@ -148,32 +188,32 @@
         </table>
     </div>
 
-        <h2>All Players</h2>
-        <div data-bind="foreach: analysis().allPlayers">
-            <div data-bind="text: $data"></div>
-        </div>
+    <h2>All Players</h2>
+    <div data-bind="foreach: analysis().allPlayers">
+        <div data-bind="text: $data"></div>
+    </div>
 
-        <h2>Raw data</h2>
-        <div data-bind="foreach: analysis().rawData">
-            <!--<pre data-bind="text: ko.toJSON($data, null, 2)"></pre>-->
-            <div data-bind="text: dataTimestampUtc"></div>
-            <span data-bind="text: date"></span>
-            <span data-bind="text: keeperA"></span>
-            <span data-bind="text: strikerA"></span>
-            <span>vs.</span>
-            <span data-bind="text: keeperB"></span>
-            <span data-bind="text: strikerB"></span>
-            <span data-bind="text: scoreA"></span> - <span data-bind="text: scoreB"></span>
-        </div>
+    <h2>Raw data</h2>
+    <div data-bind="foreach: analysis().rawData">
+        <!--<pre data-bind="text: ko.toJSON($data, null, 2)"></pre>-->
+        <div data-bind="text: dataTimestampUtc"></div>
+        <span data-bind="text: date"></span>
+        <span data-bind="text: keeperA"></span>
+        <span data-bind="text: strikerA"></span>
+        <span>vs.</span>
+        <span data-bind="text: keeperB"></span>
+        <span data-bind="text: strikerB"></span>
+        <span data-bind="text: scoreA"></span> - <span data-bind="text: scoreB"></span>
+    </div>
 
-        <script>
-            let vm = new KickerStatsAppViewModel(kickerStatsDataService);
+    <script>
+        let vm = new KickerStatsAppViewModel(kickerStatsDataService);
 
-            ko.applyBindings(vm);
+        ko.applyBindings(vm);
 
-            kickerStatsDataService.fetchData(true, function (data) {
-                vm.loadData(data);
-            });
-        </script>
+        kickerStatsDataService.fetchData(true, function (data) {
+            vm.loadData(data);
+        });
+    </script>
 </body>
 </html>

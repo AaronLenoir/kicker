@@ -1,4 +1,68 @@
 ﻿let KickerStatsAnalysis = (function (data) {
+    let TeamEloRating = function (team) {
+        let self = this;
+
+        self.team = team;
+        self.rating = 400;
+    };
+
+    let TeamEloRatings = function (rawData) {
+        let self = this;
+
+        self.factor = 400;
+        self.kFactor = 32;
+
+        self.calculateRatings = function (rawData) {
+            let ratings = [];
+
+            // rawData has most recent game first, so we go backwards
+            for (let i = rawData.length - 1; i >= 0; i--) {
+                let gameResult = rawData[i];
+
+                let teamA = new Team(gameResult.keeperA, gameResult.strikerA);
+                let teamB = new Team(gameResult.keeperB, gameResult.strikerB);
+
+                let ratingA = ratings[teamA.getTeamId()];
+                let ratingB = ratings[teamB.getTeamId()];
+
+                if (!ratingA) { ratingA = new TeamEloRating(teamA); ratings[teamA.getTeamId()] = ratingA; }
+                if (!ratingB) { ratingB = new TeamEloRating(teamB); ratings[teamB.getTeamId()] = ratingB; }
+
+                let qa = Math.pow(10, ratingA.rating / self.factor);
+                let qb = Math.pow(10, ratingB.rating / self.factor);
+
+                let expectedScoreA = qa / (qa + qb);
+                let expectedScoreB = qb / (qa + qb);
+
+                // reminder: 0 = loss, 0.5 = win, 1 = Clean win (10 - 0)
+                let resultA = 0;
+                let resultB = 0;
+
+                if (gameResult.scoreA > gameResult.scoreB) {
+                    resultA += 0.5;
+                    if (gameResult.scoreB === 0) { resultA += 0.5; }
+                }
+
+                if (gameResult.scoreB > gameResult.scoreA) {
+                    resultB += 0.5;
+                    if (gameResult.scoreA === 0) { resultB += 0.5; }
+                }
+
+                ratingA.rating = ratingA.rating + self.kFactor * (resultA - expectedScoreA);
+                ratingB.rating = ratingB.rating + self.kFactor * (resultB - expectedScoreB);
+            }
+
+            let result = [];
+            for (let key in ratings) {
+                result.push(ratings[key]);
+            }
+
+            return result.sort(function (a, b) { return b.rating - a.rating; });
+        };
+
+        self.ratings = self.calculateRatings(rawData);
+    };
+
     let Team = function (keeper, striker) {
         let self = this;
 
@@ -116,5 +180,6 @@
         self.allPlayers = getAllPlayers(self.rawData);
         self.teamStats = loadTeamStats(self.rawData, self.allPlayers);
         self.teamRanking = loadTeamRanking(self.teamStats);
-    }
+        self.eloRatings = new TeamEloRatings(self.rawData);
+    };
 }());
