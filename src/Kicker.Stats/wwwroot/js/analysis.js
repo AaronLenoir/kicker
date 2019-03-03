@@ -39,13 +39,15 @@
                 let resultB = 0;
 
                 if (gameResult.scoreA > gameResult.scoreB) {
-                    resultA += 0.5;
-                    if (gameResult.scoreB === 0) { resultA += 0.5; }
+                    resultA += 0.75;
+                    if (gameResult.scoreB === 0) { resultA += 0.25; }
+                    else { resultB += 0.25; }
                 }
 
                 if (gameResult.scoreB > gameResult.scoreA) {
-                    resultB += 0.5;
-                    if (gameResult.scoreA === 0) { resultB += 0.5; }
+                    resultB += 0.75;
+                    if (gameResult.scoreA === 0) { resultB += 0.25; }
+                    else { resultA += 0.25; }
                 }
 
                 ratingA.rating = ratingA.rating + self.kFactor * (resultA - expectedScoreA);
