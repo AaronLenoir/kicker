@@ -2,58 +2,112 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kicker Stats v1.0.0</title>
 
     <script src="js/lib/knockout-3.5.0.js"></script>
     <script src="js/statsDataService.js"></script>
     <script src="js/analysis.js"></script>
     <script src="js/app.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            letter-spacing: .05em
+        }
+
+        h1 {
+            letter-spacing: .1em;
+            font-weight: 100
+        }
+
+        h2 {
+            letter-spacing: .1em;
+            font-weight: 100;
+            margin-top: 2em;
+        }
+
+        .center {
+            justify-content: center;
+        }
+
+        .note {
+            color: #AAAAAA;
+        }
+    </style>
 </head>
-<body>
+<body style="margin: 2em">
     <h1 data-bind="text: appName"></h1>
+    <div data-bind="visible: loading" class="pure-button pure-button-disabled">Loading data ...</div>
 
-    <div data-bind="visible: loading">Loading data ...</div>
-
-    <div data-bind="click: refreshData, hidden: loading" style="cursor: pointer">Refresh data</div>
+    <div data-bind="click: refreshData, hidden: loading" class="pure-button">Refresh data</div>
 
     <h2>Team Ranking (Top 10)</h2>
-    <table>
-        <tr>
-            <th>Team</th>
-            <th>Score</th>
-        </tr>
-        <!-- ko foreach: analysis().teamRanking -->
-        <tr>
-            <td>
-                <span data-bind="text: team.keeper"></span>
-                <span>-</span>
-                <span data-bind="text: team.striker"></span>
-            </td>
-            <td>
-                <span data-bind="text: score"></span>
-            </td>
-        </tr>
-        <!-- /ko -->
+    <table class="pure-table pure-table-bordered">
+        <thead>
+            <tr>
+                <th>Team</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- ko foreach: analysis().teamRanking -->
+            <tr>
+                <td>
+                    <span data-bind="text: team.keeper"></span>
+                    <span>-</span>
+                    <span data-bind="text: team.striker"></span>
+                </td>
+                <td>
+                    <span data-bind="text: score"></span>
+                </td>
+            </tr>
+            <!-- /ko -->
+        </tbody>
     </table>
-    <p>
+
+    <p class="note">
         Scoring:
-        <ul>
+        <ul class="note">
             <li>Win = 10 points (15 points if 10-0 win)</li>
             <li>Loss = minus 5 points (minus 10 points if 0-10 loss)</li>
+            <li>Score doesn't go below 0</li>
         </ul>
     </p>
 
     <h2>Team Stats</h2>
-    <div data-bind="foreach: analysis().teamStats">
-        <!--<span data-bind="text: team.keeper" /> - <span data-bind="text: team.striker" />-->
-        <div>
-            <span data-bind="text: team.keeper"></span>
-            <span>-</span>
-            <span data-bind="text: team.striker"></span>
-            <span data-bind="text: gamesWon"></span> / <span data-bind="text: gamesPlayed"></span>
-            (<span data-bind="text: winRatio.toFixed(2)"></span> %)
-            Score: <span data-bind="text: score"></span>
-        </div>
+    <div>
+        <table class="pure-table pure-table-bordered">
+            <thead>
+                <tr>
+                    <th>Keeper</th>
+                    <th>Striker</th>
+                    <th>Won / played</th>
+                    <th>Win ratio</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ko foreach: analysis().teamStats -->
+                <tr>
+                    <td data-bind="text: team.keeper"></td>
+                    <td data-bind="text: team.striker"></td>
+                    <td>
+                        <span data-bind="text: gamesWon"></span>
+                        /
+                        <span data-bind="text: gamesPlayed"></span>
+                    </td>
+                    <td>
+                        <span data-bind="text: winRatio.toFixed(2)"></span>
+                        <span>%</span>
+                    </td>
+                    <td data-bind="text: score"></td>
+                </tr>
+                <!-- /ko -->
+            </tbody>
+        </table>
     </div>
 
     <h2>All Players</h2>
