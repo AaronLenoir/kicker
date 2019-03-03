@@ -31,8 +31,6 @@
                 if (ourScore === 0) { self.score -= 5; }
             }
 
-            if (self.score < 0) { self.score = 0; }
-
             self.gamesPlayed++;
 
             self.winRatio = self.gamesWon / self.gamesPlayed;
