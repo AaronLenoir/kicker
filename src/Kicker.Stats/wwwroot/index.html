@@ -118,6 +118,7 @@
     <table class="pure-table pure-table-bordered" data-bind="with: analysis().eloRatings">
         <thead>
             <tr>
+                <th></th>
                 <th>Keeper - Striker</th>
                 <th>Rating</th>
             </tr>
@@ -125,6 +126,9 @@
         <tbody>
             <!-- ko foreach: ratings -->
             <tr>
+                <td>
+                    <span data-bind="text: $index() + 1"></span>
+                </td>
                 <td>
                     <span data-bind="text: team.keeper"></span>
                     <span>-</span>
