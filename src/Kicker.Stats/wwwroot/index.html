@@ -48,73 +48,6 @@
     <div data-bind="click: refreshData, hidden: loading" class="pure-button">Refresh data</div>
 
     <h2>Team Ranking (Top 10)</h2>
-    <table class="pure-table pure-table-bordered">
-        <thead>
-            <tr>
-                <th>Keeper - Striker</th>
-                <th>Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- ko foreach: analysis().teamRanking -->
-            <tr>
-                <td>
-                    <span data-bind="text: team.keeper"></span>
-                    <span>-</span>
-                    <span data-bind="text: team.striker"></span>
-                </td>
-                <td>
-                    <span data-bind="text: score"></span>
-                </td>
-            </tr>
-            <!-- /ko -->
-        </tbody>
-    </table>
-
-    <p class="note">
-        Scoring:
-        <ul class="note">
-            <li>Win = 10 points (15 points for 10-0 win)</li>
-            <li>Loss = minus 5 points (minus 10 points for 0-10 loss)</li>
-        </ul>
-    </p>
-
-    <h2>Team Stats</h2>
-    <div>
-        <table class="pure-table pure-table-bordered">
-            <thead>
-                <tr>
-                    <th>Keeper</th>
-                    <th>Striker</th>
-                    <th>Won / played</th>
-                    <th>Win ratio</th>
-                    <th>Longest streak</th>
-                    <th>Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- ko foreach: analysis().teamStats -->
-                <tr>
-                    <td data-bind="text: team.keeper"></td>
-                    <td data-bind="text: team.striker"></td>
-                    <td>
-                        <span data-bind="text: gamesWon"></span>
-                        /
-                        <span data-bind="text: gamesPlayed"></span>
-                    </td>
-                    <td>
-                        <span data-bind="text: winRatio.toFixed(2)"></span>
-                        <span>%</span>
-                    </td>
-                    <td data-bind="text: longestStreak"></td>
-                    <td data-bind="text: score"></td>
-                </tr>
-                <!-- /ko -->
-            </tbody>
-        </table>
-    </div>
-
-    <h2>Elo ratings</h2>
     <table class="pure-table pure-table-bordered" data-bind="with: analysis().eloRatings">
         <thead>
             <tr>
@@ -165,6 +98,47 @@
             </p>
 
         </div>
+    </div>
+
+    <p class="note">
+        Scoring:
+        <ul class="note">
+            <li>Win = 10 points (15 points for 10-0 win)</li>
+            <li>Loss = minus 5 points (minus 10 points for 0-10 loss)</li>
+        </ul>
+    </p>
+
+    <h2>Team Stats</h2>
+    <div>
+        <table class="pure-table pure-table-bordered">
+            <thead>
+                <tr>
+                    <th>Keeper</th>
+                    <th>Striker</th>
+                    <th>Won / played</th>
+                    <th>Win ratio</th>
+                    <th>Longest streak</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ko foreach: analysis().teamStats -->
+                <tr>
+                    <td data-bind="text: team.keeper"></td>
+                    <td data-bind="text: team.striker"></td>
+                    <td>
+                        <span data-bind="text: gamesWon"></span>
+                        /
+                        <span data-bind="text: gamesPlayed"></span>
+                    </td>
+                    <td>
+                        <span data-bind="text: winRatio.toFixed(2)"></span>
+                        <span>%</span>
+                    </td>
+                    <td data-bind="text: longestStreak"></td>
+                </tr>
+                <!-- /ko -->
+            </tbody>
+        </table>
     </div>
 
     <h2>Game History</h2>
