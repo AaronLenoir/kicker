@@ -131,7 +131,7 @@
                         <span data-bind="text: gamesPlayed"></span>
                     </td>
                     <td>
-                        <span data-bind="text: winRatio.toFixed(2)"></span>
+                        <span data-bind="text: (winRatio * 100).toFixed(2)"></span>
                         <span>%</span>
                     </td>
                     <td data-bind="text: longestStreak"></td>
