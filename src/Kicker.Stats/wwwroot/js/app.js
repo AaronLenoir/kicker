@@ -8,7 +8,7 @@
 
     self.loading = ko.observable(true);
 
-    self.analysis = ko.observable("A");
+    self.analysis = ko.observable({});
 
     self.refreshData = function () {
         self.loading(true);
