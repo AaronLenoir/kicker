@@ -41,7 +41,7 @@ namespace Kicker.Stats.Services
             if (!_cache.TryGetValue(_cacheKey, out result))
             {
                 result = GetResultsFromServer();
-                _cache.Set(_cacheKey, result, TimeSpan.FromMinutes(1));
+                _cache.Set(_cacheKey, result, TimeSpan.FromMinutes(30));
             }
 
             return result;
