@@ -142,40 +142,6 @@
         </table>
     </div>
 
-    <h2>Game History</h2>
-    <div>
-        <table class="pure-table pure-table-bordered">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Team A (keeper - striker)</th>
-                    <th>Score</th>
-                    <th>Team B (keeper - striker)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- ko foreach: analysis().rawData -->
-                <tr>
-                    <td data-bind="text: date"></td>
-                    <td data-bind="style: { 'background-color': scoreA === 10 ? '#d2ff62' : '' }">
-                        <span data-bind="text: keeperA"></span>
-                        -
-                        <span data-bind="text: strikerA"></span>
-                    </td>
-                    <td>
-                        <span data-bind="text: scoreA"></span> - <span data-bind="text: scoreB"></span>
-                    </td>
-                    <td data-bind="style: { 'background-color': scoreB === 10 ? '#d2ff62' : '' }">
-                        <span data-bind="text: keeperB"></span>
-                        -
-                        <span data-bind="text: strikerB"></span>
-                    </td>
-                </tr>
-                <!-- /ko -->
-            </tbody>
-        </table>
-    </div>
-
     <h2>Player Stats</h2>
     <div data-bind="with: analysis().stats">
         <table class="pure-table pure-table-bordered">
@@ -205,6 +171,40 @@
                     <td data-bind="text: longestStreak"></td>
                     <td data-bind="text: averageTeamRating.toFixed()"></td>
                     <td data-bind="text: highestTeamRank"></td>
+                </tr>
+                <!-- /ko -->
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Game History</h2>
+    <div>
+        <table class="pure-table pure-table-bordered">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Team A (keeper - striker)</th>
+                    <th>Score</th>
+                    <th>Team B (keeper - striker)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ko foreach: analysis().rawData -->
+                <tr>
+                    <td data-bind="text: date"></td>
+                    <td data-bind="style: { 'background-color': scoreA === 10 ? '#d2ff62' : '' }">
+                        <span data-bind="text: keeperA"></span>
+                        -
+                        <span data-bind="text: strikerA"></span>
+                    </td>
+                    <td>
+                        <span data-bind="text: scoreA"></span> - <span data-bind="text: scoreB"></span>
+                    </td>
+                    <td data-bind="style: { 'background-color': scoreB === 10 ? '#d2ff62' : '' }">
+                        <span data-bind="text: keeperB"></span>
+                        -
+                        <span data-bind="text: strikerB"></span>
+                    </td>
                 </tr>
                 <!-- /ko -->
             </tbody>
