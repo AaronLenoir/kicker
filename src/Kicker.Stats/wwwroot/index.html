@@ -80,8 +80,7 @@
         <table class="pure-table pure-table-bordered">
             <thead>
                 <tr>
-                    <th>Keeper</th>
-                    <th>Striker</th>
+                    <th>Team (keeper - striker)</th>
                     <th>Won / played</th>
                     <th>Win ratio</th>
                     <th>Longest streak</th>
@@ -91,8 +90,11 @@
             <tbody>
                 <!-- ko foreach: teamStats.allTeams -->
                 <tr>
-                    <td data-bind="text: team.keeper"></td>
-                    <td data-bind="text: team.striker"></td>
+                    <td>
+                        <span data-bind="text: team.keeper"></span>
+                        -
+                        <span data-bind="text: team.striker"></span>
+                    </td>
                     <td>
                         <span data-bind="text: gamesWon"></span>
                         /
