@@ -127,6 +127,24 @@
         let self = this;
 
         self.name = name;
+
+        self.gamesPlayed = 0;
+        self.gamesWon = 0;
+        self.winRatio = 0;
+        self.longestStreak = 0;
+        self.averageTeamRating = 0;
+        self.highestTeamRank = 0;
+
+        let _currentStreak = 0;
+
+        self.updateStreak = function () {
+            _currentStreak++;
+            if (_currentStreak > self.longestStreak) { self.longestStreak = _currentStreak; }
+        };
+
+        self.endStreak = function () {
+            _currentStreak = 0;
+        };
     }
 
     let PlayerStats = function () {
@@ -142,16 +160,52 @@
             });
         };
 
+        self.updatePlayer = function (name, position, ourScore, otherScore) {
+            let playerStat = self.allPlayers.find(function (playerStat) { return playerStat.name === name; });
+
+            if (!playerStat) {
+                playerStat = new PlayerStat(name);
+                self.allPlayers.push(playerStat);
+            }
+
+            playerStat.gamesPlayed++;
+
+            if (ourScore > otherScore) {
+                playerStat.gamesWon++;
+                playerStat.updateStreak();
+            } else {
+                playerStat.endStreak();
+            }
+
+            playerStat.winRatio = playerStat.gamesWon / playerStat.gamesPlayed;
+        };
+
         self.addGame = function (game) {
-            let players = [game.keeperA, game.strikerA, game.keeperB, game.strikerB];
+            self.updatePlayer(game.keeperA, "keeper", game.scoreA, game.scoreB);
+            self.updatePlayer(game.strikerA, "striker", game.scoreA, game.scoreB);
+            self.updatePlayer(game.keeperB, "keeper", game.scoreB, game.scoreA);
+            self.updatePlayer(game.strikerB, "striker", game.scoreB, game.scoreA);
+        };
 
-            for (let i = 0; i < players.length; i++) {
-                let player = players[i];
-                let playerStat = self.allPlayers.find(function (playerStat) { return playerStat.name === player; });
+        self.updateWithTeamStats = function (teamStats) {
 
-                if (!playerStat) {
-                    self.allPlayers.push(new PlayerStat(player));
+            for (let i = 0; i < self.allPlayers.length; i++) {
+                let player = self.allPlayers[i];
+
+                let totalRating = 0;
+                let totalTeams = 0;
+
+                for (let j = 0; j < teamStats.allTeams.length; j++) {
+                    let teamRank = j + 1;
+                    if (teamStats.allTeams[j].team.getTeamId().indexOf(player.name) > -1) {
+                        if (player.highestTeamRank === 0 || player.highestTeamRank > teamRank) { player.highestTeamRank = teamRank; }
+
+                        totalRating += teamStats.allTeams[j].eloRating.rating;
+                        totalTeams++;
+                    }
                 }
+
+                player.averageTeamRating = totalRating / totalTeams;
             }
         };
     };
@@ -170,6 +224,8 @@
 
         playerStats.sortByName();
         teamStats.sortByRatingDesc();
+
+        playerStats.updateWithTeamStats(teamStats);
 
         return {
             playerStats: playerStats,

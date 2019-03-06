@@ -176,11 +176,39 @@
         </table>
     </div>
 
+    <h2>Player Stats</h2>
     <div data-bind="with: analysis().stats">
-        <h2>All Players (<span data-bind="text: playerStats.allPlayers.length"></span>)</h2>
-        <!-- ko foreach: playerStats.allPlayers -->
-        <div data-bind="text: name"></div>
-        <!-- /ko -->
+        <table class="pure-table pure-table-bordered">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Won / played</th>
+                    <th>Win ratio</th>
+                    <th>Longest streak</th>
+                    <th>Average team rating</th>
+                    <th>Highest team rank</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ko foreach: playerStats.allPlayers -->
+                <tr>
+                    <td data-bind="text: name"></td>
+                    <td>
+                        <span data-bind="text: gamesWon"></span>
+                        /
+                        <span data-bind="text: gamesPlayed"></span>
+                    </td>
+                    <td>
+                        <span data-bind="text: (winRatio * 100).toFixed(2)"></span>
+                        <span>%</span>
+                    </td>
+                    <td data-bind="text: longestStreak"></td>
+                    <td data-bind="text: averageTeamRating.toFixed()"></td>
+                    <td data-bind="text: highestTeamRank"></td>
+                </tr>
+                <!-- /ko -->
+            </tbody>
+        </table>
     </div>
 
     <h2><a name="ratingInfo">Rating info</a></h2>
