@@ -90,7 +90,7 @@
             <!-- ko foreach: teamStats.allTeams -->
             <tr>
                 <td>
-                    <span data-bind="text: $index() + 1"></span>
+                    <a data-bind="attr: { name: 'rank_' + ($index() + 1) }"><span data-bind="text: $index() + 1"></span></a>
                 </td>
                 <td>
                     <span data-bind="text: team.keeper"></span>
@@ -156,6 +156,7 @@
                     <th>Longest streak</th>
                     <th>Average team rating</th>
                     <th>Highest ranking team</th>
+                    <th>Preferred position</th>
                 </tr>
             </thead>
             <tbody>
@@ -178,7 +179,13 @@
                         <span data-bind="text: highestRankingTeam.team.keeper"></span>
                         -
                         <span data-bind="text: highestRankingTeam.team.striker"></span>
-                        (<span data-bind="text: highestRankingTeam.ranking"></span>)
+                        <a data-bind="attr: { href: '#rank_' + (highestRankingTeam.ranking) }">
+                            (<span data-bind="text: highestRankingTeam.ranking"></span>)
+                        </a>
+                    </td>
+                    <td>
+                        <span data-bind="text: preferredPosition.position"></span>
+                        (<span data-bind="text: (preferredPosition.ratio * 100).toFixed()"></span> %)
                     </td>
                 </tr>
                 <!-- /ko -->

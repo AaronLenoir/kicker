@@ -139,6 +139,12 @@
             team: undefined,
             ranking: 0
         };
+        self.preferredPosition = {
+            position: "unknown",
+            ratio: 0
+        };
+        self.timesPlayedAsKeeper = 0;
+        self.timesPlayedAsStriker = 0;
 
         self.updateStreak = function () {
             self.currentStreak++;
@@ -147,6 +153,23 @@
 
         self.endStreak = function () {
             self.currentStreak = 0;
+        };
+
+        self.updatePreferredPosition = function (positionPlayed) {
+            if (positionPlayed === "keeper") { self.timesPlayedAsKeeper++; }
+            if (positionPlayed === "striker") { self.timesPlayedAsStriker++; }
+            if (self.timesPlayedAsKeeper > self.timesPlayedAsStriker) {
+                self.preferredPosition.position = "keeper";
+                self.preferredPosition.ratio = self.timesPlayedAsKeeper / (self.timesPlayedAsStriker + self.timesPlayedAsKeeper);
+            }
+            if (self.timesPlayedAsKeeper < self.timesPlayedAsStriker) {
+                self.preferredPosition.position = "striker";
+                self.preferredPosition.ratio = self.timesPlayedAsStriker / (self.timesPlayedAsStriker + self.timesPlayedAsKeeper);
+            }
+            if (self.timesPlayedAsKeeper === self.timesPlayedAsStriker) {
+                self.preferredPosition.position = "both";
+                self.preferredPosition.ratio = 0.5;
+            }
         };
     }
 
@@ -181,6 +204,8 @@
             }
 
             playerStat.winRatio = playerStat.gamesWon / playerStat.gamesPlayed;
+
+            playerStat.updatePreferredPosition(position);
         };
 
         self.addGame = function (game) {
@@ -199,14 +224,17 @@
                 let totalTeams = 0;
 
                 for (let j = 0; j < teamStats.allTeams.length; j++) {
+                    let teamStat = teamStats.allTeams[j];
+                    let team = teamStat.team;
                     let teamRank = j + 1;
-                    if (teamStats.allTeams[j].team.getTeamId().indexOf(player.name) > -1) {
+
+                    if (team.getTeamId().indexOf(player.name) > -1) {
                         if (player.highestRankingTeam.ranking === 0 || player.highestRankingTeam.ranking > teamRank) {
-                            player.highestRankingTeam.team = teamStats.allTeams[j].team;
+                            player.highestRankingTeam.team = team;
                             player.highestRankingTeam.ranking = teamRank;
                         }
 
-                        totalRating += teamStats.allTeams[j].eloRating.rating;
+                        totalRating += teamStat.eloRating.rating;
                         totalTeams++;
                     }
                 }
