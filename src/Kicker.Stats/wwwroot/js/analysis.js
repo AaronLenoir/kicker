@@ -54,17 +54,17 @@
         self.gamesPlayed = 0;
         self.winRatio = 0;
         self.longestStreak = 0;
+        self.currentStreak = 0;
         self.eloRating = new TeamEloRating(team);
 
-        let _currentStreak = 0;
 
         self.updateStreak = function () {
-            _currentStreak++;
-            if (_currentStreak > self.longestStreak) { self.longestStreak = _currentStreak; }
+            self.currentStreak++;
+            if (self.currentStreak > self.longestStreak) { self.longestStreak = self.currentStreak; }
         };
 
         self.endStreak = function () {
-            _currentStreak = 0;
+            self.currentStreak = 0;
         };
     };
 
@@ -132,18 +132,21 @@
         self.gamesWon = 0;
         self.winRatio = 0;
         self.longestStreak = 0;
+        self.currentStreak = 0;
         self.averageTeamRating = 0;
         self.highestTeamRank = 0;
-
-        let _currentStreak = 0;
+        self.highestRankingTeam = {
+            team: undefined,
+            ranking: 0
+        };
 
         self.updateStreak = function () {
-            _currentStreak++;
-            if (_currentStreak > self.longestStreak) { self.longestStreak = _currentStreak; }
+            self.currentStreak++;
+            if (self.currentStreak > self.longestStreak) { self.longestStreak = self.currentStreak; }
         };
 
         self.endStreak = function () {
-            _currentStreak = 0;
+            self.currentStreak = 0;
         };
     }
 
@@ -198,7 +201,10 @@
                 for (let j = 0; j < teamStats.allTeams.length; j++) {
                     let teamRank = j + 1;
                     if (teamStats.allTeams[j].team.getTeamId().indexOf(player.name) > -1) {
-                        if (player.highestTeamRank === 0 || player.highestTeamRank > teamRank) { player.highestTeamRank = teamRank; }
+                        if (player.highestRankingTeam.ranking === 0 || player.highestRankingTeam.ranking > teamRank) {
+                            player.highestRankingTeam.team = teamStats.allTeams[j].team;
+                            player.highestRankingTeam.ranking = teamRank;
+                        }
 
                         totalRating += teamStats.allTeams[j].eloRating.rating;
                         totalTeams++;

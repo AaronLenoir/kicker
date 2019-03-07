@@ -113,6 +113,7 @@
                     <th>Team (keeper - striker)</th>
                     <th>Won / played</th>
                     <th>Win ratio</th>
+                    <th>Current streak</th>
                     <th>Longest streak</th>
                     <th>Rating <a href="#ratingInfo">(?)</a></th>
                 </tr>
@@ -134,6 +135,7 @@
                         <span data-bind="text: (winRatio * 100).toFixed(2)"></span>
                         <span>%</span>
                     </td>
+                    <td data-bind="text: currentStreak"></td>
                     <td data-bind="text: longestStreak"></td>
                     <td data-bind="text: eloRating.rating.toFixed()"></td>
                 </tr>
@@ -150,9 +152,10 @@
                     <th>Player</th>
                     <th>Won / played</th>
                     <th>Win ratio</th>
+                    <th>Current streak</th>
                     <th>Longest streak</th>
                     <th>Average team rating</th>
-                    <th>Highest team rank</th>
+                    <th>Highest ranking team</th>
                 </tr>
             </thead>
             <tbody>
@@ -168,9 +171,15 @@
                         <span data-bind="text: (winRatio * 100).toFixed(2)"></span>
                         <span>%</span>
                     </td>
+                    <td data-bind="text: currentStreak"></td>
                     <td data-bind="text: longestStreak"></td>
                     <td data-bind="text: averageTeamRating.toFixed()"></td>
-                    <td data-bind="text: highestTeamRank"></td>
+                    <td>
+                        <span data-bind="text: highestRankingTeam.team.keeper"></span>
+                        -
+                        <span data-bind="text: highestRankingTeam.team.striker"></span>
+                        (<span data-bind="text: highestRankingTeam.ranking"></span>)
+                    </td>
                 </tr>
                 <!-- /ko -->
             </tbody>
