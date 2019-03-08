@@ -218,7 +218,7 @@
                         -
                         <span data-bind="text: strikerA"></span>
                     </td>
-                    <td>
+                    <td data-bind="style: { 'background-color': scoreA === 0 || scoreB === 0 ? 'black' : '', 'color': scoreA === 0 || scoreB === 0 ? 'white': '' }">
                         <span data-bind="text: scoreA"></span> - <span data-bind="text: scoreB"></span>
                     </td>
                     <td data-bind="style: { 'background-color': scoreB === 10 ? '#d2ff62' : '' }">
