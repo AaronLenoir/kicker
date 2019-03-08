@@ -88,7 +88,7 @@
         </thead>
         <tbody>
             <!-- ko foreach: teamStats.allTeams -->
-            <tr>
+            <tr data-bind="style: { 'background-color': $index() % 2 === 0 ? '' : '#F8F8F8' }">
                 <td>
                     <a data-bind="attr: { name: 'rank_' + ($index() + 1) }"><span data-bind="text: $index() + 1"></span></a>
                 </td>
@@ -120,7 +120,7 @@
             </thead>
             <tbody>
                 <!-- ko foreach: teamStats.allTeams -->
-                <tr>
+                <tr data-bind="style: { 'background-color': $index() % 2 === 0 ? '' : '#F8F8F8' }">
                     <td>
                         <span data-bind="text: team.keeper"></span>
                         -
@@ -162,7 +162,7 @@
             </thead>
             <tbody>
                 <!-- ko foreach: playerStats.allPlayers -->
-                <tr>
+                <tr data-bind="style: { 'background-color': $index() % 2 === 0 ? '' : '#F8F8F8' }">
                     <td data-bind="text: name"></td>
                     <td>
                         <span data-bind="text: gamesWon"></span>
@@ -211,7 +211,7 @@
             </thead>
             <tbody>
                 <!-- ko foreach: analysis().rawData -->
-                <tr>
+                <tr data-bind="style: { 'background-color': $index() % 2 === 0 ? '' : '#F8F8F8' }">
                     <td data-bind="text: date"></td>
                     <td data-bind="style: { 'background-color': scoreA === 10 ? '#d2ff62' : '' }">
                         <span data-bind="text: keeperA"></span>
