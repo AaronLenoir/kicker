@@ -157,6 +157,7 @@
                     <th>Average team rating</th>
                     <th>Highest ranking team</th>
                     <th>Preferred position</th>
+                    <th>Best position <a href="#positionInfo">(?)</a></th>
                 </tr>
             </thead>
             <tbody>
@@ -186,6 +187,10 @@
                     <td>
                         <span data-bind="text: preferredPosition.position"></span>
                         (<span data-bind="text: (preferredPosition.ratio * 100).toFixed()"></span> %)
+                    </td>
+                    <td>
+                        <span data-bind="text: bestPosition.position"></span>
+                        (<span data-bind="text: bestPosition.averageTeamRating.toFixed()"></span>)
                     </td>
                 </tr>
                 <!-- /ko -->
@@ -246,6 +251,19 @@
         </p>
         <p class="note">
             More information: <a href="https://en.wikipedia.org/wiki/Elo_rating_system">Wikipedia: Elo rating system</a>
+        </p>
+    </div>
+
+    <h2><a name="positionInfo">Best position</a></h2>
+    <div>
+        <p class="note">
+            If teams where the player is keeper perform better on average, then the best position is keeper.
+        </p>
+        <p class="note">
+            If teams where the player is striker perform better on average, then the best position is striker.
+        </p>
+        <p class="note">
+            "Performance" is the average rating of those teams, shown in brackets in the table.
         </p>
     </div>
 

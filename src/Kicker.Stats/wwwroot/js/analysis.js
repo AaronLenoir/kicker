@@ -134,6 +134,8 @@
         self.longestStreak = 0;
         self.currentStreak = 0;
         self.averageTeamRating = 0;
+        self.averageKeeperTeamRating = 0;
+        self.averageStrikerTeamRating = 0;
         self.highestTeamRank = 0;
         self.highestRankingTeam = {
             team: undefined,
@@ -142,6 +144,10 @@
         self.preferredPosition = {
             position: "unknown",
             ratio: 0
+        };
+        self.bestPosition = {
+            position: "unknown",
+            averageTeamRating: 0
         };
         self.timesPlayedAsKeeper = 0;
         self.timesPlayedAsStriker = 0;
@@ -223,6 +229,11 @@
                 let totalRating = 0;
                 let totalTeams = 0;
 
+                let totalKeeperRating = 0;
+                let totalStrikerRating = 0;
+                let totalKeeperTeams = 0;
+                let totalStrikerTeams = 0;
+
                 for (let j = 0; j < teamStats.allTeams.length; j++) {
                     let teamStat = teamStats.allTeams[j];
                     let team = teamStat.team;
@@ -236,10 +247,30 @@
 
                         totalRating += teamStat.eloRating.rating;
                         totalTeams++;
+
+                        if (team.keeper === player.name) { totalKeeperRating += teamStat.eloRating.rating; totalKeeperTeams++; }
+                        if (team.striker === player.name) { totalStrikerRating += teamStat.eloRating.rating; totalStrikerTeams++; }
                     }
                 }
 
                 player.averageTeamRating = totalRating / totalTeams;
+                if (totalKeeperTeams > 0) { player.averageKeeperTeamRating = totalKeeperRating / totalKeeperTeams; }
+                if (totalStrikerTeams > 0) { player.averageStrikerTeamRating = totalStrikerRating / totalStrikerTeams; }
+
+                if (player.averageKeeperTeamRating > player.averageStrikerTeamRating) {
+                    player.bestPosition.position = "keeper";
+                    player.bestPosition.averageTeamRating = player.averageKeeperTeamRating;
+                }
+
+                if (player.averageKeeperTeamRating < player.averageStrikerTeamRating) {
+                    player.bestPosition.position = "striker";
+                    player.bestPosition.averageTeamRating = player.averageStrikerTeamRating;
+                }
+
+                if (player.averageKeeperTeamRating === player.averageStrikerTeamRating) {
+                    player.bestPosition.position = "both";
+                    player.bestPosition.averageTeamRating = player.averageKeeperTeamRating;
+                }
             }
         };
     };
