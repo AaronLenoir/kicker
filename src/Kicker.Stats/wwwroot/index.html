@@ -198,7 +198,7 @@
         </table>
     </div>
 
-    <h2>Game History</h2>
+    <h2 data-bind="with: analysis().rawData">Game History (<span data-bind="text: length"></span> games)</h2>
     <div>
         <table class="pure-table pure-table-bordered">
             <thead>
