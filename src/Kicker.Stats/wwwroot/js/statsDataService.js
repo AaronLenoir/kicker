@@ -5,7 +5,6 @@
                 return response.json();
             })
             .then(function (data) {
-                console.log(JSON.stringify(data));
                 callback(data);
             });
     };
