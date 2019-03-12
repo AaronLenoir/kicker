@@ -13,7 +13,7 @@
         <tbody>
             <tr v-for="(teamStat, index) in stats.teamStats.allTeams" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
                 <td>
-                    <a><span>{{ index + 1 }}</span></a>
+                    <a v-bind:name="'rank_' + (index + 1)"><span>{{ index + 1 }}</span></a>
                 </td>
                 <td>
                     <span>{{ teamStat.team.keeper }}</span>
@@ -67,6 +67,63 @@ Vue.component('team-stats', {
 </table>`
 });
 
+Vue.component('player-stats', {
+    props: ['stats'],
+    template: `
+<div>
+<table class="pure-table pure-table-bordered">
+<thead>
+    <tr>
+        <th>Player</th>
+        <th>Won / played</th>
+        <th>Win ratio</th>
+        <th>Current streak</th>
+        <th>Longest streak</th>
+        <th>Average team rating</th>
+        <th>Highest ranking team</th>
+        <th>Preferred position</th>
+        <th>Best position <a href="#positionInfo">(?)</a></th>
+    </tr>
+</thead>
+<tbody>
+    <tr v-for="(playerStat, index) in stats.playerStats.allPlayers" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+        <td>{{ playerStat.name }}</td>
+        <td>
+            <span>{{ playerStat.gamesWon }}</span>
+            /
+            <span>{{ playerStat.gamesPlayed }}</span>
+        </td>
+        <td>
+            <span>{{ (playerStat.winRatio * 100).toFixed(2) }}</span>
+            <span>%</span>
+        </td>
+        <td>{{ playerStat.currentStreak }}</td>
+        <td>{{ playerStat.longestStreak }}</td>
+        <td>{{ playerStat.averageTeamRating.toFixed() }}</td>
+        <td>
+            <span>{{ playerStat.highestRankingTeam.team.keeper }}</span>
+            -
+            <span>{{ playerStat.highestRankingTeam.team.striker }}</span>
+            <a v-bind:href="'#rank_' + (playerStat.highestRankingTeam.ranking)">
+                (<span>{{ playerStat.highestRankingTeam.ranking }}</span>)
+            </a>
+        </td>
+        <td>
+            <span>{{ playerStat.preferredPosition.position }}</span>
+            (<span>{{ (playerStat.preferredPosition.ratio * 100).toFixed() }}</span> %)
+        </td>
+        <td>
+            <span>{{ playerStat.bestPosition.position }}</span>
+            (<span>{{ playerStat.bestPosition.averageTeamRating.toFixed() }}</span>)
+        </td>
+    </tr>
+    <!-- /ko -->
+</tbody>
+</table>
+</div>
+`
+});
+
 Vue.component('overview', {
     props: ['app'],
     methods: {
@@ -90,6 +147,9 @@ Vue.component('overview', {
 
     <h2>Team stats</h2>
     <team-stats v-if="!app.loading" v-bind:stats="app.analysis.stats" />
+
+    <h2>Player stats</h2>
+    <player-stats v-if="!app.loading" v-bind:stats="app.analysis.stats" />
 </div>
 `
 });
