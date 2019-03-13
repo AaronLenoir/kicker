@@ -1,4 +1,8 @@
-﻿Vue.component('full-team-ranking', {
+﻿/*
+ * Components 
+ */
+
+const TeamRanking = {
     props: ['stats'],
     template: `
 <div>
@@ -27,9 +31,9 @@
         </tbody>
     </table>
 </div>`
-});
+};
 
-Vue.component('team-stats', {
+const TeamStats = {
     props: ['stats'],
     template: `
 <table class="pure-table pure-table-bordered">
@@ -65,9 +69,9 @@ Vue.component('team-stats', {
         </tr>
     </tbody>
 </table>`
-});
+};
 
-Vue.component('player-stats', {
+const PlayerStats = {
     props: ['stats'],
     template: `
 <div>
@@ -121,9 +125,9 @@ Vue.component('player-stats', {
 </table>
 </div>
 `
-});
+};
 
-Vue.component('game-overview', {
+const GameOverview = {
     props: ['rawData'],
     template: `
 <table class="pure-table pure-table-bordered">
@@ -155,14 +159,20 @@ Vue.component('game-overview', {
     </tbody>
 </table>
 `
-});
+};
 
-Vue.component('overview', {
+const Overview = {
     props: ['app'],
     methods: {
         refreshData: function () {
             this.$emit('refresh-data');
         }
+    },
+    components: {
+        'game-overview': GameOverview,
+        'player-stats': PlayerStats,
+        'team-stats': TeamStats,
+        'team-ranking': TeamRanking
     },
     template: `
 <div>
@@ -176,8 +186,9 @@ Vue.component('overview', {
     <div v-if="!app.loading" v-on:click="refreshData" class="pure-button">Refresh data</div>
 
     <div v-if="!app.loading">
+
         <h2>Team Ranking (all time)</h2>
-        <full-team-ranking v-bind:stats="app.analysis.stats" />
+        <team-ranking v-bind:stats="app.analysis.stats" />
 
         <h2>Team stats ({{ app.analysis.stats.teamStats.allTeams.length }} teams)</h2>
         <team-stats v-bind:stats="app.analysis.stats" />
@@ -190,10 +201,28 @@ Vue.component('overview', {
     </div>
 </div>
 `
+};
+
+/*
+ * Routing 
+ */
+
+const routes = [
+    { path: '/', component: Overview },
+    { path: '/overview', component: Overview }
+];
+
+const router = new VueRouter({
+    routes // short for `routes: routes`
 });
 
-let kickerStatsApp = new Vue({
+/*
+ * App
+ */ 
+
+const kickerStatsApp = new Vue({
     el: '#app',
+    router,
     data: {
         appName: "Kicker Stats",
         loading: true,
@@ -216,4 +245,4 @@ let kickerStatsApp = new Vue({
             });
         }
     }
-});
+}).$mount('#app');
