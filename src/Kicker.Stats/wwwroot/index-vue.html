@@ -71,10 +71,8 @@
 </head>
 <body style="margin: 2em">
 
-    
-
     <div id="app">
-        <overview @refresh-data="refreshData" v-bind:app="$data"/>
+        <overview @refresh-data="refreshData" v-bind:app="$data" />
     </div>
 
     <h2><a name="ratingInfo">Rating info</a></h2>
@@ -96,6 +94,19 @@
         </p>
         <p class="note">
             More information: <a href="https://en.wikipedia.org/wiki/Elo_rating_system">Wikipedia: Elo rating system</a>
+        </p>
+    </div>
+
+    <h2><a name="positionInfo">Best position</a></h2>
+    <div>
+        <p class="note">
+            If teams where the player is keeper perform better on average, then the best position is keeper.
+        </p>
+        <p class="note">
+            If teams where the player is striker perform better on average, then the best position is striker.
+        </p>
+        <p class="note">
+            "Performance" is the average rating of those teams, shown in brackets in the table.
         </p>
     </div>
 

@@ -117,10 +117,43 @@ Vue.component('player-stats', {
             (<span>{{ playerStat.bestPosition.averageTeamRating.toFixed() }}</span>)
         </td>
     </tr>
-    <!-- /ko -->
 </tbody>
 </table>
 </div>
+`
+});
+
+Vue.component('game-overview', {
+    props: ['rawData'],
+    template: `
+<table class="pure-table pure-table-bordered">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Team A (keeper - striker)</th>
+            <th>Score</th>
+            <th>Team B (keeper - striker)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr v-for="(game, index) in rawData" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+            <td>{{ game.date }}</td>
+            <td v-bind:style="game.scoreA > game.scoreB ? { background: '#d2ff62' } : {}">
+                <span>{{ game.keeperA }}</span>
+                -
+                <span>{{ game.strikerA }}</span>
+            </td>
+            <td v-bind:style="game.scoreA === 0 || game.scoreB === 0 ? { background: 'black', color: 'white' } : {}">
+                <span>{{ game.scoreA }}</span> - <span>{{ game.scoreB }}</span>
+            </td>
+            <td v-bind:style="game.scoreB > game.scoreA ? { background: '#d2ff62' } : {}">
+                <span>{{ game.keeperB }}</span>
+                -
+                <span>{{ game.strikerB }}</span>
+            </td>
+        </tr>
+    </tbody>
+</table>
 `
 });
 
@@ -142,14 +175,19 @@ Vue.component('overview', {
 
     <div v-if="!app.loading" v-on:click="refreshData" class="pure-button">Refresh data</div>
 
-    <h2>Team Ranking (all time)</h2>
-    <full-team-ranking v-if="!app.loading" v-bind:stats="app.analysis.stats" />
+    <div v-if="!app.loading">
+        <h2>Team Ranking (all time)</h2>
+        <full-team-ranking v-bind:stats="app.analysis.stats" />
 
-    <h2>Team stats</h2>
-    <team-stats v-if="!app.loading" v-bind:stats="app.analysis.stats" />
+        <h2>Team stats ({{ app.analysis.stats.teamStats.allTeams.length }} teams)</h2>
+        <team-stats v-bind:stats="app.analysis.stats" />
 
-    <h2>Player stats</h2>
-    <player-stats v-if="!app.loading" v-bind:stats="app.analysis.stats" />
+        <h2>Player stats ({{ app.analysis.stats.playerStats.allPlayers.length }} players)</h2>
+        <player-stats v-bind:stats="app.analysis.stats" />
+
+        <h2>Game history ({{ app.analysis.rawData.length }} games)</h2>
+        <game-overview v-bind:rawData="app.analysis.rawData" />
+    </div>
 </div>
 `
 });
