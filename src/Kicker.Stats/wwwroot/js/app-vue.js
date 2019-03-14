@@ -4,8 +4,18 @@
 
 const TeamRanking = {
     props: ['stats'],
+    props: {
+        stats: {
+            type: Object,
+        },
+        top: {
+            type: Number,
+            default: undefined
+        }
+    },
     template: `
 <div>
+    <h2>Team Ranking {{ top ? '(top ' + top + ')' : '(all)' }}</h2>
     <table class="pure-table pure-table-bordered">
         <thead>
             <tr>
@@ -15,7 +25,7 @@ const TeamRanking = {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(teamStat, index) in stats.teamStats.allTeams" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+            <tr v-for="(teamStat, index) in stats.teamStats.allTeams.slice(0, top)" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
                 <td>
                     <a v-bind:name="'rank_' + (index + 1)"><span>{{ index + 1 }}</span></a>
                 </td>
@@ -30,134 +40,144 @@ const TeamRanking = {
             </tr>
         </tbody>
     </table>
+    <div style="margin-top: 1em">
+        <router-link to="/ranking">Full ranking ...</router-link>
+    </div>
 </div>`
 };
 
 const TeamStats = {
     props: ['stats'],
     template: `
-<table class="pure-table pure-table-bordered">
-    <thead>
-        <tr>
-            <th>Team (keeper - striker)</th>
-            <th>Won / played</th>
-            <th>Win ratio</th>
-            <th>Current streak</th>
-            <th>Longest streak</th>
-            <th>Rating <a href="#ratingInfo">(?)</a></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr v-for="(teamStat, index) in stats.teamStats.allTeams" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
-            <td>
-                <span>{{ teamStat.team.keeper }}</span>
-                -
-                <span>{{ teamStat.team.striker }}</span>
-            </td>
-            <td>
-                <span>{{ teamStat.gamesWon }}</span>
-                /
-                <span>{{ teamStat.gamesPlayed }}</span>
-            </td>
-            <td>
-                <span>{{ (teamStat.winRatio * 100).toFixed(2) }}</span>
-                <span>%</span>
-            </td>
-            <td>{{ teamStat.currentStreak }}</td>
-            <td>{{ teamStat.longestStreak }}</td>
-            <td>{{ teamStat.eloRating.rating.toFixed() }}</td>
-        </tr>
-    </tbody>
-</table>`
+<div>
+    <h2>Team stats ({{ stats.teamStats.allTeams.length }} teams)</h2>
+    <table class="pure-table pure-table-bordered">
+        <thead>
+            <tr>
+                <th>Team (keeper - striker)</th>
+                <th>Won / played</th>
+                <th>Win ratio</th>
+                <th>Current streak</th>
+                <th>Longest streak</th>
+                <th>Rating <a href="#ratingInfo">(?)</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(teamStat, index) in stats.teamStats.allTeams" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+                <td>
+                    <span>{{ teamStat.team.keeper }}</span>
+                    -
+                    <span>{{ teamStat.team.striker }}</span>
+                </td>
+                <td>
+                    <span>{{ teamStat.gamesWon }}</span>
+                    /
+                    <span>{{ teamStat.gamesPlayed }}</span>
+                </td>
+                <td>
+                    <span>{{ (teamStat.winRatio * 100).toFixed(2) }}</span>
+                    <span>%</span>
+                </td>
+                <td>{{ teamStat.currentStreak }}</td>
+                <td>{{ teamStat.longestStreak }}</td>
+                <td>{{ teamStat.eloRating.rating.toFixed() }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>`
 };
 
 const PlayerStats = {
     props: ['stats'],
     template: `
 <div>
-<table class="pure-table pure-table-bordered">
-<thead>
-    <tr>
-        <th>Player</th>
-        <th>Won / played</th>
-        <th>Win ratio</th>
-        <th>Current streak</th>
-        <th>Longest streak</th>
-        <th>Average team rating</th>
-        <th>Highest ranking team</th>
-        <th>Preferred position</th>
-        <th>Best position <a href="#positionInfo">(?)</a></th>
-    </tr>
-</thead>
-<tbody>
-    <tr v-for="(playerStat, index) in stats.playerStats.allPlayers" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
-        <td>{{ playerStat.name }}</td>
-        <td>
-            <span>{{ playerStat.gamesWon }}</span>
-            /
-            <span>{{ playerStat.gamesPlayed }}</span>
-        </td>
-        <td>
-            <span>{{ (playerStat.winRatio * 100).toFixed(2) }}</span>
-            <span>%</span>
-        </td>
-        <td>{{ playerStat.currentStreak }}</td>
-        <td>{{ playerStat.longestStreak }}</td>
-        <td>{{ playerStat.averageTeamRating.toFixed() }}</td>
-        <td>
-            <span>{{ playerStat.highestRankingTeam.team.keeper }}</span>
-            -
-            <span>{{ playerStat.highestRankingTeam.team.striker }}</span>
-            <a v-bind:href="'#rank_' + (playerStat.highestRankingTeam.ranking)">
-                (<span>{{ playerStat.highestRankingTeam.ranking }}</span>)
-            </a>
-        </td>
-        <td>
-            <span>{{ playerStat.preferredPosition.position }}</span>
-            (<span>{{ (playerStat.preferredPosition.ratio * 100).toFixed() }}</span> %)
-        </td>
-        <td>
-            <span>{{ playerStat.bestPosition.position }}</span>
-            (<span>{{ playerStat.bestPosition.averageTeamRating.toFixed() }}</span>)
-        </td>
-    </tr>
-</tbody>
-</table>
+    <h2>Player stats ({{ stats.playerStats.allPlayers.length }} players)</h2>
+    <table class="pure-table pure-table-bordered">
+    <thead>
+        <tr>
+            <th>Player</th>
+            <th>Won / played</th>
+            <th>Win ratio</th>
+            <th>Current streak</th>
+            <th>Longest streak</th>
+            <th>Average team rating</th>
+            <th>Highest ranking team</th>
+            <th>Preferred position</th>
+            <th>Best position <a href="#positionInfo">(?)</a></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr v-for="(playerStat, index) in stats.playerStats.allPlayers" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+            <td>{{ playerStat.name }}</td>
+            <td>
+                <span>{{ playerStat.gamesWon }}</span>
+                /
+                <span>{{ playerStat.gamesPlayed }}</span>
+            </td>
+            <td>
+                <span>{{ (playerStat.winRatio * 100).toFixed(2) }}</span>
+                <span>%</span>
+            </td>
+            <td>{{ playerStat.currentStreak }}</td>
+            <td>{{ playerStat.longestStreak }}</td>
+            <td>{{ playerStat.averageTeamRating.toFixed() }}</td>
+            <td>
+                <span>{{ playerStat.highestRankingTeam.team.keeper }}</span>
+                -
+                <span>{{ playerStat.highestRankingTeam.team.striker }}</span>
+                <a v-bind:href="'#rank_' + (playerStat.highestRankingTeam.ranking)">
+                    (<span>{{ playerStat.highestRankingTeam.ranking }}</span>)
+                </a>
+            </td>
+            <td>
+                <span>{{ playerStat.preferredPosition.position }}</span>
+                (<span>{{ (playerStat.preferredPosition.ratio * 100).toFixed() }}</span> %)
+            </td>
+            <td>
+                <span>{{ playerStat.bestPosition.position }}</span>
+                (<span>{{ playerStat.bestPosition.averageTeamRating.toFixed() }}</span>)
+            </td>
+        </tr>
+    </tbody>
+    </table>
 </div>
 `
 };
 
 const GameOverview = {
-    props: ['rawData'],
+    props: ['rawdata'],
     template: `
-<table class="pure-table pure-table-bordered">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Team A (keeper - striker)</th>
-            <th>Score</th>
-            <th>Team B (keeper - striker)</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr v-for="(game, index) in rawData" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
-            <td>{{ game.date }}</td>
-            <td v-bind:style="game.scoreA > game.scoreB ? { background: '#d2ff62' } : {}">
-                <span>{{ game.keeperA }}</span>
-                -
-                <span>{{ game.strikerA }}</span>
-            </td>
-            <td v-bind:style="game.scoreA === 0 || game.scoreB === 0 ? { background: 'black', color: 'white' } : {}">
-                <span>{{ game.scoreA }}</span> - <span>{{ game.scoreB }}</span>
-            </td>
-            <td v-bind:style="game.scoreB > game.scoreA ? { background: '#d2ff62' } : {}">
-                <span>{{ game.keeperB }}</span>
-                -
-                <span>{{ game.strikerB }}</span>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div>
+    <h2>Game history ({{ rawdata.length }} games)</h2>
+    <table class="pure-table pure-table-bordered">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Team A (keeper - striker)</th>
+                <th>Score</th>
+                <th>Team B (keeper - striker)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(game, index) in rawdata" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+                <td>{{ game.date }}</td>
+                <td v-bind:style="game.scoreA > game.scoreB ? { background: '#d2ff62' } : {}">
+                    <span>{{ game.keeperA }}</span>
+                    -
+                    <span>{{ game.strikerA }}</span>
+                </td>
+                <td v-bind:style="game.scoreA === 0 || game.scoreB === 0 ? { background: 'black', color: 'white' } : {}">
+                    <span>{{ game.scoreA }}</span> - <span>{{ game.scoreB }}</span>
+                </td>
+                <td v-bind:style="game.scoreB > game.scoreA ? { background: '#d2ff62' } : {}">
+                    <span>{{ game.keeperB }}</span>
+                    -
+                    <span>{{ game.strikerB }}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 `
 };
 
@@ -176,28 +196,12 @@ const Overview = {
     },
     template: `
 <div>
-    <h1>
-        <span>{{ app.appName }}</span>
-        <span v-if="app.loading">(loading data ...)</span>
-    </h1>
-
-    <div v-if="app.loading" class="pure-button pure-button-disabled">Loading data ...</div>
-
-    <div v-if="!app.loading" v-on:click="refreshData" class="pure-button">Refresh data</div>
-
     <div v-if="!app.loading">
+        <team-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
 
-        <h2>Team Ranking (all time)</h2>
-        <team-ranking v-bind:stats="app.analysis.stats" />
-
-        <h2>Team stats ({{ app.analysis.stats.teamStats.allTeams.length }} teams)</h2>
         <team-stats v-bind:stats="app.analysis.stats" />
 
-        <h2>Player stats ({{ app.analysis.stats.playerStats.allPlayers.length }} players)</h2>
         <player-stats v-bind:stats="app.analysis.stats" />
-
-        <h2>Game history ({{ app.analysis.rawData.length }} games)</h2>
-        <game-overview v-bind:rawData="app.analysis.rawData" />
     </div>
 </div>
 `
@@ -209,7 +213,11 @@ const Overview = {
 
 const routes = [
     { path: '/', component: Overview },
-    { path: '/overview', component: Overview }
+    { path: '/overview', component: Overview },
+    { path: '/ranking', component: TeamRanking },
+    { path: '/team-stats', component: TeamStats },
+    { path: '/player-stats', component: PlayerStats },
+    { path: '/game-history', component: GameOverview },
 ];
 
 const router = new VueRouter({
@@ -226,22 +234,24 @@ const kickerStatsApp = new Vue({
     data: {
         appName: "Kicker Stats",
         loading: true,
+        refreshing: false,
         analysis: {}
     },
     created: function () {
         kickerStatsDataService.fetchData(true, function (data) {
             kickerStatsApp.loadData(data);
+            kickerStatsApp.loading = false;
         });
     },
     methods: {
         loadData: function (data) {
             kickerStatsApp.analysis = new KickerStatsAnalysis(data);
-            kickerStatsApp.loading = false;
         },
         refreshData: function () {
-            kickerStatsApp.loading = true;
+            kickerStatsApp.refreshing = true;
             kickerStatsDataService.fetchData(false, function (data) {
                 kickerStatsApp.loadData(data);
+                kickerStatsApp.refreshing = false;
             });
         }
     }

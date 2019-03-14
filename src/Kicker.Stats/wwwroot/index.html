@@ -31,6 +31,26 @@
         .note {
             color: #AAAAAA;
         }
+
+        .menu > a {
+            padding-left: 1em;
+            padding-right: 1em;
+            padding-top: .5em;
+            padding-bottom: .5em;
+            line-height: 2.5em;
+            color: black;
+            text-decoration: none;
+            transition: border-bottom .5s;
+            border-bottom: 5px solid transparent;
+        }
+
+        .menu > a:hover {
+            border-bottom: 5px solid #CCCCCC;
+        }
+
+        .menu > a.router-link-active {
+            border-bottom: 5px solid #CCCCCC;
+        }
     </style>
     <!-- Github ribbon -->
     <style>
@@ -66,9 +86,23 @@
 <body style="margin: 2em">
 
     <div id="app">
-        <!--<router-link to="/overview">Go to Overview</router-link>-->
+        <div class="menu">
+            <router-link to="/overview">home</router-link>
+            <router-link to="/ranking">ranking</router-link>
+            <router-link to="/team-stats">team stats</router-link>
+            <router-link to="/player-stats">player stats</router-link>
+            <router-link to="/game-history">game history</router-link>
+        </div>
 
-        <router-view @refresh-data="refreshData" :app="$data"></router-view>
+        <h1>
+            <span>{{ appName }}</span>
+        </h1>
+
+        <div v-if="refreshing" class="pure-button pure-button-disabled">Loading data ...</div>
+
+        <div v-if="!refreshing" v-on:click="refreshData" class="pure-button">Refresh data</div>
+
+        <router-view v-if="!loading" @refresh-data="refreshData" :app="$data" :stats="analysis.stats" :rawdata="analysis.rawData"></router-view>
     </div>
 
     <h2><a name="ratingInfo">Rating info</a></h2>
