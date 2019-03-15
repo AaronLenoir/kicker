@@ -15,7 +15,7 @@ const TeamRanking = {
     },
     template: `
 <div>
-    <h2>Team Ranking {{ top ? '(top ' + top + ')' : '(all)' }}</h2>
+    <h2>Team ranking {{ top ? '(top ' + top + ')' : '(all)' }}</h2>
     <table class="pure-table pure-table-bordered">
         <thead>
             <tr>
