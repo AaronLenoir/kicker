@@ -192,6 +192,22 @@
             });
         };
 
+        self.sortByWinRatio = function () {
+            self.allPlayers.sort(function (a, b) {
+                if (a.winRatio < b.winRatio) { return 1; }
+                if (a.winRatio > b.winRatio) { return -1; }
+                return 0;
+            });
+        };
+
+        self.sortByAverageTeamRating = function () {
+            self.allPlayers.sort(function (a, b) {
+                if (a.averageTeamRating < b.averageTeamRating) { return 1; }
+                if (a.averageTeamRating > b.averageTeamRating) { return -1; }
+                return 0;
+            });
+        };
+
         self.updatePlayer = function (name, position, ourScore, otherScore) {
             let playerStat = self.allPlayers.find(function (playerStat) { return playerStat.name === name; });
 
@@ -287,10 +303,11 @@
             teamStats.addGame(game);
         }
 
-        playerStats.sortByName();
         teamStats.sortByRatingDesc();
 
         playerStats.updateWithTeamStats(teamStats);
+
+        playerStats.sortByAverageTeamRating();
 
         return {
             playerStats: playerStats,

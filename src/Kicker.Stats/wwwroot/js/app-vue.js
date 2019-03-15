@@ -125,9 +125,7 @@ const PlayerStats = {
                 <span>{{ playerStat.highestRankingTeam.team.keeper }}</span>
                 -
                 <span>{{ playerStat.highestRankingTeam.team.striker }}</span>
-                <a v-bind:href="'#rank_' + (playerStat.highestRankingTeam.ranking)">
-                    (<span>{{ playerStat.highestRankingTeam.ranking }}</span>)
-                </a>
+                (<span>{{ playerStat.highestRankingTeam.ranking }}</span>)
             </td>
             <td>
                 <span>{{ playerStat.preferredPosition.position }}</span>
