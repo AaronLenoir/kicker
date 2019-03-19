@@ -98,12 +98,14 @@ const PlayerStats = {
             <th>Player</th>
             <th>Won / played</th>
             <th>Win ratio</th>
+            <th>Participation ratio</th>
             <th>Current streak</th>
             <th>Longest streak</th>
             <th>Average team rating</th>
             <th>Highest ranking team</th>
             <th>Preferred position</th>
             <th>Best position <a href="#positionInfo">(?)</a></th>
+            <th>Rating</th>
         </tr>
     </thead>
     <tbody>
@@ -116,6 +118,10 @@ const PlayerStats = {
             </td>
             <td>
                 <span>{{ (playerStat.winRatio * 100).toFixed(2) }}</span>
+                <span>%</span>
+            </td>
+            <td>
+                <span>{{ (playerStat.participationRatio * 100).toFixed(2) }}</span>
                 <span>%</span>
             </td>
             <td>{{ playerStat.currentStreak }}</td>
@@ -134,6 +140,9 @@ const PlayerStats = {
             <td>
                 <span>{{ playerStat.bestPosition.position }}</span>
                 (<span>{{ playerStat.bestPosition.averageTeamRating.toFixed() }}</span>)
+            </td>
+            <td>
+                <span>{{ (playerStat.rating * 10000).toFixed() }}</span>
             </td>
         </tr>
     </tbody>

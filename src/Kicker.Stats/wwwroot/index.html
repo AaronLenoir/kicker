@@ -36,6 +36,13 @@
             color: #AAAAAA;
         }
 
+        pre.note {
+            text-indent: 2em;
+            padding: 1em;
+            background: #F7F7F7;
+            color: #888888;
+        }
+
         .menu > a {
             padding-left: 1em;
             padding-right: 1em;
@@ -111,6 +118,7 @@
 
     <h2><a name="ratingInfo">Rating info</a></h2>
     <div>
+        <h2>Team rating</h2>
         <p class="note">
             The rating is calculated using the "<a href="https://en.wikipedia.org/wiki/Elo_rating_system">Elo Rating</a>" algorithm. In the chart it is rounded to an integer.
         </p>
@@ -128,6 +136,11 @@
         </p>
         <p class="note">
             More information: <a href="https://en.wikipedia.org/wiki/Elo_rating_system">Wikipedia: Elo rating system</a>
+        </p>
+        <h2>Player rating</h2>
+        <p class="note">
+            The player rating does <b>not</b> use the elo rating system. Instead it is using the following formula:
+            <pre class="note">Player rating = winRatio * participationRatio</pre>
         </p>
     </div>
 

@@ -131,6 +131,8 @@
         self.gamesPlayed = 0;
         self.gamesWon = 0;
         self.winRatio = 0;
+        self.participationRatio = 0;
+        self.rating = 0;
         self.longestStreak = 0;
         self.currentStreak = 0;
         self.averageTeamRating = 0;
@@ -184,6 +186,8 @@
 
         self.allPlayers = [];
 
+        self.totalGames = 0;
+
         self.sortByName = function () {
             self.allPlayers.sort(function (a, b) {
                 if (a.name < b.name) { return -1; }
@@ -208,6 +212,14 @@
             });
         };
 
+        self.sortByRating = function () {
+            self.allPlayers.sort(function (a, b) {
+                if (a.rating < b.rating) { return 1; }
+                if (a.rating > b.rating) { return -1; }
+                return 0;
+            });
+        };
+
         self.updatePlayer = function (name, position, ourScore, otherScore) {
             let playerStat = self.allPlayers.find(function (playerStat) { return playerStat.name === name; });
 
@@ -227,10 +239,16 @@
 
             playerStat.winRatio = playerStat.gamesWon / playerStat.gamesPlayed;
 
+            playerStat.participationRatio = playerStat.gamesPlayed / self.totalGames;
+
+            playerStat.rating = playerStat.winRatio * playerStat.participationRatio;
+
             playerStat.updatePreferredPosition(position);
         };
 
         self.addGame = function (game) {
+            self.totalGames++;
+
             self.updatePlayer(game.keeperA, "keeper", game.scoreA, game.scoreB);
             self.updatePlayer(game.strikerA, "striker", game.scoreA, game.scoreB);
             self.updatePlayer(game.keeperB, "keeper", game.scoreB, game.scoreA);
@@ -307,7 +325,7 @@
 
         playerStats.updateWithTeamStats(teamStats);
 
-        playerStats.sortByAverageTeamRating();
+        playerStats.sortByRating();
 
         return {
             playerStats: playerStats,
