@@ -253,16 +253,10 @@
 
             playerStat.winRatio = playerStat.gamesWon / playerStat.gamesPlayed;
 
-            playerStat.participationRatio = playerStat.gamesPlayed / self.totalGames;
-
-            playerStat.rating = playerStat.winRatio * playerStat.participationRatio;
-
             playerStat.updatePreferredPosition(position);
         };
 
         self.addGame = function (game) {
-            self.totalGames++;
-
             self.updatePlayer(game.keeperA, "keeper", game.scoreA, game.scoreB);
             self.updatePlayer(game.strikerA, "striker", game.scoreA, game.scoreB);
             self.updatePlayer(game.keeperB, "keeper", game.scoreB, game.scoreA);
@@ -321,6 +315,13 @@
                 }
             }
         };
+
+        self.updateParticipation = function (totalGames) {
+            for (let i = 0; i < self.allPlayers.length; i++) {
+                self.allPlayers[i].participationRatio = self.allPlayers[i].gamesPlayed / totalGames;
+                self.allPlayers[i].rating = self.allPlayers[i].participationRatio * self.allPlayers[i].winRatio;
+            }
+        };
     };
 
     self.getAllStats = function (rawData) {
@@ -338,6 +339,7 @@
         teamStats.sortByRatingDesc();
 
         playerStats.updateWithTeamStats(teamStats);
+        playerStats.updateParticipation(rawData.length);
 
         playerStats.sortByRating();
 
