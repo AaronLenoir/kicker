@@ -78,8 +78,8 @@ const TeamStats = {
                     <span>{{ (teamStat.winRatio * 100).toFixed(2) }}</span>
                     <span>%</span>
                 </td>
-                <td>{{ teamStat.currentStreak }}</td>
-                <td>{{ teamStat.longestStreak }}</td>
+                <td v-bind:style="teamStat.longestStreak > 1 && teamStat.longestStreak === teamStat.currentStreak ? { background: 'yellow' } : {}">{{ teamStat.currentStreak }}</td>
+                <td v-bind:style="teamStat.longestStreak > 1 && teamStat.longestStreak === teamStat.currentStreak ? { background: 'yellow' } : {}">{{ teamStat.longestStreak }}</td>
                 <td>{{ teamStat.eloRating.rating.toFixed() }}</td>
             </tr>
         </tbody>
@@ -166,8 +166,8 @@ const PlayerStats = {
                 <span>{{ (playerStat.participationRatio * 100).toFixed(2) }}</span>
                 <span>%</span>
             </td>
-            <td>{{ playerStat.currentStreak }}</td>
-            <td>{{ playerStat.longestStreak }}</td>
+            <td v-bind:style="playerStat.longestStreak > 1 && playerStat.longestStreak === playerStat.currentStreak ? { background: 'yellow' } : {}">{{ playerStat.currentStreak }}</td>
+            <td v-bind:style="playerStat.longestStreak > 1 && playerStat.longestStreak === playerStat.currentStreak ? { background: 'yellow' } : {}">{{ playerStat.longestStreak }}</td>
             <td>{{ playerStat.averageTeamRating.toFixed() }}</td>
             <td>
                 <span>{{ playerStat.highestRankingTeam.team.keeper }}</span>
