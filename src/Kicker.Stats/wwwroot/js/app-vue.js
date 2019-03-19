@@ -54,6 +54,7 @@ const TeamStats = {
     <table class="pure-table pure-table-bordered">
         <thead>
             <tr>
+                <th>Rank</th>
                 <th>Team (keeper - striker)</th>
                 <th>Won / played</th>
                 <th>Win ratio</th>
@@ -64,6 +65,9 @@ const TeamStats = {
         </thead>
         <tbody>
             <tr v-for="(teamStat, index) in stats.teamStats.allTeams" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+                <td>
+                    <span>{{ index + 1 }}</span>
+                </td>
                 <td>
                     <span>{{ teamStat.team.keeper }}</span>
                     -
@@ -139,6 +143,7 @@ const PlayerStats = {
     <table class="pure-table pure-table-bordered">
     <thead>
         <tr>
+            <th>Rank</th>
             <th>Player</th>
             <th>Won / played</th>
             <th>Win ratio</th>
@@ -154,6 +159,9 @@ const PlayerStats = {
     </thead>
     <tbody>
         <tr v-for="(playerStat, index) in stats.playerStats.allPlayers" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+            <td>
+                <span>{{ index + 1 }}</span>
+            </td>
             <td>{{ playerStat.name }}</td>
             <td>
                 <span>{{ playerStat.gamesWon }}</span>
