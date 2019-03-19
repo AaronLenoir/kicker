@@ -73,6 +73,8 @@
 
         self.allTeams = [];
 
+        self.longestStreak = 0;
+
         self.sortByRatingDesc = function () {
             self.allTeams.sort(function (a, b) {
                 if (a.eloRating.rating < b.eloRating.rating) { return 1; }
@@ -108,6 +110,13 @@
                 teamBStat.gamesWon++;
                 teamBStat.updateStreak();
                 teamAStat.endStreak();
+            }
+
+            if (teamAStat.longestStreak > self.longestStreak) {
+                self.longestStreak = teamAStat.longestStreak;
+            }
+            if (teamBStat.longestStreak > self.longestStreak) {
+                self.longestStreak = teamBStat.longestStreak;
             }
 
             teamAStat.winRatio = teamAStat.gamesWon / teamAStat.gamesPlayed;
@@ -187,6 +196,7 @@
         self.allPlayers = [];
 
         self.totalGames = 0;
+        self.longestStreak = 0;
 
         self.sortByName = function () {
             self.allPlayers.sort(function (a, b) {
@@ -235,6 +245,10 @@
                 playerStat.updateStreak();
             } else {
                 playerStat.endStreak();
+            }
+
+            if (playerStat.currentStreak > self.longestStreak) {
+                self.longestStreak = playerStat.currentStreak;
             }
 
             playerStat.winRatio = playerStat.gamesWon / playerStat.gamesPlayed;

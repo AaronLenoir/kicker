@@ -79,7 +79,9 @@ const TeamStats = {
                     <span>%</span>
                 </td>
                 <td v-bind:style="teamStat.longestStreak > 1 && teamStat.longestStreak === teamStat.currentStreak ? { background: 'yellow' } : {}">{{ teamStat.currentStreak }}</td>
-                <td v-bind:style="teamStat.longestStreak > 1 && teamStat.longestStreak === teamStat.currentStreak ? { background: 'yellow' } : {}">{{ teamStat.longestStreak }}</td>
+                <td v-bind:style="teamStat.longestStreak > 1 && teamStat.longestStreak === teamStat.currentStreak ? { background: 'yellow' } : {}">
+                    <span v-bind:style="teamStat.longestStreak === stats.teamStats.longestStreak ? { 'font-weight': 'bold' } : {}">{{ teamStat.longestStreak }}</span>
+                </td>
                 <td>{{ teamStat.eloRating.rating.toFixed() }}</td>
             </tr>
         </tbody>
@@ -167,7 +169,9 @@ const PlayerStats = {
                 <span>%</span>
             </td>
             <td v-bind:style="playerStat.longestStreak > 1 && playerStat.longestStreak === playerStat.currentStreak ? { background: 'yellow' } : {}">{{ playerStat.currentStreak }}</td>
-            <td v-bind:style="playerStat.longestStreak > 1 && playerStat.longestStreak === playerStat.currentStreak ? { background: 'yellow' } : {}">{{ playerStat.longestStreak }}</td>
+            <td v-bind:style="playerStat.longestStreak > 1 && playerStat.longestStreak === playerStat.currentStreak ? { background: 'yellow' } : {}">
+                <span v-bind:style="playerStat.longestStreak === stats.playerStats.longestStreak ? { 'font-weight': 'bold' } : {}">{{ playerStat.longestStreak }}</span>
+            </td>
             <td>{{ playerStat.averageTeamRating.toFixed() }}</td>
             <td>
                 <span>{{ playerStat.highestRankingTeam.team.keeper }}</span>
