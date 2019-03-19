@@ -40,7 +40,7 @@ const TeamRanking = {
             </tr>
         </tbody>
     </table>
-    <div style="margin-top: 1em">
+    <div v-if="top" style="margin-top: 1em">
         <router-link to="/team-ranking">Full ranking ...</router-link>
     </div>
 </div>`
