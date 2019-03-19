@@ -41,7 +41,7 @@ const TeamRanking = {
         </tbody>
     </table>
     <div style="margin-top: 1em">
-        <router-link to="/ranking">Full ranking ...</router-link>
+        <router-link to="/team-ranking">Full ranking ...</router-link>
     </div>
 </div>`
 };
@@ -84,6 +84,48 @@ const TeamStats = {
             </tr>
         </tbody>
     </table>
+</div>`
+};
+
+const PlayerRanking = {
+    props: ['stats'],
+    props: {
+        stats: {
+            type: Object,
+        },
+        top: {
+            type: Number,
+            default: undefined
+        }
+    },
+    template: `
+<div>
+    <h2>Player ranking {{ top ? '(top ' + top + ')' : '(all)' }}</h2>
+    <table class="pure-table pure-table-bordered">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>Rating <a href="#ratingInfo">(?)</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(playerStat, index) in stats.playerStats.allPlayers.slice(0, top)" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+                <td>
+                    <span>{{ index + 1 }}</span>
+                </td>
+                <td>
+                    <span>{{ playerStat.name }}</span>
+                </td>
+                <td>
+                    <span>{{ (playerStat.rating * 10000).toFixed() }}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div v-if="top" style="margin-top: 1em">
+        <router-link to="/player-ranking">Full ranking ...</router-link>
+    </div>
 </div>`
 };
 
@@ -199,16 +241,24 @@ const Overview = {
         'game-overview': GameOverview,
         'player-stats': PlayerStats,
         'team-stats': TeamStats,
-        'team-ranking': TeamRanking
+        'team-ranking': TeamRanking,
+        'player-ranking': PlayerRanking
     },
     template: `
 <div>
-    <div v-if="!app.loading">
-        <team-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
+    <div v-if="!app.loading" class="pure-g">
+        <div class="pure-u-1 pure-u-lg-1-3">
+            <team-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
+        </div>
+        <div class="pure-u-1 pure-u-lg-1-3">
+            <player-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
+        </div>
 
+        <!--
         <team-stats v-bind:stats="app.analysis.stats" />
 
         <player-stats v-bind:stats="app.analysis.stats" />
+        -->
     </div>
 </div>
 `
@@ -221,8 +271,9 @@ const Overview = {
 const routes = [
     { path: '/', component: Overview },
     { path: '/overview', component: Overview },
-    { path: '/ranking', component: TeamRanking },
+    { path: '/team-ranking', component: TeamRanking },
     { path: '/team-stats', component: TeamStats },
+    { path: '/player-ranking', component: PlayerRanking },
     { path: '/player-stats', component: PlayerStats },
     { path: '/game-history', component: GameOverview },
 ];

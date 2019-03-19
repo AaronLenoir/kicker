@@ -6,6 +6,7 @@
     <title>Kicker Stats v1.0.0</title>
 
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
 
     <style>
         body {
@@ -19,6 +20,12 @@
         }
 
         h2 {
+            letter-spacing: .1em;
+            font-weight: 100;
+            margin-top: 2em;
+        }
+
+        h3 {
             letter-spacing: .1em;
             font-weight: 100;
             margin-top: 2em;
@@ -55,13 +62,13 @@
             border-bottom: 5px solid transparent;
         }
 
-        .menu > a:hover {
-            border-bottom: 5px solid #CCCCCC;
-        }
+            .menu > a:hover {
+                border-bottom: 5px solid #CCCCCC;
+            }
 
-        .menu > a.router-link-active {
-            border-bottom: 5px solid #CCCCCC;
-        }
+            .menu > a.router-link-active {
+                border-bottom: 5px solid #CCCCCC;
+            }
     </style>
     <!-- Github ribbon -->
     <style>
@@ -99,8 +106,9 @@
     <div id="app">
         <div class="menu">
             <router-link to="/overview">home</router-link>
-            <router-link to="/ranking">ranking</router-link>
+            <router-link to="/ranking">team ranking</router-link>
             <router-link to="/team-stats">team stats</router-link>
+            <router-link to="/player-ranking">player ranking</router-link>
             <router-link to="/player-stats">player stats</router-link>
             <router-link to="/game-history">game history</router-link>
         </div>
@@ -118,7 +126,7 @@
 
     <h2><a name="ratingInfo">Rating info</a></h2>
     <div>
-        <h2>Team rating</h2>
+        <h3>Team rating</h3>
         <p class="note">
             The rating is calculated using the "<a href="https://en.wikipedia.org/wiki/Elo_rating_system">Elo Rating</a>" algorithm. In the chart it is rounded to an integer.
         </p>
@@ -137,10 +145,10 @@
         <p class="note">
             More information: <a href="https://en.wikipedia.org/wiki/Elo_rating_system">Wikipedia: Elo rating system</a>
         </p>
-        <h2>Player rating</h2>
+        <h3>Player rating</h3>
         <p class="note">
             The player rating does <b>not</b> use the elo rating system. Instead it is using the following formula:
-            <pre class="note">Player rating = winRatio * participationRatio</pre>
+            <pre class="note">Player rating = 10000 * (winRatio * participationRatio)</pre>
         </p>
     </div>
 
