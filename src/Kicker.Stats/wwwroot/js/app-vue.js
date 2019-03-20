@@ -106,7 +106,7 @@ const PlayerRanking = {
     },
     template: `
 <div>
-    <h2>Player ranking {{ top ? '(top ' + top + ')' : '(all)' }}</h2>
+    <h2>Player ranking {{ top ? '(top ' + top + ')' : '' }}</h2>
     <table class="pure-table pure-table-bordered">
         <thead>
             <tr>
@@ -116,7 +116,7 @@ const PlayerRanking = {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(playerStat, index) in stats.playerStats.allPlayers.slice(0, top)" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+            <tr v-for="(playerStat, index) in stats.playerStats.allPlayers.filter(function (playerStat) { return playerStat.gamesPlayed >= 10; }).slice(0, top)" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
                 <td>
                     <span>{{ index + 1 }}</span>
                 </td>
@@ -129,6 +129,7 @@ const PlayerRanking = {
             </tr>
         </tbody>
     </table>
+    <p v-if="!top">Only players with 10 games or more are included in the ranking.</p>
     <div v-if="top" style="margin-top: 1em">
         <router-link to="/player-ranking">Full ranking ...</router-link>
     </div>
@@ -143,7 +144,6 @@ const PlayerStats = {
     <table class="pure-table pure-table-bordered">
     <thead>
         <tr>
-            <th>Rank</th>
             <th>Player</th>
             <th>Won / played</th>
             <th>Win ratio</th>
@@ -159,9 +159,6 @@ const PlayerStats = {
     </thead>
     <tbody>
         <tr v-for="(playerStat, index) in stats.playerStats.allPlayers" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
-            <td>
-                <span>{{ index + 1 }}</span>
-            </td>
             <td>{{ playerStat.name }}</td>
             <td>
                 <span>{{ playerStat.gamesWon }}</span>
