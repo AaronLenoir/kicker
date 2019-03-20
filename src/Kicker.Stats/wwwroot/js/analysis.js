@@ -42,7 +42,9 @@
                 if (ourScore > 0) { ourResult += 0.25; }
             }
 
-            self.rating = self.rating + _kFactor * (ourResult - ourExpectedResult);
+            let ratingDelta = _kFactor * (ourResult - ourExpectedResult);
+            self.rating = self.rating + ratingDelta;
+            return ratingDelta;
         };
     };
 
@@ -68,8 +70,10 @@
         };
     };
 
-    let TeamStats = function () {
+    let TeamStats = function (playerStats) {
         let self = this;
+
+        self.playerStats = playerStats;
 
         self.allTeams = [];
 
@@ -124,8 +128,16 @@
 
             let teamARating = teamAStat.eloRating.rating;
             let teamBRating = teamBStat.eloRating.rating;
-            teamAStat.eloRating.updateRating(game.scoreA, game.scoreB, teamBRating);
-            teamBStat.eloRating.updateRating(game.scoreB, game.scoreA, teamARating);
+            let ratingDeltaTeamA = teamAStat.eloRating.updateRating(game.scoreA, game.scoreB, teamBRating);
+            let ratingDeltaTeamB = teamBStat.eloRating.updateRating(game.scoreB, game.scoreA, teamARating);
+
+            let playerStatsTeamA = [self.playerStats.getPlayerStat(teamAStat.team.keeper), self.playerStats.getPlayerStat(teamAStat.team.striker)];
+            let playerStatsTeamB = [self.playerStats.getPlayerStat(teamBStat.team.keeper), self.playerStats.getPlayerStat(teamBStat.team.striker)];
+
+            playerStatsTeamA[0].rating += ratingDeltaTeamA;
+            playerStatsTeamA[1].rating += ratingDeltaTeamA;
+            playerStatsTeamB[0].rating += ratingDeltaTeamB;
+            playerStatsTeamB[1].rating += ratingDeltaTeamB;
         };
     };
 
@@ -141,7 +153,7 @@
         self.gamesWon = 0;
         self.winRatio = 0;
         self.participationRatio = 0;
-        self.rating = 0;
+        self.rating = 400;
         self.longestStreak = 0;
         self.currentStreak = 0;
         self.averageTeamRating = 0;
@@ -319,14 +331,18 @@
         self.updateParticipation = function (totalGames) {
             for (let i = 0; i < self.allPlayers.length; i++) {
                 self.allPlayers[i].participationRatio = self.allPlayers[i].gamesPlayed / totalGames;
-                self.allPlayers[i].rating = self.allPlayers[i].participationRatio * self.allPlayers[i].winRatio;
             }
+        };
+
+        self.getPlayerStat = function (name) {
+            let playerStat = self.allPlayers.find(function (playerStat) { return playerStat.name === name; });
+            return playerStat;
         };
     };
 
     self.getAllStats = function (rawData) {
         let playerStats = new PlayerStats();
-        let teamStats = new TeamStats();
+        let teamStats = new TeamStats(playerStats);
 
         // rawData has most recent game first, so we go backwards
         for (let i = rawData.length - 1; i >= 0; i--) {
