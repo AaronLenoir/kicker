@@ -255,11 +255,11 @@ const Overview = {
     },
     template: `
 <div>
-    <div v-if="!app.loading" class="pure-g">
-        <div class="pure-u-1 pure-u-lg-1-3">
+    <div v-if="!app.loading" class="pure-g" style="margin-right: 1em">
+        <div class="pure-u-1 pure-u-lg-1-2">
             <team-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
         </div>
-        <div class="pure-u-1 pure-u-lg-1-3">
+        <div class="pure-u-1 pure-u-lg-1-2">
             <player-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
         </div>
 
