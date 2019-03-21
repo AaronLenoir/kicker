@@ -124,7 +124,7 @@ const PlayerRanking = {
                     <span>{{ playerStat.name }}</span>
                 </td>
                 <td>
-                    <span>{{ playerStat.rating.toFixed() }}</span>
+                    <span>{{ playerStat.eloRating.rating.toFixed() }}</span>
                 </td>
             </tr>
         </tbody>
@@ -193,7 +193,7 @@ const PlayerStats = {
                 (<span>{{ playerStat.bestPosition.averageTeamRating.toFixed() }}</span>)
             </td>
             <td>
-                <span>{{ playerStat.rating.toFixed() }}</span>
+                <span>{{ playerStat.eloRating.rating.toFixed() }}</span>
             </td>
         </tr>
     </tbody>

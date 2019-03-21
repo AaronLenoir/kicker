@@ -14,17 +14,18 @@
         };
     };
 
-    let TeamEloRating = function (team) {
+    let EloRating = function () {
         let self = this;
 
         let _factor = 400;
         let _kFactor = 32;
 
-        self.team = team;
         self.rating = _factor;
 
-        self.updateRating = function (ourScore, theirScore, theirRating) {
-            let qa = Math.pow(10, self.rating / _factor);
+        self.updateRating = function (ourScore, theirScore, theirRating, ourCustomRating) {
+            let ourRating = ourCustomRating || self.rating;
+
+            let qa = Math.pow(10, ourRating / _factor);
             let qb = Math.pow(10, theirRating / _factor);
 
             let ourExpectedResult = qa / (qa + qb);
@@ -42,9 +43,7 @@
                 if (ourScore > 0) { ourResult += 0.25; }
             }
 
-            let ratingDelta = _kFactor * (ourResult - ourExpectedResult);
-            self.rating = self.rating + ratingDelta;
-            return ratingDelta;
+            self.rating += _kFactor * (ourResult - ourExpectedResult);
         };
     };
 
@@ -57,7 +56,7 @@
         self.winRatio = 0;
         self.longestStreak = 0;
         self.currentStreak = 0;
-        self.eloRating = new TeamEloRating(team);
+        self.eloRating = new EloRating();
 
 
         self.updateStreak = function () {
@@ -70,10 +69,8 @@
         };
     };
 
-    let TeamStats = function (playerStats) {
+    let TeamStats = function () {
         let self = this;
-
-        self.playerStats = playerStats;
 
         self.allTeams = [];
 
@@ -128,16 +125,8 @@
 
             let teamARating = teamAStat.eloRating.rating;
             let teamBRating = teamBStat.eloRating.rating;
-            let ratingDeltaTeamA = teamAStat.eloRating.updateRating(game.scoreA, game.scoreB, teamBRating);
-            let ratingDeltaTeamB = teamBStat.eloRating.updateRating(game.scoreB, game.scoreA, teamARating);
-
-            let playerStatsTeamA = [self.playerStats.getPlayerStat(teamAStat.team.keeper), self.playerStats.getPlayerStat(teamAStat.team.striker)];
-            let playerStatsTeamB = [self.playerStats.getPlayerStat(teamBStat.team.keeper), self.playerStats.getPlayerStat(teamBStat.team.striker)];
-
-            playerStatsTeamA[0].rating += ratingDeltaTeamA;
-            playerStatsTeamA[1].rating += ratingDeltaTeamA;
-            playerStatsTeamB[0].rating += ratingDeltaTeamB;
-            playerStatsTeamB[1].rating += ratingDeltaTeamB;
+            teamAStat.eloRating.updateRating(game.scoreA, game.scoreB, teamBRating);
+            teamBStat.eloRating.updateRating(game.scoreB, game.scoreA, teamARating);
         };
     };
 
@@ -153,7 +142,7 @@
         self.gamesWon = 0;
         self.winRatio = 0;
         self.participationRatio = 0;
-        self.rating = 400;
+        self.eloRating = new EloRating();
         self.longestStreak = 0;
         self.currentStreak = 0;
         self.averageTeamRating = 0;
@@ -236,8 +225,8 @@
 
         self.sortByRating = function () {
             self.allPlayers.sort(function (a, b) {
-                if (a.rating < b.rating) { return 1; }
-                if (a.rating > b.rating) { return -1; }
+                if (a.eloRating.rating < b.eloRating.rating) { return 1; }
+                if (a.eloRating.rating > b.eloRating.rating) { return -1; }
                 return 0;
             });
         };
@@ -268,11 +257,33 @@
             playerStat.updatePreferredPosition(position);
         };
 
+        self.updatePlayerRatings = function (game) {
+            let teamAPlayers = {};
+            let teamBPlayers = {};
+
+            teamAPlayers.keeper = self.allPlayers.find(function (playerStat) { return playerStat.name === game.keeperA; });
+            teamAPlayers.striker = self.allPlayers.find(function (playerStat) { return playerStat.name === game.strikerA; });
+
+            teamBPlayers.keeper = self.allPlayers.find(function (playerStat) { return playerStat.name === game.keeperB; });
+            teamBPlayers.striker = self.allPlayers.find(function (playerStat) { return playerStat.name === game.strikerB; });
+
+            let teamAAverage = (teamAPlayers.keeper.eloRating.rating + teamAPlayers.striker.eloRating.rating) / 2;
+            let teamBAverage = (teamBPlayers.keeper.eloRating.rating + teamBPlayers.striker.eloRating.rating) / 2;
+
+            // ourScore, theirScore, theirRating, ourCustomRating
+            teamAPlayers.keeper.eloRating.updateRating(game.scoreA, game.scoreB, teamBAverage, teamAAverage);
+            teamAPlayers.striker.eloRating.updateRating(game.scoreA, game.scoreB, teamBAverage, teamAAverage);
+            teamBPlayers.keeper.eloRating.updateRating(game.scoreB, game.scoreA, teamAAverage, teamBAverage);
+            teamBPlayers.striker.eloRating.updateRating(game.scoreB, game.scoreA, teamAAverage, teamBAverage);
+        };
+
         self.addGame = function (game) {
             self.updatePlayer(game.keeperA, "keeper", game.scoreA, game.scoreB);
             self.updatePlayer(game.strikerA, "striker", game.scoreA, game.scoreB);
             self.updatePlayer(game.keeperB, "keeper", game.scoreB, game.scoreA);
             self.updatePlayer(game.strikerB, "striker", game.scoreB, game.scoreA);
+
+            self.updatePlayerRatings(game);
         };
 
         self.updateWithTeamStats = function (teamStats) {
