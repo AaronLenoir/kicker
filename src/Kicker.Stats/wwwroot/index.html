@@ -79,26 +79,35 @@
                 color: black;
                 text-decoration: none;
                 transition: border-bottom .5s;
-                border-bottom: 5px solid transparent;
+                border-bottom: 1px solid lightgray;
+            }
+            .menu a.icon {
+                padding-left: 0;
             }
 
                 .menu > a:hover {
-                    border-bottom: 5px solid black;
+                    border-bottom: 1px solid black;
                 }
 
                 .menu > a.router-link-active {
-                    border-bottom: 5px solid black;
+                    border-bottom: 1px solid black;
                 }
 
         @media screen and (max-width: 800px) {
-            .menu a:not(:first-child) {
+            .menu a {
                 display: none;
+            }
+            .menu a.icon {
+                display: block;
             }
 
             .menu a.icon {
-                float: right;
-                display: block;
+                float: left;
                 margin-right: 5em;
+                border: 0;
+            }
+            .menu > a:hover.icon {
+                border: 0;
             }
         }
 
@@ -108,9 +117,9 @@
             }
 
                 .menu.responsive .icon {
-                    position: absolute;
+                    /*position: absolute;
                     right: 0;
-                    top: 0;
+                    top: 0;*/
                 }
 
                 .menu.responsive a {
@@ -165,15 +174,15 @@
 
     <div id="app"  class="content">
         <div class="menu" id="menu">
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                <i class="fa fa-bars"></i>
+            </a>
             <router-link to="/overview">overview</router-link>
             <router-link to="/team-ranking">team ranking</router-link>
             <router-link to="/team-stats">team stats</router-link>
             <router-link to="/player-ranking">player ranking</router-link>
             <router-link to="/player-stats">player stats</router-link>
             <router-link to="/game-history">game history</router-link>
-            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-                <i class="fa fa-bars"></i>
-            </a>
         </div>
 
         <div>
