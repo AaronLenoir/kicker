@@ -20,7 +20,7 @@ const TeamRanking = {
         <thead>
             <tr>
                 <th>Rank</th>
-                <th>Keeper - Striker</th>
+                <th style="width: 200px">Keeper - Striker</th>
                 <th>Rating <a href="#ratingInfo">(?)</a></th>
             </tr>
         </thead>
@@ -111,7 +111,7 @@ const PlayerRanking = {
         <thead>
             <tr>
                 <th>Rank</th>
-                <th>Player</th>
+                <th style="width: 200px">Player</th>
                 <th>Rating <a href="#ratingInfo">(?)</a></th>
             </tr>
         </thead>
