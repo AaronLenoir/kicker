@@ -225,22 +225,17 @@ const GameOverview = {
 
     <table class="pure-table pure-table-bordered">
         <thead>
-            <tr v-if="showRating">
-                <th colspan="4"></th>
-                <th colspan="3">Ratings team A</th>
-                <th colspan="3">Ratings team B</th>
-            </tr>
             <tr>
                 <th>Date</th>
                 <th>Team A (keeper - striker)</th>
                 <th>Score</th>
                 <th>Team B (keeper - striker)</th>
-                <th v-if="showRating">Keeper</th>
-                <th v-if="showRating">Striker</th>
-                <th v-if="showRating">Team</th>
-                <th v-if="showRating">Keeper</th>
-                <th v-if="showRating">Striker</th>
-                <th v-if="showRating">Team</th>
+                <th v-if="showRating">Keeper team A</th>
+                <th v-if="showRating">Striker team A</th>
+                <th v-if="showRating">Team A</th>
+                <th v-if="showRating">Keeper team B</th>
+                <th v-if="showRating">Striker team B</th>
+                <th v-if="showRating">Team B</th>
             </tr>
         </thead>
         <tbody>
