@@ -260,25 +260,31 @@ const GameOverview = {
                     <span>{{ game.strikerB }}</span>
                 </td>
                 <td v-if="showRating">
+                    <span class="ratingDelta">{{ game.ratings.deltaTeamAKeeper >= 0 ? '+' : '' }}{{ game.ratings.deltaTeamAKeeper.toFixed() }}</span>
                     <span>{{ game.ratings.oldTeamAKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAKeeper.toFixed() }}</span>
                     (<span>{{ game.keeperA }}</span>)
                 </td>
                 <td v-if="showRating">
+                    <span class="ratingDelta">{{ game.ratings.deltaTeamAStriker >= 0 ? '+' : '' }}{{ game.ratings.deltaTeamAStriker.toFixed() }}</span>
                     <span>{{ game.ratings.oldTeamAStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAStriker.toFixed() }}</span>
                     (<span>{{ game.strikerA }}</span>)
                 </td>
                 <td v-if="showRating">
+                    <span class="ratingDelta">{{ game.ratings.deltaTeamA >= 0 ? '+' : '' }}{{ game.ratings.deltaTeamA.toFixed() }}</span>
                     <span>{{ game.ratings.oldTeamA.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamA.toFixed() }}</span>
                 </td>
                 <td v-if="showRating">
+                    <span class="ratingDelta">{{ game.ratings.deltaTeamBKeeper >= 0 ? '+' : '' }}{{ game.ratings.deltaTeamBKeeper.toFixed() }}</span>
                     <span>{{ game.ratings.oldTeamBKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBKeeper.toFixed() }}</span>
                     (<span>{{ game.keeperB }}</span>)
                 </td>
                 <td v-if="showRating">
+                    <span class="ratingDelta">{{ game.ratings.deltaTeamBStriker >= 0 ? '+' : '' }}{{ game.ratings.deltaTeamBStriker.toFixed() }}</span>
                     <span>{{ game.ratings.oldTeamBStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBStriker.toFixed() }}</span>
                     (<span>{{ game.strikerB }}</span>)
                 </td>
                 <td v-if="showRating">
+                    <span class="ratingDelta">{{ game.ratings.deltaTeamB >= 0 ? '+' : '' }}{{ game.ratings.deltaTeamB.toFixed() }}</span>
                     <span>{{ game.ratings.oldTeamB.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamB.toFixed() }}</span>
                 </td>
             </tr>
