@@ -127,6 +127,15 @@
             let teamBRating = teamBStat.eloRating.rating;
             teamAStat.eloRating.updateRating(game.scoreA, game.scoreB, teamBRating);
             teamBStat.eloRating.updateRating(game.scoreB, game.scoreA, teamARating);
+
+            game.ratings = game.ratings || {};
+            game.ratings.oldTeamA = teamARating;
+            game.ratings.oldTeamB = teamBRating;
+            game.ratings.newTeamA = teamAStat.eloRating.rating;
+            game.ratings.newTeamB = teamBStat.eloRating.rating;
+
+            game.ratings.deltaTeamA = game.ratings.newTeamA - game.ratings.oldTeamA;
+            game.ratings.deltaTeamB = game.ratings.newTeamB - game.ratings.oldTeamB;
         };
     };
 
@@ -270,11 +279,27 @@
             let teamAAverage = (teamAPlayers.keeper.eloRating.rating + teamAPlayers.striker.eloRating.rating) / 2;
             let teamBAverage = (teamBPlayers.keeper.eloRating.rating + teamBPlayers.striker.eloRating.rating) / 2;
 
-            // ourScore, theirScore, theirRating, ourCustomRating
+
+            game.ratings = game.ratings || {};
+            game.ratings.oldTeamAKeeper = teamAPlayers.keeper.eloRating.rating;
+            game.ratings.oldTeamAStriker = teamAPlayers.striker.eloRating.rating;
+            game.ratings.oldTeamBKeeper = teamBPlayers.keeper.eloRating.rating;
+            game.ratings.oldTeamBStriker = teamBPlayers.striker.eloRating.rating;
+
             teamAPlayers.keeper.eloRating.updateRating(game.scoreA, game.scoreB, teamBAverage, teamAAverage);
             teamAPlayers.striker.eloRating.updateRating(game.scoreA, game.scoreB, teamBAverage, teamAAverage);
             teamBPlayers.keeper.eloRating.updateRating(game.scoreB, game.scoreA, teamAAverage, teamBAverage);
             teamBPlayers.striker.eloRating.updateRating(game.scoreB, game.scoreA, teamAAverage, teamBAverage);
+
+            game.ratings.newTeamAKeeper = teamAPlayers.keeper.eloRating.rating;
+            game.ratings.newTeamBKeeper = teamBPlayers.keeper.eloRating.rating;
+            game.ratings.newTeamAStriker = teamAPlayers.striker.eloRating.rating;
+            game.ratings.newTeamBStriker = teamBPlayers.striker.eloRating.rating;
+
+            game.ratings.deltaTeamAKeeper = game.ratings.newTeamAKeeper - game.ratings.oldTeamAKeeper;
+            game.ratings.deltaTeamBKeeper = game.ratings.newTeamBKeeper - game.ratings.oldTeamBKeeper;
+            game.ratings.deltaTeamAStriker = game.ratings.newTeamAStriker - game.ratings.oldTeamAStriker;
+            game.ratings.deltaTeamBStriker = game.ratings.newTeamBStriker - game.ratings.oldTeamBStriker;
         };
 
         self.addGame = function (game) {

@@ -204,16 +204,43 @@ const PlayerStats = {
 
 const GameOverview = {
     props: ['rawdata'],
+    data: function () {
+        return {
+            showRating: true
+        };
+    },
+    methods: {
+        toggleRatings: function () {
+            this.showRating = !this.showRating;
+        }
+    },
     template: `
 <div>
     <h2>Game history ({{ rawdata.length }} games)</h2>
+    
+    <p>
+        <span v-if="!showRating" v-on:click="toggleRatings" class="button-small pure-button">Show ratings</span>
+        <span v-if="showRating" v-on:click="toggleRatings" class="button-small pure-button">Hide ratings</span>
+    </p>
+
     <table class="pure-table pure-table-bordered">
         <thead>
+            <tr v-if="showRating">
+                <th colspan="4"></th>
+                <th colspan="3">Ratings team A</th>
+                <th colspan="3">Ratings team B</th>
+            </tr>
             <tr>
                 <th>Date</th>
                 <th>Team A (keeper - striker)</th>
                 <th>Score</th>
                 <th>Team B (keeper - striker)</th>
+                <th v-if="showRating">Keeper</th>
+                <th v-if="showRating">Striker</th>
+                <th v-if="showRating">Team</th>
+                <th v-if="showRating">Keeper</th>
+                <th v-if="showRating">Striker</th>
+                <th v-if="showRating">Team</th>
             </tr>
         </thead>
         <tbody>
@@ -231,6 +258,28 @@ const GameOverview = {
                     <span>{{ game.keeperB }}</span>
                     -
                     <span>{{ game.strikerB }}</span>
+                </td>
+                <td v-if="showRating">
+                    <span>{{ game.ratings.oldTeamAKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAKeeper.toFixed() }}</span>
+                    (<span>{{ game.keeperA }}</span>)
+                </td>
+                <td v-if="showRating">
+                    <span>{{ game.ratings.oldTeamAStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAStriker.toFixed() }}</span>
+                    (<span>{{ game.strikerA }}</span>)
+                </td>
+                <td v-if="showRating">
+                    <span>{{ game.ratings.oldTeamA.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamA.toFixed() }}</span>
+                </td>
+                <td v-if="showRating">
+                    <span>{{ game.ratings.oldTeamBKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBKeeper.toFixed() }}</span>
+                    (<span>{{ game.keeperB }}</span>)
+                </td>
+                <td v-if="showRating">
+                    <span>{{ game.ratings.oldTeamBStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBStriker.toFixed() }}</span>
+                    (<span>{{ game.strikerB }}</span>)
+                </td>
+                <td v-if="showRating">
+                    <span>{{ game.ratings.oldTeamB.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamB.toFixed() }}</span>
                 </td>
             </tr>
         </tbody>
