@@ -51,6 +51,12 @@ const TeamStats = {
     template: `
 <div>
     <h2>Team stats ({{ stats.teamStats.allTeams.length }} teams)</h2>
+    <div style="margin-bottom: 2em">
+        <span style="height: 2em; padding: .5em; background-color: orange">Orange: a team breaking its own winning streak record</span>
+    </div>
+    <div style="margin-bottom: 2em">
+        <span style="height: 2em; padding: .5em; background-color: #d2ff62">Green: highest winning streak, ever</span>
+    </div>
     <table class="pure-table pure-table-bordered">
         <thead>
             <tr>
@@ -141,6 +147,12 @@ const PlayerStats = {
     template: `
 <div>
     <h2>Player stats ({{ stats.playerStats.allPlayers.length }} players)</h2>
+    <div style="margin-bottom: 2em">
+        <span style="height: 2em; padding: .5em; background-color: orange">Orange: a player breaking a personal winning streak record</span>
+    </div>
+    <div style="margin-bottom: 2em">
+        <span style="height: 2em; padding: .5em; background-color: #d2ff62">Green: highest winning streak, ever</span>
+    </div>
     <table class="pure-table pure-table-bordered">
     <thead>
         <tr>
