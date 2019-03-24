@@ -180,7 +180,7 @@
         }
     </style>
     <script>
-        function myFunction() {
+        function toggleMenu() {
             var x = document.getElementById("menu");
             if (x.className === "menu") {
                 x.className += " responsive";
@@ -194,15 +194,15 @@
 
     <div id="app"  class="content">
         <div class="menu" id="menu">
-            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
                 <i class="fa fa-bars"></i>
             </a>
-            <router-link to="/overview">overview</router-link>
-            <router-link to="/team-ranking">team ranking</router-link>
-            <router-link to="/team-stats">team stats</router-link>
-            <router-link to="/player-ranking">player ranking</router-link>
-            <router-link to="/player-stats">player stats</router-link>
-            <router-link to="/game-history">game history</router-link>
+            <router-link to="/overview" onclick="toggleMenu()">overview</router-link>
+            <router-link to="/team-ranking" onclick="toggleMenu()">team ranking</router-link>
+            <router-link to="/team-stats" onclick="toggleMenu()">team stats</router-link>
+            <router-link to="/player-ranking" onclick="toggleMenu()">player ranking</router-link>
+            <router-link to="/player-stats" onclick="toggleMenu()">player stats</router-link>
+            <router-link to="/game-history" onclick="toggleMenu()">game history</router-link>
         </div>
 
         <div>
