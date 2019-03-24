@@ -82,9 +82,9 @@ const TeamStats = {
                     <span>{{ (teamStat.winRatio * 100).toFixed(2) }}</span>
                     <span>%</span>
                 </td>
-                <td v-bind:style="teamStat.longestStreak > 1 && teamStat.longestStreak === teamStat.currentStreak ? { background: 'yellow' } : {}">{{ teamStat.currentStreak }}</td>
-                <td v-bind:style="teamStat.longestStreak > 1 && teamStat.longestStreak === teamStat.currentStreak ? { background: 'yellow' } : {}">
-                    <span v-bind:style="teamStat.longestStreak === stats.teamStats.longestStreak ? { 'font-weight': 'bold' } : {}">{{ teamStat.longestStreak }}</span>
+                <td v-bind:style="teamStat.longestStreak > 1 && teamStat.longestStreak === teamStat.currentStreak ? { background: 'orange' } : {}">{{ teamStat.currentStreak }}</td>
+                <td v-bind:style="teamStat.longestStreak === stats.teamStats.longestStreak ? { 'background': '#d2ff62' } : {}">
+                    <span>{{ teamStat.longestStreak }}</span>
                 </td>
                 <td>{{ teamStat.eloRating.rating.toFixed() }}</td>
             </tr>
@@ -173,9 +173,9 @@ const PlayerStats = {
                 <span>{{ (playerStat.participationRatio * 100).toFixed(2) }}</span>
                 <span>%</span>
             </td>
-            <td v-bind:style="playerStat.longestStreak > 1 && playerStat.longestStreak === playerStat.currentStreak ? { background: 'yellow' } : {}">{{ playerStat.currentStreak }}</td>
-            <td v-bind:style="playerStat.longestStreak > 1 && playerStat.longestStreak === playerStat.currentStreak ? { background: 'yellow' } : {}">
-                <span v-bind:style="playerStat.longestStreak === stats.playerStats.longestStreak ? { 'font-weight': 'bold' } : {}">{{ playerStat.longestStreak }}</span>
+            <td v-bind:style="playerStat.longestStreak > 1 && playerStat.longestStreak === playerStat.currentStreak ? { background: 'orange' } : {}">{{ playerStat.currentStreak }}</td>
+            <td v-bind:style="playerStat.longestStreak === stats.playerStats.longestStreak ? { 'background': '#d2ff62' } : {}">
+                <span>{{ playerStat.longestStreak }}</span>
             </td>
             <td>{{ playerStat.averageTeamRating.toFixed() }}</td>
             <td>
