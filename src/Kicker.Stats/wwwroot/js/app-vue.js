@@ -321,13 +321,13 @@ const Overview = {
 <div>
     <div v-if="!app.loading" class="pure-g" style="margin-right: 1em">
         <div class="pure-u-1 pure-u-lg-1-2">
-            <team-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
             <h3>
                 Leading team
             </h3>
-            <div>
+            <div class="leader">
                 {{ app.analysis.stats.globalStats.leadingTeam.team.getTeamId() }} ({{ app.analysis.stats.globalStats.leadingTeam.eloRating.rating.toFixed() }})
             </div>
+            <team-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
             <h3>
                 Longest streak: {{ app.analysis.stats.globalStats.longestTeamStreak.streak }}
             </h3>
@@ -336,13 +336,13 @@ const Overview = {
             </div>
         </div>
         <div class="pure-u-1 pure-u-lg-1-2">
-            <player-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
             <h3>
                 Leading player
             </h3>
-            <div>
+            <div class="leader">
                 {{ app.analysis.stats.globalStats.leadingPlayer.name }} ({{ app.analysis.stats.globalStats.leadingPlayer.eloRating.rating.toFixed() }})
             </div>
+            <player-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
             <h3>
                 Longest streak: {{ app.analysis.stats.globalStats.longestPlayerStreak.streak }}
             </h3>
