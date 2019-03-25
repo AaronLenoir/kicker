@@ -321,7 +321,6 @@ const Overview = {
 <div>
     <div v-if="!app.loading" class="pure-g" style="margin-right: 1em">
         <div class="pure-u-1 pure-u-lg-1-2">
-            <h2>Teams</h2>
             <team-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
             <h3>
                 Leading team
@@ -337,7 +336,6 @@ const Overview = {
             </div>
         </div>
         <div class="pure-u-1 pure-u-lg-1-2">
-            <h2>Players</h2>
             <player-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
             <h3>
                 Leading player
