@@ -198,7 +198,7 @@
                 self.preferredPosition.ratio = 0.5;
             }
         };
-    }
+    };
 
     let PlayerStats = function () {
         let self = this;
@@ -376,6 +376,46 @@
         };
     };
 
+    let GlobalStats = function (rawData, playerStats, teamStats) {
+        let self = this;
+
+        self.rawData = rawData;
+        self.playerStats = playerStats;
+        self.teamStats = teamStats;
+
+        self.leadingTeam = undefined;
+        self.leadingPlayer = undefined;
+        self.longestTeamStreak = {};
+        self.longestPlayerStreak = {};
+
+        self.loadStats = function () {
+            self.leadingTeam = teamStats.allTeams[0];
+            self.leadingPlayer = playerStats.allPlayers[0];
+
+            self.longestTeamStreak.streak = teamStats.allTeams.reduce(function (previous, current) {
+                if (current.longestStreak > previous.longestStreak) {
+                    return current;
+                } else {
+                    return previous;
+                }
+            }).longestStreak;
+
+            self.longestTeamStreak.teams = teamStats.allTeams.filter(function (team) { return team.longestStreak == self.longestTeamStreak.streak });
+
+            self.longestPlayerStreak.streak = playerStats.allPlayers.reduce(function (previous, current) {
+                if (current.longestStreak > previous.longestStreak) {
+                    return current;
+                } else {
+                    return previous;
+                }
+            }).longestStreak;
+
+            self.longestPlayerStreak.players = playerStats.allPlayers.filter(function (player) { return player.longestStreak == self.longestPlayerStreak.streak });
+        };
+
+        self.loadStats();
+    }
+
     self.getAllStats = function (rawData) {
         let playerStats = new PlayerStats();
         let teamStats = new TeamStats(playerStats);
@@ -395,9 +435,12 @@
 
         playerStats.sortByRating();
 
+        let globalStats = new GlobalStats(rawData, playerStats, teamStats);
+
         return {
             playerStats: playerStats,
-            teamStats: teamStats
+            teamStats: teamStats,
+            globalStats: globalStats
         };
     };
 
