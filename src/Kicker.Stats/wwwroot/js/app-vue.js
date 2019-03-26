@@ -329,10 +329,11 @@ const Overview = {
             </div>
             <team-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
             <h3>
-                Longest streak: {{ app.analysis.stats.globalStats.longestTeamStreak.streak }}
+                Longest team streak
             </h3>
-            <div v-for="teamStat in app.analysis.stats.globalStats.longestTeamStreak.teams">
-                 {{ teamStat.team.getTeamId() }}
+            <div>
+                <span class="streak">{{ app.analysis.stats.globalStats.longestTeamStreak.streak }}</span>
+                <span v-for="(teamStat, index) in app.analysis.stats.globalStats.longestTeamStreak.teams">{{ index > 0 ? ' ; ' : '' }}{{ teamStat.team.getTeamId() }}</span>
             </div>
         </div>
         <div class="pure-u-1 pure-u-lg-1-2">
@@ -344,10 +345,11 @@ const Overview = {
             </div>
             <player-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
             <h3>
-                Longest streak: {{ app.analysis.stats.globalStats.longestPlayerStreak.streak }}
+                Longest player streak
             </h3>
-            <div v-for="playerStat in app.analysis.stats.globalStats.longestPlayerStreak.players">
-                 {{ playerStat.name }}
+            <div>
+                <span class="streak">{{ app.analysis.stats.globalStats.longestPlayerStreak.streak }}</span>
+                <span v-for="(playerStat, index) in app.analysis.stats.globalStats.longestPlayerStreak.players">{{ index > 0 ? ', ' : '' }} {{ playerStat.name }}</span>
             </div>
         </div>
     </div>
