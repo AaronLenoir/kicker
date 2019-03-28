@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kicker stats</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
 
@@ -72,6 +71,16 @@
             font-size: xx-large;
             font-weight: bold;
             margin-right: .5em;
+        }
+
+        .hamburger {
+            display: block;
+            text-indent: -9999px;
+            width: 20px;
+            height: 20px;
+            background: url(images/hamburger.svg);
+            background-size: 20px 20px;
+            margin-top: 1em;
         }
 
         .menu {
@@ -208,7 +217,7 @@
     <div id="app" class="content">
         <div class="menu" id="menu">
             <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
-                <i class="fa fa-bars"></i>
+                <i class="hamburger"></i>
             </a>
             <router-link to="/overview" onclick="toggleMenu()">overview</router-link>
             <router-link to="/team-ranking" onclick="toggleMenu()">team ranking</router-link>
