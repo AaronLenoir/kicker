@@ -149,6 +149,10 @@
 
         self.gamesPlayed = 0;
         self.gamesWon = 0;
+
+        self.totalGoalsAllowed = 0;
+        self.averageGoalsAllowed = 0;
+
         self.winRatio = 0;
         self.participationRatio = 0;
         self.eloRating = new EloRating();
@@ -264,6 +268,11 @@
             playerStat.winRatio = playerStat.gamesWon / playerStat.gamesPlayed;
 
             playerStat.updatePreferredPosition(position);
+
+            if (position === "keeper") {
+                playerStat.totalGoalsAllowed += otherScore;
+                playerStat.averageGoalsAllowed = playerStat.totalGoalsAllowed / playerStat.timesPlayedAsKeeper;
+            }
         };
 
         self.updatePlayerRatings = function (game) {
@@ -278,7 +287,6 @@
 
             let teamAAverage = (teamAPlayers.keeper.eloRating.rating + teamAPlayers.striker.eloRating.rating) / 2;
             let teamBAverage = (teamBPlayers.keeper.eloRating.rating + teamBPlayers.striker.eloRating.rating) / 2;
-
 
             game.ratings = game.ratings || {};
             game.ratings.oldTeamAKeeper = teamAPlayers.keeper.eloRating.rating;
@@ -387,6 +395,7 @@
         self.leadingPlayer = undefined;
         self.longestTeamStreak = {};
         self.longestPlayerStreak = {};
+        self.bestKeeper = undefined;
 
         self.loadStats = function () {
             self.leadingTeam = teamStats.allTeams[0];
@@ -411,6 +420,19 @@
             }).longestStreak;
 
             self.longestPlayerStreak.players = playerStats.allPlayers.filter(function (player) { return player.longestStreak == self.longestPlayerStreak.streak });
+
+            let keepers = playerStats.allPlayers.filter(function (player) { return player.timesPlayedAsKeeper >= 10 });
+
+            if (keepers.length > 0) {
+                self.bestKeeper = keepers.
+                    reduce(function (previous, current) {
+                        if (current.averageGoalsAllowed < previous.averageGoalsAllowed) {
+                            return current;
+                        } else {
+                            return previous;
+                        }
+                    });
+            }
         };
 
         self.loadStats();

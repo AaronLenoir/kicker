@@ -164,6 +164,7 @@ const PlayerStats = {
             <th>Longest streak</th>
             <th>Average team rating</th>
             <th>Highest ranking team</th>
+            <th>Avg. goals allowed</th>
             <th>Preferred position</th>
             <th>Best position <a href="#positionInfo">(?)</a></th>
             <th>Rating</th>
@@ -195,6 +196,9 @@ const PlayerStats = {
                 -
                 <span>{{ playerStat.highestRankingTeam.team.striker }}</span>
                 (<span>{{ playerStat.highestRankingTeam.ranking }}</span>)
+            </td>
+            <td>
+                <span>{{ playerStat.averageGoalsAllowed.toFixed(2) }}</span>
             </td>
             <td>
                 <span>{{ playerStat.preferredPosition.position }}</span>
@@ -334,6 +338,7 @@ const Overview = {
             <div>
                 <span class="streak">{{ app.analysis.stats.globalStats.longestTeamStreak.streak }}</span>
                 <span v-for="(teamStat, index) in app.analysis.stats.globalStats.longestTeamStreak.teams">{{ index > 0 ? ' ; ' : '' }}{{ teamStat.team.getTeamId() }}</span>
+                <div class="small-note">Consecutive wins</div>
             </div>
         </div>
         <div class="pure-u-1 pure-u-lg-1-2">
@@ -350,6 +355,15 @@ const Overview = {
             <div>
                 <span class="streak">{{ app.analysis.stats.globalStats.longestPlayerStreak.streak }}</span>
                 <span v-for="(playerStat, index) in app.analysis.stats.globalStats.longestPlayerStreak.players">{{ index > 0 ? ', ' : '' }} {{ playerStat.name }}</span>
+                <div class="small-note">Consecutive wins</div>
+            </div>
+            <h3 v-if="app.analysis.stats.globalStats.bestKeeper">
+                Best keeper
+            </h3>
+            <div v-if="app.analysis.stats.globalStats.bestKeeper">
+                <span class="streak">{{ app.analysis.stats.globalStats.bestKeeper.averageGoalsAllowed.toFixed(2) }}</span>
+                <span >{{ app.analysis.stats.globalStats.bestKeeper.name }}</span>
+                <div class="small-note">Lowest average goals allowed (at least 10 games as keeper)</div>
             </div>
         </div>
     </div>
