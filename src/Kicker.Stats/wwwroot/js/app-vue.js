@@ -2,8 +2,64 @@
  * Components 
  */
 
-const TeamRanking = {
+const PlayerDetails = {
+    props: ['stats', 'playerStat'],
+    template: `
+<div>
+    <h3>Rating</h3>
+    <div>
+        <span class="stat-number">{{ playerStat.eloRating.rating.toFixed() }}</span>
+        <div class="small-note">{{ playerStat.eloRating.rating.toFixed(5) }}</div>
+    </div>
+
+    <h3>Win ratio</h3>
+    <div>
+        <span class="stat-number">{{ playerStat.winRatio.toFixed(2) }} %</span>
+        <div class="small-note">{{ playerStat.gamesWon }} of {{ playerStat.gamesPlayed }} games won</div>
+    </div>
+
+    <h3>Longest streak</h3>
+    <div>
+        <span class="stat-number">{{ playerStat.longestStreak }}</span>
+        <div class="small-note">Current streak: {{ playerStat.currentStreak }}</div>
+    </div>
+
+    <h3>Preferred position</h3>
+    <div>
+        <span class="stat-number">{{ playerStat.preferredPosition.position }}</span>
+        <div class="small-note">Played {{ (playerStat.preferredPosition.ratio * 100).toFixed(2) }} % of all matches as {{ playerStat.preferredPosition.position }}</div>
+    </div>
+
+    <h3>Goals allowed</h3>
+    <div>
+        <span class="stat-number">{{ playerStat.averageGoalsAllowed.toFixed(2) }} %</span>
+        <div class="small-note">Allowed {{ playerStat.totalGoalsAllowed }} in {{ playerStat.timesPlayedAsKeeper }} games as keeper</div>
+    </div>
+
+    {{ playerStat }}
+</div>
+`
+};
+
+const Player = {
     props: ['stats'],
+    data: function () {
+        return {
+            myName: name
+        }
+    },
+    components: {
+        'player-details': PlayerDetails
+    },
+    template: `
+<div>
+    <h2>Player: <b>{{ $route.params.name }}</b></h2>
+    <player-details v-bind:playerStat="stats.getPlayerStat($route.params.name)" />
+</div>
+`
+};
+
+const TeamRanking = {
     props: {
         stats: {
             type: Object,
@@ -100,7 +156,6 @@ const TeamStats = {
 };
 
 const PlayerRanking = {
-    props: ['stats'],
     props: {
         stats: {
             type: Object,
@@ -382,7 +437,8 @@ const routes = [
     { path: '/team-stats', component: TeamStats },
     { path: '/player-ranking', component: PlayerRanking },
     { path: '/player-stats', component: PlayerStats },
-    { path: '/game-history', component: GameOverview },
+    { path: '/player-stats/:name', component: Player },
+    { path: '/game-history', component: GameOverview }
 ];
 
 const router = new VueRouter({

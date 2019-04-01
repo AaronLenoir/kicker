@@ -409,7 +409,7 @@
                 }
             }).longestStreak;
 
-            self.longestTeamStreak.teams = teamStats.allTeams.filter(function (team) { return team.longestStreak == self.longestTeamStreak.streak });
+            self.longestTeamStreak.teams = teamStats.allTeams.filter(function (team) { return team.longestStreak === self.longestTeamStreak.streak });
 
             self.longestPlayerStreak.streak = playerStats.allPlayers.reduce(function (previous, current) {
                 if (current.longestStreak > previous.longestStreak) {
@@ -419,7 +419,7 @@
                 }
             }).longestStreak;
 
-            self.longestPlayerStreak.players = playerStats.allPlayers.filter(function (player) { return player.longestStreak == self.longestPlayerStreak.streak });
+            self.longestPlayerStreak.players = playerStats.allPlayers.filter(function (player) { return player.longestStreak === self.longestPlayerStreak.streak });
 
             let keepers = playerStats.allPlayers.filter(function (player) { return player.timesPlayedAsKeeper >= 10 });
 
@@ -462,7 +462,10 @@
         return {
             playerStats: playerStats,
             teamStats: teamStats,
-            globalStats: globalStats
+            globalStats: globalStats,
+            getPlayerStat: function (name) {
+                return playerStats.allPlayers.find(function (playerStat) { return playerStat.name === name; });
+            }
         };
     };
 
