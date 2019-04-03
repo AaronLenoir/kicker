@@ -65,13 +65,18 @@ namespace Kicker.Stats.Services
 
             foreach (var row in values)
             {
+                if (row.Count < 7) { continue; }
+
+                if (!int.TryParse(row[5].ToString(), out int scoreA)) { continue; }
+                if (!int.TryParse(row[6].ToString(), out int scoreB)) { continue; }
+
                 result.Add(new GameResult(row[0].ToString(),
                                           row[1].ToString(),
                                           row[2].ToString(),
                                           row[3].ToString(),
                                           row[4].ToString(),
-                                          int.Parse(row[5].ToString()),
-                                          int.Parse(row[6].ToString())));
+                                          scoreA,
+                                          scoreB));
             }
 
             return result;
