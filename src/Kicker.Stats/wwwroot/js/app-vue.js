@@ -122,6 +122,7 @@ const TeamStats = {
                 <th>Win ratio</th>
                 <th>Current streak</th>
                 <th>Longest streak</th>
+                <th>Highest rating ever</th>
                 <th>Rating <a href="#ratingInfo">(?)</a></th>
             </tr>
         </thead>
@@ -147,6 +148,9 @@ const TeamStats = {
                 <td v-bind:style="teamStat.longestStreak > 1 && teamStat.longestStreak === teamStat.currentStreak ? { background: 'orange' } : {}">{{ teamStat.currentStreak }}</td>
                 <td v-bind:style="teamStat.longestStreak === stats.teamStats.longestStreak ? { 'background': '#d2ff62' } : {}">
                     <span>{{ teamStat.longestStreak }}</span>
+                </td>
+                <td>
+                    {{ teamStat.highestRatingEver.toFixed() }}
                 </td>
                 <td>{{ teamStat.eloRating.rating.toFixed() }}</td>
             </tr>
@@ -222,6 +226,7 @@ const PlayerStats = {
             <th>Avg. goals allowed</th>
             <th>Preferred position</th>
             <th>Best position <a href="#positionInfo">(?)</a></th>
+            <th>Highest rating ever</th>
             <th>Rating</th>
         </tr>
     </thead>
@@ -262,6 +267,9 @@ const PlayerStats = {
             <td>
                 <span>{{ playerStat.bestPosition.position }}</span>
                 (<span>{{ playerStat.bestPosition.averageTeamRating.toFixed() }}</span>)
+            </td>
+            <td>
+                <span>{{ playerStat.highestRatingEver.toFixed() }}</span>
             </td>
             <td>
                 <span>{{ playerStat.eloRating.rating.toFixed() }}</span>

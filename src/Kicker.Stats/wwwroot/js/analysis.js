@@ -56,6 +56,9 @@
         self.winRatio = 0;
         self.longestStreak = 0;
         self.currentStreak = 0;
+
+        self.highestRatingEver = 0;
+
         self.eloRating = new EloRating();
 
 
@@ -66,6 +69,12 @@
 
         self.endStreak = function () {
             self.currentStreak = 0;
+        };
+
+        self.updateHighestRating = function () {
+            if (self.eloRating.rating > self.highestRatingEver) {
+                self.highestRatingEver = self.eloRating.rating;
+            }
         };
     };
 
@@ -128,6 +137,9 @@
             teamAStat.eloRating.updateRating(game.scoreA, game.scoreB, teamBRating);
             teamBStat.eloRating.updateRating(game.scoreB, game.scoreA, teamARating);
 
+            teamAStat.updateHighestRating();
+            teamBStat.updateHighestRating();
+
             game.ratings = game.ratings || {};
             game.ratings.oldTeamA = teamARating;
             game.ratings.oldTeamB = teamBRating;
@@ -166,6 +178,9 @@
             team: undefined,
             ranking: 0
         };
+
+        self.highestRatingEver = 0;
+
         self.preferredPosition = {
             position: "unknown",
             ratio: 0
@@ -200,6 +215,12 @@
             if (self.timesPlayedAsKeeper === self.timesPlayedAsStriker) {
                 self.preferredPosition.position = "both";
                 self.preferredPosition.ratio = 0.5;
+            }
+        };
+
+        self.updateHighestRating = function () {
+            if (self.eloRating.rating > self.highestRatingEver) {
+                self.highestRatingEver = self.eloRating.rating;
             }
         };
     };
@@ -298,6 +319,16 @@
             teamAPlayers.striker.eloRating.updateRating(game.scoreA, game.scoreB, teamBAverage, teamAAverage);
             teamBPlayers.keeper.eloRating.updateRating(game.scoreB, game.scoreA, teamAAverage, teamBAverage);
             teamBPlayers.striker.eloRating.updateRating(game.scoreB, game.scoreA, teamAAverage, teamBAverage);
+
+            teamAPlayers.keeper.updateHighestRating();
+            teamAPlayers.striker.updateHighestRating();
+            teamBPlayers.keeper.updateHighestRating();
+            teamBPlayers.striker.updateHighestRating();
+
+            if (teamAPlayers.keeper.eloRating.rating > teamAPlayers.keeper.highestRatingEver) { teamAPlayers.keeper.highestRatingEver = teamAPlayers.keeper.eloRating.rating; }
+            if (teamAPlayers.striker.eloRating.rating > teamAPlayers.striker.highestRatingEver) { teamAPlayers.striker.highestRatingEver = teamAPlayers.striker.eloRating.rating; }
+            if (teamBPlayers.keeper.eloRating.rating > teamBPlayers.keeper.highestRatingEver) { teamBPlayers.keeper.highestRatingEver = eloRating.rating; }
+            if (teamBPlayers.striker.eloRating.rating > teamBPlayers.striker.highestRatingEver) { teamBPlayers.striker.highestRatingEver = eloRating.rating; }
 
             game.ratings.newTeamAKeeper = teamAPlayers.keeper.eloRating.rating;
             game.ratings.newTeamBKeeper = teamBPlayers.keeper.eloRating.rating;
