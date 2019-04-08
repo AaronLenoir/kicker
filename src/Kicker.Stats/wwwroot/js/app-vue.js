@@ -6,15 +6,29 @@ const PlayerDetails = {
     props: ['stats', 'playerStat'],
     template: `
 <div>
+    <h3>Ranking</h3>
+    <div>
+        <span class="stat-number">
+            {{ stats.playerStats.getPlayerRanking(playerStat.name) > 0 ? stats.playerStats.getPlayerRanking(playerStat.name) : 'N/A' }}
+        </span>
+        <div class="small-note">Only players with at least 10 games have a ranking</div>
+    </div>
+
     <h3>Rating</h3>
     <div>
         <span class="stat-number">{{ playerStat.eloRating.rating.toFixed() }}</span>
         <div class="small-note">{{ playerStat.eloRating.rating.toFixed(5) }}</div>
     </div>
 
+    <h3>Highest rating ever</h3>
+    <div>
+        <span class="stat-number">{{ playerStat.highestRatingEver.toFixed() }}</span>
+        <div class="small-note">{{ playerStat.highestRatingEver.toFixed(5) }}</div>
+    </div>
+
     <h3>Win ratio</h3>
     <div>
-        <span class="stat-number">{{ playerStat.winRatio.toFixed(2) }} %</span>
+        <span class="stat-number">{{ (playerStat.winRatio * 100).toFixed(2) }} %</span>
         <div class="small-note">{{ playerStat.gamesWon }} of {{ playerStat.gamesPlayed }} games won</div>
     </div>
 
@@ -54,7 +68,7 @@ const Player = {
     template: `
 <div>
     <h2>Player: <b>{{ $route.params.name }}</b></h2>
-    <player-details v-bind:playerStat="stats.getPlayerStat($route.params.name)" />
+    <player-details v-bind:stats="stats" v-bind:playerStat="stats.getPlayerStat($route.params.name)" />
 </div>
 `
 };

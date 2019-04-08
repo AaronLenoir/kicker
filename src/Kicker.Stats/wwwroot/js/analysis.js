@@ -176,6 +176,7 @@
         self.winRatio = 0;
         self.participationRatio = 0;
         self.eloRating = new EloRating();
+        self.ranking = 0;
         self.longestStreak = 0;
         self.currentStreak = 0;
         self.averageTeamRating = 0;
@@ -421,6 +422,18 @@
             let playerStat = self.allPlayers.find(function (playerStat) { return playerStat.name === name; });
             return playerStat;
         };
+
+        self.getPlayerRanking = function (name) {
+            let frequentPlayers = self.allPlayers.filter(function (playerStat) { return playerStat.gamesPlayed >= 10; });
+
+            console.log(frequentPlayers);
+            
+            let index = frequentPlayers.findIndex(function (stat) {
+                return stat.name === name;
+            });
+
+            return index + 1;
+        };
     };
 
     let GlobalStats = function (rawData, playerStats, teamStats) {
@@ -504,10 +517,10 @@
 
         teamStats.sortByRatingDesc();
 
+        playerStats.sortByRating();
+
         playerStats.updateWithTeamStats(teamStats);
         playerStats.updateParticipation(rawData.length);
-
-        playerStats.sortByRating();
 
         let globalStats = new GlobalStats(rawData, playerStats, teamStats);
 
