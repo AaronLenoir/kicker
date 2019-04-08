@@ -53,6 +53,9 @@
         self.team = team;
         self.gamesWon = 0;
         self.gamesPlayed = 0;
+        //selfplayerStat.averageGoalsAllowed = playerStat.totalGoalsAllowed / playerStat.timesPlayedAsKeeper;
+        self.averageGoalsAllowed = 0;
+        self.totalGoalsAllowed = 0;
         self.winRatio = 0;
         self.longestStreak = 0;
         self.currentStreak = 0;
@@ -111,6 +114,11 @@
 
             teamAStat.gamesPlayed++;
             teamBStat.gamesPlayed++;
+
+            teamAStat.totalGoalsAllowed += game.scoreB;
+            teamAStat.averageGoalsAllowed = teamAStat.totalGoalsAllowed / teamAStat.gamesPlayed;
+            teamBStat.totalGoalsAllowed += game.scoreA;
+            teamBStat.averageGoalsAllowed = teamBStat.totalGoalsAllowed / teamBStat.gamesPlayed;
 
             if (game.scoreA === 10) {
                 teamAStat.gamesWon++;
@@ -452,10 +460,23 @@
 
             self.longestPlayerStreak.players = playerStats.allPlayers.filter(function (player) { return player.longestStreak === self.longestPlayerStreak.streak });
 
-            let keepers = playerStats.allPlayers.filter(function (player) { return player.timesPlayedAsKeeper >= 10 });
+            let keepers = playerStats.allPlayers.filter(function (player) { return player.timesPlayedAsKeeper >= 10; });
 
             if (keepers.length > 0) {
                 self.bestKeeper = keepers.
+                    reduce(function (previous, current) {
+                        if (current.averageGoalsAllowed < previous.averageGoalsAllowed) {
+                            return current;
+                        } else {
+                            return previous;
+                        }
+                    });
+            }
+
+            let frequentPlayerTeams = teamStats.allTeams.filter(function (team) { return team.gamesPlayed >= 10; });
+
+            if (frequentPlayerTeams.length > 0) {
+                self.bestDefense = frequentPlayerTeams.
                     reduce(function (previous, current) {
                         if (current.averageGoalsAllowed < previous.averageGoalsAllowed) {
                             return current;

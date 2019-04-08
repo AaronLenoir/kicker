@@ -122,6 +122,7 @@ const TeamStats = {
                 <th>Win ratio</th>
                 <th>Current streak</th>
                 <th>Longest streak</th>
+                <th>Avg. goals allowed</th>
                 <th>Highest rating ever</th>
                 <th>Rating <a href="#ratingInfo">(?)</a></th>
             </tr>
@@ -148,6 +149,9 @@ const TeamStats = {
                 <td v-bind:style="teamStat.longestStreak > 1 && teamStat.longestStreak === teamStat.currentStreak ? { background: 'orange' } : {}">{{ teamStat.currentStreak }}</td>
                 <td v-bind:style="teamStat.longestStreak === stats.teamStats.longestStreak ? { 'background': '#d2ff62' } : {}">
                     <span>{{ teamStat.longestStreak }}</span>
+                </td>
+                <td>
+                    {{ teamStat.averageGoalsAllowed.toFixed(2) }}
                 </td>
                 <td>
                     {{ teamStat.highestRatingEver.toFixed() }}
@@ -403,6 +407,14 @@ const Overview = {
                 <span v-for="(teamStat, index) in app.analysis.stats.globalStats.longestTeamStreak.teams">{{ index > 0 ? ' ; ' : '' }}{{ teamStat.team.getTeamId() }}</span>
                 <div class="small-note">Consecutive wins</div>
             </div>
+            <h3 v-if="app.analysis.stats.globalStats.bestDefense">
+                Best defense
+            </h3>
+            <div v-if="app.analysis.stats.globalStats.bestDefense">
+                <span class="streak">{{ app.analysis.stats.globalStats.bestDefense.averageGoalsAllowed.toFixed(2) }}</span>
+                <span >{{ app.analysis.stats.globalStats.bestDefense.team.getTeamId() }}</span>
+                <div class="small-note">Average goals allowed (at least 5 games)</div>
+            </div>
         </div>
         <div class="pure-u-1 pure-u-lg-1-2">
             <h3>
@@ -426,7 +438,7 @@ const Overview = {
             <div v-if="app.analysis.stats.globalStats.bestKeeper">
                 <span class="streak">{{ app.analysis.stats.globalStats.bestKeeper.averageGoalsAllowed.toFixed(2) }}</span>
                 <span >{{ app.analysis.stats.globalStats.bestKeeper.name }}</span>
-                <div class="small-note">Lowest average goals allowed (at least 10 games as keeper)</div>
+                <div class="small-note">Average goals allowed (at least 10 games as keeper)</div>
             </div>
         </div>
     </div>
