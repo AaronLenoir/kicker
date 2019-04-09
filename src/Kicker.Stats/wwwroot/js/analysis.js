@@ -1,6 +1,4 @@
-﻿import { EloRating } from './eloRating.js';
-
-let KickerStatsAnalysis = (function () {
+﻿let KickerStatsAnalysis = (function () {
 
     /*
      * Team Stats
@@ -13,6 +11,39 @@ let KickerStatsAnalysis = (function () {
         self.striker = striker;
         self.getTeamId = function () {
             return keeper + " - " + striker;
+        };
+    };
+
+    let EloRating = function () {
+        let self = this;
+
+        let _factor = 400;
+        let _kFactor = 32;
+
+        self.rating = _factor;
+
+        self.updateRating = function (ourScore, theirScore, theirRating, ourCustomRating) {
+            let ourRating = ourCustomRating || self.rating;
+
+            let qa = Math.pow(10, ourRating / _factor);
+            let qb = Math.pow(10, theirRating / _factor);
+
+            let ourExpectedResult = qa / (qa + qb);
+
+            let ourResult = 0.0;
+
+            if (ourScore > theirScore) {
+                // We won
+                ourResult += 0.75;
+                if (theirScore === 0) { ourResult += 0.25; }
+            }
+
+            if (theirScore > ourScore) {
+                // We lost
+                if (ourScore > 0) { ourResult += 0.25; }
+            }
+
+            self.rating += _kFactor * (ourResult - ourExpectedResult);
         };
     };
 
@@ -31,6 +62,7 @@ let KickerStatsAnalysis = (function () {
         self.highestRatingEver = 0;
 
         self.eloRating = new EloRating();
+
 
         self.updateStreak = function () {
             self.currentStreak++;
@@ -210,6 +242,11 @@ let KickerStatsAnalysis = (function () {
         self.longestStreak = 0;
 
         self.sortByName = function () {
+            //self.allPlayers.sort(function (a, b) {
+            //    if (a.name < b.name) { return -1; }
+            //    if (a.name > b.name) { return 1; }
+            //    return 0;
+            //});
             self.allPlayers.sort(function (a, b) {
                 if (a.name < b.name) { return -1; }
                 if (a.name > b.name) { return 1; }
@@ -498,5 +535,3 @@ let KickerStatsAnalysis = (function () {
         self.stats = getAllStats(self.rawData);
     };
 }());
-
-export { KickerStatsAnalysis };

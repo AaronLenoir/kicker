@@ -1,6 +1,4 @@
-﻿import { KickerStatsAnalysis } from './analysis.js';
-
-/*
+﻿/*
  * Components 
  */
 
