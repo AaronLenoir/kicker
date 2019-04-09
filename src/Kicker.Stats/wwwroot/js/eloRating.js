@@ -1,7 +1,8 @@
 ﻿class EloRating {
+    _factor = 400;
+    _kFactor = 32;
+
     constructor() {
-        this._factor = 400;
-        this._kFactor = 32;
         this.rating = this._factor;
     }
 
