@@ -1,4 +1,4 @@
-﻿let KickerStatsAnalysis = (function (data) {
+﻿let KickerStatsAnalysis = (function () {
 
     /*
      * Team Stats
@@ -53,7 +53,6 @@
         self.team = team;
         self.gamesWon = 0;
         self.gamesPlayed = 0;
-        //selfplayerStat.averageGoalsAllowed = playerStat.totalGoalsAllowed / playerStat.timesPlayedAsKeeper;
         self.averageGoalsAllowed = 0;
         self.totalGoalsAllowed = 0;
         self.winRatio = 0;
@@ -100,8 +99,8 @@
             let teamA = new Team(game.keeperA, game.strikerA);
             let teamB = new Team(game.keeperB, game.strikerB);
 
-            let teamAStat = self.allTeams.find(function (teamStat) { return teamStat.team.getTeamId() === teamA.getTeamId(); });
-            let teamBStat = self.allTeams.find(function (teamStat) { return teamStat.team.getTeamId() === teamB.getTeamId(); });
+            let teamAStat = self.allTeams.find((teamStat) => teamStat.team.getTeamId() === teamA.getTeamId());
+            let teamBStat = self.allTeams.find((teamStat) => teamStat.team.getTeamId() === teamB.getTeamId());
 
             if (!teamAStat) {
                 teamAStat = new TeamStat(teamA);
@@ -243,6 +242,11 @@
         self.longestStreak = 0;
 
         self.sortByName = function () {
+            //self.allPlayers.sort(function (a, b) {
+            //    if (a.name < b.name) { return -1; }
+            //    if (a.name > b.name) { return 1; }
+            //    return 0;
+            //});
             self.allPlayers.sort(function (a, b) {
                 if (a.name < b.name) { return -1; }
                 if (a.name > b.name) { return 1; }
@@ -275,7 +279,7 @@
         };
 
         self.updatePlayer = function (name, position, ourScore, otherScore) {
-            let playerStat = self.allPlayers.find(function (playerStat) { return playerStat.name === name; });
+            let playerStat = self.allPlayers.find((playerStat) => playerStat.name === name);
 
             if (!playerStat) {
                 playerStat = new PlayerStat(name);
@@ -309,11 +313,11 @@
             let teamAPlayers = {};
             let teamBPlayers = {};
 
-            teamAPlayers.keeper = self.allPlayers.find(function (playerStat) { return playerStat.name === game.keeperA; });
-            teamAPlayers.striker = self.allPlayers.find(function (playerStat) { return playerStat.name === game.strikerA; });
+            teamAPlayers.keeper = self.allPlayers.find((playerStat) => playerStat.name === game.keeperA);
+            teamAPlayers.striker = self.allPlayers.find((playerStat) => playerStat.name === game.strikerA);
 
-            teamBPlayers.keeper = self.allPlayers.find(function (playerStat) { return playerStat.name === game.keeperB; });
-            teamBPlayers.striker = self.allPlayers.find(function (playerStat) { return playerStat.name === game.strikerB; });
+            teamBPlayers.keeper = self.allPlayers.find((playerStat) => playerStat.name === game.keeperB);
+            teamBPlayers.striker = self.allPlayers.find((playerStat) => playerStat.name === game.strikerB);
 
             let teamAAverage = (teamAPlayers.keeper.eloRating.rating + teamAPlayers.striker.eloRating.rating) / 2;
             let teamBAverage = (teamBPlayers.keeper.eloRating.rating + teamBPlayers.striker.eloRating.rating) / 2;
@@ -361,9 +365,7 @@
 
         self.updateWithTeamStats = function (teamStats) {
 
-            for (let i = 0; i < self.allPlayers.length; i++) {
-                let player = self.allPlayers[i];
-
+            for (let player of self.allPlayers) {
                 let totalRating = 0;
                 let totalTeams = 0;
 
@@ -419,20 +421,14 @@
         };
 
         self.getPlayerStat = function (name) {
-            let playerStat = self.allPlayers.find(function (playerStat) { return playerStat.name === name; });
+            let playerStat = self.allPlayers.find((playerStat) => playerStat.name === name);
             return playerStat;
         };
 
         self.getPlayerRanking = function (name) {
-            let frequentPlayers = self.allPlayers.filter(function (playerStat) { return playerStat.gamesPlayed >= 10; });
+            let frequentPlayers = self.allPlayers.filter((playerStat) => playerStat.gamesPlayed >= 10);
 
-            console.log(frequentPlayers);
-            
-            let index = frequentPlayers.findIndex(function (stat) {
-                return stat.name === name;
-            });
-
-            return index + 1;
+            return frequentPlayers.findIndex((stat) => stat.name === name) + 1;
         };
     };
 
@@ -461,7 +457,7 @@
                 }
             }).longestStreak;
 
-            self.longestTeamStreak.teams = teamStats.allTeams.filter(function (team) { return team.longestStreak === self.longestTeamStreak.streak });
+            self.longestTeamStreak.teams = teamStats.allTeams.filter((team) => team.longestStreak === self.longestTeamStreak.streak);
 
             self.longestPlayerStreak.streak = playerStats.allPlayers.reduce(function (previous, current) {
                 if (current.longestStreak > previous.longestStreak) {
@@ -471,9 +467,9 @@
                 }
             }).longestStreak;
 
-            self.longestPlayerStreak.players = playerStats.allPlayers.filter(function (player) { return player.longestStreak === self.longestPlayerStreak.streak });
+            self.longestPlayerStreak.players = playerStats.allPlayers.filter((player) => player.longestStreak === self.longestPlayerStreak.streak);
 
-            let keepers = playerStats.allPlayers.filter(function (player) { return player.timesPlayedAsKeeper >= 10; });
+            let keepers = playerStats.allPlayers.filter((player) => player.timesPlayedAsKeeper >= 10);
 
             if (keepers.length > 0) {
                 self.bestKeeper = keepers.
@@ -486,7 +482,7 @@
                     });
             }
 
-            let frequentPlayerTeams = teamStats.allTeams.filter(function (team) { return team.gamesPlayed >= 5; });
+            let frequentPlayerTeams = teamStats.allTeams.filter((team) => team.gamesPlayed >= 5);
 
             if (frequentPlayerTeams.length > 0) {
                 self.bestDefense = frequentPlayerTeams.
@@ -501,16 +497,14 @@
         };
 
         self.loadStats();
-    }
+    };
 
     self.getAllStats = function (rawData) {
         let playerStats = new PlayerStats();
         let teamStats = new TeamStats(playerStats);
 
         // rawData has most recent game first, so we go backwards
-        for (let i = rawData.length - 1; i >= 0; i--) {
-            let game = rawData[i];
-
+        for (let game of rawData) {
             playerStats.addGame(game);
             teamStats.addGame(game);
         }
@@ -529,7 +523,7 @@
             teamStats: teamStats,
             globalStats: globalStats,
             getPlayerStat: function (name) {
-                return playerStats.allPlayers.find(function (playerStat) { return playerStat.name === name; });
+                return playerStats.allPlayers.find((playerStat) => playerStat.name === name);
             }
         };
     };
