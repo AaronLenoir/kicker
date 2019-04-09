@@ -486,7 +486,7 @@
                     });
             }
 
-            let frequentPlayerTeams = teamStats.allTeams.filter(function (team) { return team.gamesPlayed >= 10; });
+            let frequentPlayerTeams = teamStats.allTeams.filter(function (team) { return team.gamesPlayed >= 5; });
 
             if (frequentPlayerTeams.length > 0) {
                 self.bestDefense = frequentPlayerTeams.
