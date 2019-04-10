@@ -152,281 +152,272 @@ class TeamStats {
     }
 }
 
-let KickerStatsAnalysis = (function () {
+/*
+ * Player Stats
+ */
 
-    /*
-     * Player Stats
-     */
-    let PlayerStat = function (name) {
-        let self = this;
-
-        self.name = name;
-
-        self.gamesPlayed = 0;
-        self.gamesWon = 0;
-
-        self.totalGoalsAllowed = 0;
-        self.averageGoalsAllowed = 0;
-
-        self.winRatio = 0;
-        self.participationRatio = 0;
-        self.eloRating = new EloRating();
-        self.ranking = 0;
-        self.longestStreak = 0;
-        self.currentStreak = 0;
-        self.averageTeamRating = 0;
-        self.averageKeeperTeamRating = 0;
-        self.averageStrikerTeamRating = 0;
-        self.highestTeamRank = 0;
-        self.highestRankingTeam = {
+class PlayerStat {
+    constructor(name) {
+        this.name = name;
+        this.gamesPlayed = 0;
+        this.gamesWon = 0;
+        this.totalGoalsAllowed = 0;
+        this.averageGoalsAllowed = 0;
+        this.winRatio = 0;
+        this.participationRatio = 0;
+        this.eloRating = new EloRating();
+        this.ranking = 0;
+        this.longestStreak = 0;
+        this.currentStreak = 0;
+        this.averageTeamRating = 0;
+        this.averageKeeperTeamRating = 0;
+        this.averageStrikerTeamRating = 0;
+        this.highestTeamRank = 0;
+        this.highestRankingTeam = {
             team: undefined,
             ranking: 0
         };
 
-        self.highestRatingEver = 0;
+        this.highestRatingEver = 0;
 
-        self.preferredPosition = {
+        this.preferredPosition = {
             position: "unknown",
             ratio: 0
         };
-        self.bestPosition = {
+        this.bestPosition = {
             position: "unknown",
             averageTeamRating: 0
         };
-        self.timesPlayedAsKeeper = 0;
-        self.timesPlayedAsStriker = 0;
+        this.timesPlayedAsKeeper = 0;
+        this.timesPlayedAsStriker = 0;
+    }
 
-        self.updateStreak = function () {
-            self.currentStreak++;
-            if (self.currentStreak > self.longestStreak) { self.longestStreak = self.currentStreak; }
-        };
+    updateStreak() {
+        this.currentStreak++;
+        if (this.currentStreak > this.longestStreak) { this.longestStreak = this.currentStreak; }
+    }
 
-        self.endStreak = function () {
-            self.currentStreak = 0;
-        };
+    endStreak() {
+        this.currentStreak = 0;
+    }
 
-        self.updatePreferredPosition = function (positionPlayed) {
-            if (positionPlayed === "keeper") { self.timesPlayedAsKeeper++; }
-            if (positionPlayed === "striker") { self.timesPlayedAsStriker++; }
-            if (self.timesPlayedAsKeeper > self.timesPlayedAsStriker) {
-                self.preferredPosition.position = "keeper";
-                self.preferredPosition.ratio = self.timesPlayedAsKeeper / (self.timesPlayedAsStriker + self.timesPlayedAsKeeper);
-            }
-            if (self.timesPlayedAsKeeper < self.timesPlayedAsStriker) {
-                self.preferredPosition.position = "striker";
-                self.preferredPosition.ratio = self.timesPlayedAsStriker / (self.timesPlayedAsStriker + self.timesPlayedAsKeeper);
-            }
-            if (self.timesPlayedAsKeeper === self.timesPlayedAsStriker) {
-                self.preferredPosition.position = "both";
-                self.preferredPosition.ratio = 0.5;
-            }
-        };
+    updatePreferredPosition(positionPlayed) {
+        if (positionPlayed === "keeper") { this.timesPlayedAsKeeper++; }
+        if (positionPlayed === "striker") { this.timesPlayedAsStriker++; }
+        if (this.timesPlayedAsKeeper > this.timesPlayedAsStriker) {
+            this.preferredPosition.position = "keeper";
+            this.preferredPosition.ratio = this.timesPlayedAsKeeper / (this.timesPlayedAsStriker + this.timesPlayedAsKeeper);
+        }
+        if (this.timesPlayedAsKeeper < this.timesPlayedAsStriker) {
+            this.preferredPosition.position = "striker";
+            this.preferredPosition.ratio = this.timesPlayedAsStriker / (this.timesPlayedAsStriker + this.timesPlayedAsKeeper);
+        }
+        if (this.timesPlayedAsKeeper === this.timesPlayedAsStriker) {
+            this.preferredPosition.position = "both";
+            this.preferredPosition.ratio = 0.5;
+        }
+    }
 
-        self.updateHighestRating = function () {
-            if (self.eloRating.rating > self.highestRatingEver) {
-                self.highestRatingEver = self.eloRating.rating;
-            }
-        };
-    };
+    updateHighestRating() {
+        if (this.eloRating.rating > this.highestRatingEver) {
+            this.highestRatingEver = this.eloRating.rating;
+        }
+    }
+}
 
-    let PlayerStats = function () {
-        let self = this;
+class PlayerStats {
+    constructor() {
+        this.allPlayers = [];
 
-        self.allPlayers = [];
+        this.totalGames = 0;
+        this.longestStreak = 0;
 
-        self.totalGames = 0;
-        self.longestStreak = 0;
-
-        self.sortByName = function () {
-            //self.allPlayers.sort(function (a, b) {
-            //    if (a.name < b.name) { return -1; }
-            //    if (a.name > b.name) { return 1; }
-            //    return 0;
-            //});
-            self.allPlayers.sort(function (a, b) {
+        this.sortByName = function () {
+            this.allPlayers.sort(function (a, b) {
                 if (a.name < b.name) { return -1; }
                 if (a.name > b.name) { return 1; }
                 return 0;
             });
         };
+    }
 
-        self.sortByWinRatio = function () {
-            self.allPlayers.sort(function (a, b) {
-                if (a.winRatio < b.winRatio) { return 1; }
-                if (a.winRatio > b.winRatio) { return -1; }
-                return 0;
-            });
-        };
+    sortByName() {
+        this.allPlayers.sort(function (a, b) {
+            if (a.name < b.name) { return -1; }
+            if (a.name > b.name) { return 1; }
+            return 0;
+        });
+    }
 
-        self.sortByAverageTeamRating = function () {
-            self.allPlayers.sort(function (a, b) {
-                if (a.averageTeamRating < b.averageTeamRating) { return 1; }
-                if (a.averageTeamRating > b.averageTeamRating) { return -1; }
-                return 0;
-            });
-        };
+    sortByAverageTeamRating() {
+        this.allPlayers.sort(function (a, b) {
+            if (a.averageTeamRating < b.averageTeamRating) { return 1; }
+            if (a.averageTeamRating > b.averageTeamRating) { return -1; }
+            return 0;
+        });
+    }
 
-        self.sortByRating = function () {
-            self.allPlayers.sort(function (a, b) {
-                if (a.eloRating.rating < b.eloRating.rating) { return 1; }
-                if (a.eloRating.rating > b.eloRating.rating) { return -1; }
-                return 0;
-            });
-        };
+    sortByRating() {
+        this.allPlayers.sort(function (a, b) {
+            if (a.eloRating.rating < b.eloRating.rating) { return 1; }
+            if (a.eloRating.rating > b.eloRating.rating) { return -1; }
+            return 0;
+        });
+    }
 
-        self.updatePlayer = function (name, position, ourScore, otherScore) {
-            let playerStat = self.allPlayers.find((playerStat) => playerStat.name === name);
+    updatePlayer(name, position, ourScore, otherScore) {
+        let playerStat = this.allPlayers.find((playerStat) => playerStat.name === name);
 
-            if (!playerStat) {
-                playerStat = new PlayerStat(name);
-                self.allPlayers.push(playerStat);
-            }
+        if (!playerStat) {
+            playerStat = new PlayerStat(name);
+            this.allPlayers.push(playerStat);
+        }
 
-            playerStat.gamesPlayed++;
+        playerStat.gamesPlayed++;
 
-            if (ourScore > otherScore) {
-                playerStat.gamesWon++;
-                playerStat.updateStreak();
-            } else {
-                playerStat.endStreak();
-            }
+        if (ourScore > otherScore) {
+            playerStat.gamesWon++;
+            playerStat.updateStreak();
+        } else {
+            playerStat.endStreak();
+        }
 
-            if (playerStat.currentStreak > self.longestStreak) {
-                self.longestStreak = playerStat.currentStreak;
-            }
+        if (playerStat.currentStreak > this.longestStreak) {
+            this.longestStreak = playerStat.currentStreak;
+        }
 
-            playerStat.winRatio = playerStat.gamesWon / playerStat.gamesPlayed;
+        playerStat.winRatio = playerStat.gamesWon / playerStat.gamesPlayed;
 
-            playerStat.updatePreferredPosition(position);
+        playerStat.updatePreferredPosition(position);
 
-            if (position === "keeper") {
-                playerStat.totalGoalsAllowed += otherScore;
-                playerStat.averageGoalsAllowed = playerStat.totalGoalsAllowed / playerStat.timesPlayedAsKeeper;
-            }
-        };
+        if (position === "keeper") {
+            playerStat.totalGoalsAllowed += otherScore;
+            playerStat.averageGoalsAllowed = playerStat.totalGoalsAllowed / playerStat.timesPlayedAsKeeper;
+        }
+    }
 
-        self.updatePlayerRatings = function (game) {
-            let teamAPlayers = {};
-            let teamBPlayers = {};
+    updatePlayerRatings(game) {
+        let teamAPlayers = {};
+        let teamBPlayers = {};
 
-            teamAPlayers.keeper = self.allPlayers.find((playerStat) => playerStat.name === game.keeperA);
-            teamAPlayers.striker = self.allPlayers.find((playerStat) => playerStat.name === game.strikerA);
+        teamAPlayers.keeper = this.allPlayers.find((playerStat) => playerStat.name === game.keeperA);
+        teamAPlayers.striker = this.allPlayers.find((playerStat) => playerStat.name === game.strikerA);
 
-            teamBPlayers.keeper = self.allPlayers.find((playerStat) => playerStat.name === game.keeperB);
-            teamBPlayers.striker = self.allPlayers.find((playerStat) => playerStat.name === game.strikerB);
+        teamBPlayers.keeper = this.allPlayers.find((playerStat) => playerStat.name === game.keeperB);
+        teamBPlayers.striker = this.allPlayers.find((playerStat) => playerStat.name === game.strikerB);
 
-            let teamAAverage = (teamAPlayers.keeper.eloRating.rating + teamAPlayers.striker.eloRating.rating) / 2;
-            let teamBAverage = (teamBPlayers.keeper.eloRating.rating + teamBPlayers.striker.eloRating.rating) / 2;
+        let teamAAverage = (teamAPlayers.keeper.eloRating.rating + teamAPlayers.striker.eloRating.rating) / 2;
+        let teamBAverage = (teamBPlayers.keeper.eloRating.rating + teamBPlayers.striker.eloRating.rating) / 2;
 
-            game.ratings = game.ratings || {};
-            game.ratings.oldTeamAKeeper = teamAPlayers.keeper.eloRating.rating;
-            game.ratings.oldTeamAStriker = teamAPlayers.striker.eloRating.rating;
-            game.ratings.oldTeamBKeeper = teamBPlayers.keeper.eloRating.rating;
-            game.ratings.oldTeamBStriker = teamBPlayers.striker.eloRating.rating;
+        game.ratings = game.ratings || {};
+        game.ratings.oldTeamAKeeper = teamAPlayers.keeper.eloRating.rating;
+        game.ratings.oldTeamAStriker = teamAPlayers.striker.eloRating.rating;
+        game.ratings.oldTeamBKeeper = teamBPlayers.keeper.eloRating.rating;
+        game.ratings.oldTeamBStriker = teamBPlayers.striker.eloRating.rating;
 
-            teamAPlayers.keeper.eloRating.updateRating(game.scoreA, game.scoreB, teamBAverage, teamAAverage);
-            teamAPlayers.striker.eloRating.updateRating(game.scoreA, game.scoreB, teamBAverage, teamAAverage);
-            teamBPlayers.keeper.eloRating.updateRating(game.scoreB, game.scoreA, teamAAverage, teamBAverage);
-            teamBPlayers.striker.eloRating.updateRating(game.scoreB, game.scoreA, teamAAverage, teamBAverage);
+        teamAPlayers.keeper.eloRating.updateRating(game.scoreA, game.scoreB, teamBAverage, teamAAverage);
+        teamAPlayers.striker.eloRating.updateRating(game.scoreA, game.scoreB, teamBAverage, teamAAverage);
+        teamBPlayers.keeper.eloRating.updateRating(game.scoreB, game.scoreA, teamAAverage, teamBAverage);
+        teamBPlayers.striker.eloRating.updateRating(game.scoreB, game.scoreA, teamAAverage, teamBAverage);
 
-            teamAPlayers.keeper.updateHighestRating();
-            teamAPlayers.striker.updateHighestRating();
-            teamBPlayers.keeper.updateHighestRating();
-            teamBPlayers.striker.updateHighestRating();
+        teamAPlayers.keeper.updateHighestRating();
+        teamAPlayers.striker.updateHighestRating();
+        teamBPlayers.keeper.updateHighestRating();
+        teamBPlayers.striker.updateHighestRating();
 
-            if (teamAPlayers.keeper.eloRating.rating > teamAPlayers.keeper.highestRatingEver) { teamAPlayers.keeper.highestRatingEver = teamAPlayers.keeper.eloRating.rating; }
-            if (teamAPlayers.striker.eloRating.rating > teamAPlayers.striker.highestRatingEver) { teamAPlayers.striker.highestRatingEver = teamAPlayers.striker.eloRating.rating; }
-            if (teamBPlayers.keeper.eloRating.rating > teamBPlayers.keeper.highestRatingEver) { teamBPlayers.keeper.highestRatingEver = eloRating.rating; }
-            if (teamBPlayers.striker.eloRating.rating > teamBPlayers.striker.highestRatingEver) { teamBPlayers.striker.highestRatingEver = eloRating.rating; }
+        if (teamAPlayers.keeper.eloRating.rating > teamAPlayers.keeper.highestRatingEver) { teamAPlayers.keeper.highestRatingEver = teamAPlayers.keeper.eloRating.rating; }
+        if (teamAPlayers.striker.eloRating.rating > teamAPlayers.striker.highestRatingEver) { teamAPlayers.striker.highestRatingEver = teamAPlayers.striker.eloRating.rating; }
+        if (teamBPlayers.keeper.eloRating.rating > teamBPlayers.keeper.highestRatingEver) { teamBPlayers.keeper.highestRatingEver = eloRating.rating; }
+        if (teamBPlayers.striker.eloRating.rating > teamBPlayers.striker.highestRatingEver) { teamBPlayers.striker.highestRatingEver = eloRating.rating; }
 
-            game.ratings.newTeamAKeeper = teamAPlayers.keeper.eloRating.rating;
-            game.ratings.newTeamBKeeper = teamBPlayers.keeper.eloRating.rating;
-            game.ratings.newTeamAStriker = teamAPlayers.striker.eloRating.rating;
-            game.ratings.newTeamBStriker = teamBPlayers.striker.eloRating.rating;
+        game.ratings.newTeamAKeeper = teamAPlayers.keeper.eloRating.rating;
+        game.ratings.newTeamBKeeper = teamBPlayers.keeper.eloRating.rating;
+        game.ratings.newTeamAStriker = teamAPlayers.striker.eloRating.rating;
+        game.ratings.newTeamBStriker = teamBPlayers.striker.eloRating.rating;
 
-            game.ratings.deltaTeamAKeeper = game.ratings.newTeamAKeeper - game.ratings.oldTeamAKeeper;
-            game.ratings.deltaTeamBKeeper = game.ratings.newTeamBKeeper - game.ratings.oldTeamBKeeper;
-            game.ratings.deltaTeamAStriker = game.ratings.newTeamAStriker - game.ratings.oldTeamAStriker;
-            game.ratings.deltaTeamBStriker = game.ratings.newTeamBStriker - game.ratings.oldTeamBStriker;
-        };
+        game.ratings.deltaTeamAKeeper = game.ratings.newTeamAKeeper - game.ratings.oldTeamAKeeper;
+        game.ratings.deltaTeamBKeeper = game.ratings.newTeamBKeeper - game.ratings.oldTeamBKeeper;
+        game.ratings.deltaTeamAStriker = game.ratings.newTeamAStriker - game.ratings.oldTeamAStriker;
+        game.ratings.deltaTeamBStriker = game.ratings.newTeamBStriker - game.ratings.oldTeamBStriker;
+    }
 
-        self.addGame = function (game) {
-            self.updatePlayer(game.keeperA, "keeper", game.scoreA, game.scoreB);
-            self.updatePlayer(game.strikerA, "striker", game.scoreA, game.scoreB);
-            self.updatePlayer(game.keeperB, "keeper", game.scoreB, game.scoreA);
-            self.updatePlayer(game.strikerB, "striker", game.scoreB, game.scoreA);
+    addGame(game) {
+        this.updatePlayer(game.keeperA, "keeper", game.scoreA, game.scoreB);
+        this.updatePlayer(game.strikerA, "striker", game.scoreA, game.scoreB);
+        this.updatePlayer(game.keeperB, "keeper", game.scoreB, game.scoreA);
+        this.updatePlayer(game.strikerB, "striker", game.scoreB, game.scoreA);
 
-            self.updatePlayerRatings(game);
-        };
+        this.updatePlayerRatings(game);
+    }
 
-        self.updateWithTeamStats = function (teamStats) {
+    updateWithTeamStats(teamStats) {
+        for (let player of this.allPlayers) {
+            let totalRating = 0;
+            let totalTeams = 0;
 
-            for (let player of self.allPlayers) {
-                let totalRating = 0;
-                let totalTeams = 0;
+            let totalKeeperRating = 0;
+            let totalStrikerRating = 0;
+            let totalKeeperTeams = 0;
+            let totalStrikerTeams = 0;
 
-                let totalKeeperRating = 0;
-                let totalStrikerRating = 0;
-                let totalKeeperTeams = 0;
-                let totalStrikerTeams = 0;
+            for (let j = 0; j < teamStats.allTeams.length; j++) {
+                let teamStat = teamStats.allTeams[j];
+                let team = teamStat.team;
+                let teamRank = j + 1;
 
-                for (let j = 0; j < teamStats.allTeams.length; j++) {
-                    let teamStat = teamStats.allTeams[j];
-                    let team = teamStat.team;
-                    let teamRank = j + 1;
-
-                    if (team.getTeamId().indexOf(player.name) > -1) {
-                        if (player.highestRankingTeam.ranking === 0 || player.highestRankingTeam.ranking > teamRank) {
-                            player.highestRankingTeam.team = team;
-                            player.highestRankingTeam.ranking = teamRank;
-                        }
-
-                        totalRating += teamStat.eloRating.rating;
-                        totalTeams++;
-
-                        if (team.keeper === player.name) { totalKeeperRating += teamStat.eloRating.rating; totalKeeperTeams++; }
-                        if (team.striker === player.name) { totalStrikerRating += teamStat.eloRating.rating; totalStrikerTeams++; }
+                if (team.getTeamId().indexOf(player.name) > -1) {
+                    if (player.highestRankingTeam.ranking === 0 || player.highestRankingTeam.ranking > teamRank) {
+                        player.highestRankingTeam.team = team;
+                        player.highestRankingTeam.ranking = teamRank;
                     }
-                }
 
-                player.averageTeamRating = totalRating / totalTeams;
-                if (totalKeeperTeams > 0) { player.averageKeeperTeamRating = totalKeeperRating / totalKeeperTeams; }
-                if (totalStrikerTeams > 0) { player.averageStrikerTeamRating = totalStrikerRating / totalStrikerTeams; }
+                    totalRating += teamStat.eloRating.rating;
+                    totalTeams++;
 
-                if (player.averageKeeperTeamRating > player.averageStrikerTeamRating) {
-                    player.bestPosition.position = "keeper";
-                    player.bestPosition.averageTeamRating = player.averageKeeperTeamRating;
-                }
-
-                if (player.averageKeeperTeamRating < player.averageStrikerTeamRating) {
-                    player.bestPosition.position = "striker";
-                    player.bestPosition.averageTeamRating = player.averageStrikerTeamRating;
-                }
-
-                if (player.averageKeeperTeamRating === player.averageStrikerTeamRating) {
-                    player.bestPosition.position = "both";
-                    player.bestPosition.averageTeamRating = player.averageKeeperTeamRating;
+                    if (team.keeper === player.name) { totalKeeperRating += teamStat.eloRating.rating; totalKeeperTeams++; }
+                    if (team.striker === player.name) { totalStrikerRating += teamStat.eloRating.rating; totalStrikerTeams++; }
                 }
             }
-        };
 
-        self.updateParticipation = function (totalGames) {
-            for (let i = 0; i < self.allPlayers.length; i++) {
-                self.allPlayers[i].participationRatio = self.allPlayers[i].gamesPlayed / totalGames;
+            player.averageTeamRating = totalRating / totalTeams;
+            if (totalKeeperTeams > 0) { player.averageKeeperTeamRating = totalKeeperRating / totalKeeperTeams; }
+            if (totalStrikerTeams > 0) { player.averageStrikerTeamRating = totalStrikerRating / totalStrikerTeams; }
+
+            if (player.averageKeeperTeamRating > player.averageStrikerTeamRating) {
+                player.bestPosition.position = "keeper";
+                player.bestPosition.averageTeamRating = player.averageKeeperTeamRating;
             }
-        };
 
-        self.getPlayerStat = function (name) {
-            let playerStat = self.allPlayers.find((playerStat) => playerStat.name === name);
-            return playerStat;
-        };
+            if (player.averageKeeperTeamRating < player.averageStrikerTeamRating) {
+                player.bestPosition.position = "striker";
+                player.bestPosition.averageTeamRating = player.averageStrikerTeamRating;
+            }
 
-        self.getPlayerRanking = function (name) {
-            let frequentPlayers = self.allPlayers.filter((playerStat) => playerStat.gamesPlayed >= 10);
+            if (player.averageKeeperTeamRating === player.averageStrikerTeamRating) {
+                player.bestPosition.position = "both";
+                player.bestPosition.averageTeamRating = player.averageKeeperTeamRating;
+            }
+        }
+    }
 
-            return frequentPlayers.findIndex((stat) => stat.name === name) + 1;
-        };
-    };
+    updateParticipation(totalGames) {
+        for (let i = 0; i < this.allPlayers.length; i++) {
+            this.allPlayers[i].participationRatio = this.allPlayers[i].gamesPlayed / totalGames;
+        }
+    }
+
+    getPlayerStat(name) {
+        let playerStat = this.allPlayers.find((playerStat) => playerStat.name === name);
+        return playerStat;
+    }
+
+    getPlayerRanking(name) {
+        let frequentPlayers = this.allPlayers.filter((playerStat) => playerStat.gamesPlayed >= 10);
+        return frequentPlayers.findIndex((stat) => stat.name === name) + 1;
+    }
+}
+
+let KickerStatsAnalysis = (function () {
 
     let GlobalStats = function (rawData, playerStats, teamStats) {
         let self = this;

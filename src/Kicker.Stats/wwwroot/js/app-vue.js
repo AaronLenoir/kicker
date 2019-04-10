@@ -219,7 +219,7 @@ const PlayerRanking = {
 </div>`
 };
 
-const PlayerStats = {
+const PlayerStatsComponent = {
     props: ['stats'],
     template: `
 <div>
@@ -397,7 +397,7 @@ const Overview = {
     },
     components: {
         'game-overview': GameOverview,
-        'player-stats': PlayerStats,
+        'player-stats': PlayerStatsComponent,
         'team-stats': TeamStatsComponent,
         'team-ranking': TeamRanking,
         'player-ranking': PlayerRanking
@@ -470,7 +470,7 @@ const routes = [
     { path: '/team-ranking', component: TeamRanking },
     { path: '/team-stats', component: TeamStatsComponent },
     { path: '/player-ranking', component: PlayerRanking },
-    { path: '/player-stats', component: PlayerStats },
+    { path: '/player-stats', component: PlayerStatsComponent },
     { path: '/player-stats/:name', component: Player },
     { path: '/game-history', component: GameOverview }
 ];
