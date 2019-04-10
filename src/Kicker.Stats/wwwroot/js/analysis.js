@@ -504,7 +504,9 @@
         let teamStats = new TeamStats(playerStats);
 
         // rawData has most recent game first, so we go backwards
-        for (let game of rawData) {
+        for (let i = rawData.length - 1; i >= 0; i--) {
+            let game = rawData[i];
+
             playerStats.addGame(game);
             teamStats.addGame(game);
         }
