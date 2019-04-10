@@ -484,9 +484,13 @@ class GlobalStats {
     }
 }
 
-let KickerStatsAnalysis = (function () {
+class KickerStatsAnalysis {
+    constructor(data) {
+        this.rawData = data.reverse();
+        this.stats = this.getAllStats(this.rawData);
+    }
 
-    self.getAllStats = function (rawData) {
+    getAllStats(rawData) {
         let playerStats = new PlayerStats();
         let teamStats = new TeamStats(playerStats);
 
@@ -515,12 +519,5 @@ let KickerStatsAnalysis = (function () {
                 return playerStats.allPlayers.find((playerStat) => playerStat.name === name);
             }
         };
-    };
-
-    return function (data) {
-        let self = this;
-
-        self.rawData = data.reverse();
-        self.stats = getAllStats(self.rawData);
-    };
-}());
+    }
+}
