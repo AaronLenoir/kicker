@@ -30,21 +30,22 @@
     }
 }
 
+class Team {
+    constructor(keeper, striker) {
+        this.keeper = keeper;
+        this.striker = striker;
+    }
+
+    getTeamId() {
+        return `${this.keeper} - ${this.striker}`;
+    }
+}
+
 let KickerStatsAnalysis = (function () {
 
     /*
      * Team Stats
      */
-
-    let Team = function (keeper, striker) {
-        let self = this;
-
-        self.keeper = keeper;
-        self.striker = striker;
-        self.getTeamId = function () {
-            return keeper + " - " + striker;
-        };
-    };
 
     let TeamStat = function (team) {
         let self = this;
