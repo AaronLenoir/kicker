@@ -417,74 +417,74 @@ class PlayerStats {
     }
 }
 
+class GlobalStats {
+    constructor(rawData, playerStats, teamStats) {
+        this.rawData = rawData;
+        this.playerStats = playerStats;
+        this.teamStats = teamStats;
+
+        this.leadingTeam = undefined;
+        this.leadingPlayer = undefined;
+        this.longestTeamStreak = {};
+        this.longestPlayerStreak = {};
+        this.bestKeeper = undefined;
+
+        this.loadStats();
+    }
+
+    loadStats() {
+        this.leadingTeam = this.teamStats.allTeams[0];
+        this.leadingPlayer = this.playerStats.allPlayers[0];
+
+        this.longestTeamStreak.streak = this.teamStats.allTeams.reduce(function (previous, current) {
+            if (current.longestStreak > previous.longestStreak) {
+                return current;
+            } else {
+                return previous;
+            }
+        }).longestStreak;
+
+        this.longestTeamStreak.teams = this.teamStats.allTeams.filter((team) => team.longestStreak === this.longestTeamStreak.streak);
+
+        this.longestPlayerStreak.streak = this.playerStats.allPlayers.reduce(function (previous, current) {
+            if (current.longestStreak > previous.longestStreak) {
+                return current;
+            } else {
+                return previous;
+            }
+        }).longestStreak;
+
+        this.longestPlayerStreak.players = this.playerStats.allPlayers.filter((player) => player.longestStreak === this.longestPlayerStreak.streak);
+
+        let keepers = this.playerStats.allPlayers.filter((player) => player.timesPlayedAsKeeper >= 10);
+
+        if (keepers.length > 0) {
+            this.bestKeeper = keepers.
+                reduce(function (previous, current) {
+                    if (current.averageGoalsAllowed < previous.averageGoalsAllowed) {
+                        return current;
+                    } else {
+                        return previous;
+                    }
+                });
+        }
+
+        let frequentPlayerTeams = this.teamStats.allTeams.filter((team) => team.gamesPlayed >= 5);
+
+        if (frequentPlayerTeams.length > 0) {
+            this.bestDefense = frequentPlayerTeams.
+                reduce(function (previous, current) {
+                    if (current.averageGoalsAllowed < previous.averageGoalsAllowed) {
+                        return current;
+                    } else {
+                        return previous;
+                    }
+                });
+        }
+    }
+}
+
 let KickerStatsAnalysis = (function () {
-
-    let GlobalStats = function (rawData, playerStats, teamStats) {
-        let self = this;
-
-        self.rawData = rawData;
-        self.playerStats = playerStats;
-        self.teamStats = teamStats;
-
-        self.leadingTeam = undefined;
-        self.leadingPlayer = undefined;
-        self.longestTeamStreak = {};
-        self.longestPlayerStreak = {};
-        self.bestKeeper = undefined;
-
-        self.loadStats = function () {
-            self.leadingTeam = teamStats.allTeams[0];
-            self.leadingPlayer = playerStats.allPlayers[0];
-
-            self.longestTeamStreak.streak = teamStats.allTeams.reduce(function (previous, current) {
-                if (current.longestStreak > previous.longestStreak) {
-                    return current;
-                } else {
-                    return previous;
-                }
-            }).longestStreak;
-
-            self.longestTeamStreak.teams = teamStats.allTeams.filter((team) => team.longestStreak === self.longestTeamStreak.streak);
-
-            self.longestPlayerStreak.streak = playerStats.allPlayers.reduce(function (previous, current) {
-                if (current.longestStreak > previous.longestStreak) {
-                    return current;
-                } else {
-                    return previous;
-                }
-            }).longestStreak;
-
-            self.longestPlayerStreak.players = playerStats.allPlayers.filter((player) => player.longestStreak === self.longestPlayerStreak.streak);
-
-            let keepers = playerStats.allPlayers.filter((player) => player.timesPlayedAsKeeper >= 10);
-
-            if (keepers.length > 0) {
-                self.bestKeeper = keepers.
-                    reduce(function (previous, current) {
-                        if (current.averageGoalsAllowed < previous.averageGoalsAllowed) {
-                            return current;
-                        } else {
-                            return previous;
-                        }
-                    });
-            }
-
-            let frequentPlayerTeams = teamStats.allTeams.filter((team) => team.gamesPlayed >= 5);
-
-            if (frequentPlayerTeams.length > 0) {
-                self.bestDefense = frequentPlayerTeams.
-                    reduce(function (previous, current) {
-                        if (current.averageGoalsAllowed < previous.averageGoalsAllowed) {
-                            return current;
-                        } else {
-                            return previous;
-                        }
-                    });
-            }
-        };
-
-        self.loadStats();
-    };
 
     self.getAllStats = function (rawData) {
         let playerStats = new PlayerStats();
