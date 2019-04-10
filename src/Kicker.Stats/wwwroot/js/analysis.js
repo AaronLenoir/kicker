@@ -231,14 +231,6 @@ class PlayerStats {
 
         this.totalGames = 0;
         this.longestStreak = 0;
-
-        this.sortByName = function () {
-            this.allPlayers.sort(function (a, b) {
-                if (a.name < b.name) { return -1; }
-                if (a.name > b.name) { return 1; }
-                return 0;
-            });
-        };
     }
 
     sortByName() {
