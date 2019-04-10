@@ -424,55 +424,82 @@ class GlobalStats {
         this.loadStats();
     }
 
+    findLongestTeamStreak(teamStats) {
+        let streak = teamStats.allTeams.reduce(function (previous, current) {
+            if (current.longestStreak > previous.longestStreak) {
+                return current;
+            } else {
+                return previous;
+            }
+        }).longestStreak;
+
+        let teams = this.teamStats.allTeams.filter((team) => team.longestStreak === streak);
+
+        return {
+            streak: streak,
+            teams: teams
+        };
+    }
+
+    findLongestPlayerStreak(playerStats) {
+        let streak = playerStats.allPlayers.reduce(function (previous, current) {
+            if (current.longestStreak > previous.longestStreak) {
+                return current;
+            } else {
+                return previous;
+            }
+        }).longestStreak;
+
+        let players = playerStats.allPlayers.filter((player) => player.longestStreak === streak);
+
+        return {
+            streak: streak,
+            players: players
+        };
+    }
+
+    findBestKeeper(playerStats) {
+        let keepers = playerStats.allPlayers.filter((player) => player.timesPlayedAsKeeper >= 10);
+
+        if (keepers.length > 0) {
+            return keepers.
+                reduce(function (previous, current) {
+                    if (current.averageGoalsAllowed < previous.averageGoalsAllowed) {
+                        return current;
+                    } else {
+                        return previous;
+                    }
+                });
+        }
+
+        return undefined;
+    }
+
+    findBestDefense(teamStats) {
+        let frequentPlayerTeams = teamStats.allTeams.filter((team) => team.gamesPlayed >= 5);
+
+        if (frequentPlayerTeams.length > 0) {
+            return frequentPlayerTeams.
+                reduce(function (previous, current) {
+                    if (current.averageGoalsAllowed < previous.averageGoalsAllowed) {
+                        return current;
+                    } else {
+                        return previous;
+                    }
+                });
+        }
+
+        return undefined;
+    }
+
     loadStats() {
         this.leadingTeam = this.teamStats.allTeams[0];
         this.leadingPlayer = this.playerStats.allPlayers[0];
 
-        this.longestTeamStreak.streak = this.teamStats.allTeams.reduce(function (previous, current) {
-            if (current.longestStreak > previous.longestStreak) {
-                return current;
-            } else {
-                return previous;
-            }
-        }).longestStreak;
-
-        this.longestTeamStreak.teams = this.teamStats.allTeams.filter((team) => team.longestStreak === this.longestTeamStreak.streak);
-
-        this.longestPlayerStreak.streak = this.playerStats.allPlayers.reduce(function (previous, current) {
-            if (current.longestStreak > previous.longestStreak) {
-                return current;
-            } else {
-                return previous;
-            }
-        }).longestStreak;
-
-        this.longestPlayerStreak.players = this.playerStats.allPlayers.filter((player) => player.longestStreak === this.longestPlayerStreak.streak);
-
-        let keepers = this.playerStats.allPlayers.filter((player) => player.timesPlayedAsKeeper >= 10);
-
-        if (keepers.length > 0) {
-            this.bestKeeper = keepers.
-                reduce(function (previous, current) {
-                    if (current.averageGoalsAllowed < previous.averageGoalsAllowed) {
-                        return current;
-                    } else {
-                        return previous;
-                    }
-                });
-        }
-
-        let frequentPlayerTeams = this.teamStats.allTeams.filter((team) => team.gamesPlayed >= 5);
-
-        if (frequentPlayerTeams.length > 0) {
-            this.bestDefense = frequentPlayerTeams.
-                reduce(function (previous, current) {
-                    if (current.averageGoalsAllowed < previous.averageGoalsAllowed) {
-                        return current;
-                    } else {
-                        return previous;
-                    }
-                });
-        }
+        this.longestTeamStreak = this.findLongestTeamStreak(this.teamStats);
+        this.longestPlayerStreak = this.findLongestPlayerStreak(this.playerStats);
+        this.bestKeeper = this.findBestKeeper(this.playerStats);
+        this.bestDefense = this.findBestDefense(this.teamStats);
     }
 }
 
