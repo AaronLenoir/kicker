@@ -30,6 +30,10 @@
     }
 }
 
+/*
+ * Team stats
+ */
+
 class Team {
     constructor(keeper, striker) {
         this.keeper = keeper;
@@ -41,122 +45,114 @@ class Team {
     }
 }
 
+class TeamStat {
+    constructor(team) {
+        this.team = team;
+        this.gamesWon = 0;
+        this.gamesPlayed = 0;
+        this.averageGoalsAllowed = 0;
+        this.totalGoalsAllowed = 0;
+        this.winRatio = 0;
+        this.longestStreak = 0;
+        this.currentStreak = 0;
+        this.highestRatingEver = 0;
+        this.eloRating = new EloRating();
+    }
+
+    updateStreak() {
+        this.currentStreak++;
+        if (this.currentStreak > this.longestStreak) { this.longestStreak = this.currentStreak; }
+    }
+
+    endStreak() {
+        this.currentStreak = 0;
+    }
+
+    updateHighestRating() {
+        if (this.eloRating.rating > this.highestRatingEver) {
+            this.highestRatingEver = this.eloRating.rating;
+        }
+    }
+}
+
+class TeamStats {
+    constructor() {
+        this.allTeams = [];
+        this.longestStreak = 0;
+    }
+
+    sortByRatingDesc() {
+        this.allTeams.sort(function (a, b) {
+            if (a.eloRating.rating < b.eloRating.rating) { return 1; }
+            if (a.eloRating.rating > b.eloRating.rating) { return -1; }
+            return 0;
+        });
+    }
+
+    addGame(game) {
+        let teamA = new Team(game.keeperA, game.strikerA);
+        let teamB = new Team(game.keeperB, game.strikerB);
+
+        let teamAStat = this.allTeams.find((teamStat) => teamStat.team.getTeamId() === teamA.getTeamId());
+        let teamBStat = this.allTeams.find((teamStat) => teamStat.team.getTeamId() === teamB.getTeamId());
+
+        if (!teamAStat) {
+            teamAStat = new TeamStat(teamA);
+            this.allTeams.push(teamAStat);
+        }
+        if (!teamBStat) {
+            teamBStat = new TeamStat(teamB);
+            this.allTeams.push(teamBStat);
+        }
+
+        teamAStat.gamesPlayed++;
+        teamBStat.gamesPlayed++;
+
+        teamAStat.totalGoalsAllowed += game.scoreB;
+        teamAStat.averageGoalsAllowed = teamAStat.totalGoalsAllowed / teamAStat.gamesPlayed;
+        teamBStat.totalGoalsAllowed += game.scoreA;
+        teamBStat.averageGoalsAllowed = teamBStat.totalGoalsAllowed / teamBStat.gamesPlayed;
+
+        if (game.scoreA === 10) {
+            teamAStat.gamesWon++;
+            teamAStat.updateStreak();
+            teamBStat.endStreak();
+        } else {
+            teamBStat.gamesWon++;
+            teamBStat.updateStreak();
+            teamAStat.endStreak();
+        }
+
+        if (teamAStat.longestStreak > this.longestStreak) {
+            this.longestStreak = teamAStat.longestStreak;
+        }
+        if (teamBStat.longestStreak > this.longestStreak) {
+            this.longestStreak = teamBStat.longestStreak;
+        }
+
+        teamAStat.winRatio = teamAStat.gamesWon / teamAStat.gamesPlayed;
+        teamBStat.winRatio = teamBStat.gamesWon / teamBStat.gamesPlayed;
+
+        let teamARating = teamAStat.eloRating.rating;
+        let teamBRating = teamBStat.eloRating.rating;
+        teamAStat.eloRating.updateRating(game.scoreA, game.scoreB, teamBRating);
+        teamBStat.eloRating.updateRating(game.scoreB, game.scoreA, teamARating);
+
+        teamAStat.updateHighestRating();
+        teamBStat.updateHighestRating();
+
+        game.ratings = game.ratings || {};
+        game.ratings.oldTeamA = teamARating;
+        game.ratings.oldTeamB = teamBRating;
+        game.ratings.newTeamA = teamAStat.eloRating.rating;
+        game.ratings.newTeamB = teamBStat.eloRating.rating;
+
+        game.ratings.deltaTeamA = game.ratings.newTeamA - game.ratings.oldTeamA;
+        game.ratings.deltaTeamB = game.ratings.newTeamB - game.ratings.oldTeamB;
+    }
+}
+
 let KickerStatsAnalysis = (function () {
-
-    /*
-     * Team Stats
-     */
-
-    let TeamStat = function (team) {
-        let self = this;
-
-        self.team = team;
-        self.gamesWon = 0;
-        self.gamesPlayed = 0;
-        self.averageGoalsAllowed = 0;
-        self.totalGoalsAllowed = 0;
-        self.winRatio = 0;
-        self.longestStreak = 0;
-        self.currentStreak = 0;
-
-        self.highestRatingEver = 0;
-
-        self.eloRating = new EloRating();
-
-
-        self.updateStreak = function () {
-            self.currentStreak++;
-            if (self.currentStreak > self.longestStreak) { self.longestStreak = self.currentStreak; }
-        };
-
-        self.endStreak = function () {
-            self.currentStreak = 0;
-        };
-
-        self.updateHighestRating = function () {
-            if (self.eloRating.rating > self.highestRatingEver) {
-                self.highestRatingEver = self.eloRating.rating;
-            }
-        };
-    };
-
-    let TeamStats = function () {
-        let self = this;
-
-        self.allTeams = [];
-
-        self.longestStreak = 0;
-
-        self.sortByRatingDesc = function () {
-            self.allTeams.sort(function (a, b) {
-                if (a.eloRating.rating < b.eloRating.rating) { return 1; }
-                if (a.eloRating.rating > b.eloRating.rating) { return -1; }
-                return 0;
-            });
-        };
-
-        self.addGame = function (game) {
-            let teamA = new Team(game.keeperA, game.strikerA);
-            let teamB = new Team(game.keeperB, game.strikerB);
-
-            let teamAStat = self.allTeams.find((teamStat) => teamStat.team.getTeamId() === teamA.getTeamId());
-            let teamBStat = self.allTeams.find((teamStat) => teamStat.team.getTeamId() === teamB.getTeamId());
-
-            if (!teamAStat) {
-                teamAStat = new TeamStat(teamA);
-                self.allTeams.push(teamAStat);
-            }
-            if (!teamBStat) {
-                teamBStat = new TeamStat(teamB);
-                self.allTeams.push(teamBStat);
-            }
-
-            teamAStat.gamesPlayed++;
-            teamBStat.gamesPlayed++;
-
-            teamAStat.totalGoalsAllowed += game.scoreB;
-            teamAStat.averageGoalsAllowed = teamAStat.totalGoalsAllowed / teamAStat.gamesPlayed;
-            teamBStat.totalGoalsAllowed += game.scoreA;
-            teamBStat.averageGoalsAllowed = teamBStat.totalGoalsAllowed / teamBStat.gamesPlayed;
-
-            if (game.scoreA === 10) {
-                teamAStat.gamesWon++;
-                teamAStat.updateStreak();
-                teamBStat.endStreak();
-            } else {
-                teamBStat.gamesWon++;
-                teamBStat.updateStreak();
-                teamAStat.endStreak();
-            }
-
-            if (teamAStat.longestStreak > self.longestStreak) {
-                self.longestStreak = teamAStat.longestStreak;
-            }
-            if (teamBStat.longestStreak > self.longestStreak) {
-                self.longestStreak = teamBStat.longestStreak;
-            }
-
-            teamAStat.winRatio = teamAStat.gamesWon / teamAStat.gamesPlayed;
-            teamBStat.winRatio = teamBStat.gamesWon / teamBStat.gamesPlayed;
-
-            let teamARating = teamAStat.eloRating.rating;
-            let teamBRating = teamBStat.eloRating.rating;
-            teamAStat.eloRating.updateRating(game.scoreA, game.scoreB, teamBRating);
-            teamBStat.eloRating.updateRating(game.scoreB, game.scoreA, teamARating);
-
-            teamAStat.updateHighestRating();
-            teamBStat.updateHighestRating();
-
-            game.ratings = game.ratings || {};
-            game.ratings.oldTeamA = teamARating;
-            game.ratings.oldTeamB = teamBRating;
-            game.ratings.newTeamA = teamAStat.eloRating.rating;
-            game.ratings.newTeamB = teamBStat.eloRating.rating;
-
-            game.ratings.deltaTeamA = game.ratings.newTeamA - game.ratings.oldTeamA;
-            game.ratings.deltaTeamB = game.ratings.newTeamB - game.ratings.oldTeamB;
-        };
-    };
 
     /*
      * Player Stats
