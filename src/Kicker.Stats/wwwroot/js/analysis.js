@@ -1,4 +1,36 @@
-﻿let KickerStatsAnalysis = (function () {
+﻿class EloRating {
+    constructor() {
+        this._factor = 400;
+        this._kFactor = 32;
+        this.rating = this._factor;
+    }
+
+    updateRating(ourScore, theirScore, theirRating, ourCustomRating) {
+        let ourRating = ourCustomRating || this.rating;
+
+        let qa = Math.pow(10, ourRating / this._factor);
+        let qb = Math.pow(10, theirRating / this._factor);
+
+        let ourExpectedResult = qa / (qa + qb);
+
+        let ourResult = 0.0;
+
+        if (ourScore > theirScore) {
+            // We won
+            ourResult += 0.75;
+            if (theirScore === 0) { ourResult += 0.25; }
+        }
+
+        if (theirScore > ourScore) {
+            // We lost
+            if (ourScore > 0) { ourResult += 0.25; }
+        }
+
+        this.rating += this._kFactor * (ourResult - ourExpectedResult);
+    }
+}
+
+let KickerStatsAnalysis = (function () {
 
     /*
      * Team Stats
@@ -11,39 +43,6 @@
         self.striker = striker;
         self.getTeamId = function () {
             return keeper + " - " + striker;
-        };
-    };
-
-    let EloRating = function () {
-        let self = this;
-
-        let _factor = 400;
-        let _kFactor = 32;
-
-        self.rating = _factor;
-
-        self.updateRating = function (ourScore, theirScore, theirRating, ourCustomRating) {
-            let ourRating = ourCustomRating || self.rating;
-
-            let qa = Math.pow(10, ourRating / _factor);
-            let qb = Math.pow(10, theirRating / _factor);
-
-            let ourExpectedResult = qa / (qa + qb);
-
-            let ourResult = 0.0;
-
-            if (ourScore > theirScore) {
-                // We won
-                ourResult += 0.75;
-                if (theirScore === 0) { ourResult += 0.25; }
-            }
-
-            if (theirScore > ourScore) {
-                // We lost
-                if (ourScore > 0) { ourResult += 0.25; }
-            }
-
-            self.rating += _kFactor * (ourResult - ourExpectedResult);
         };
     };
 
