@@ -492,6 +492,30 @@ class GlobalStats {
         return undefined;
     }
 
+    findHighestRatedTeamEver(teamStats) {
+        let highestRatedTeamEver = teamStats.allTeams.reduce(function (previous, current) {
+            if (current.highestRatingEver > previous.highestRatingEver) {
+                return current;
+            } else {
+                return previous;
+            }
+        });
+
+        return highestRatedTeamEver;
+    }
+
+    findHighestRatedPlayerEver(playerStats) {
+        let highestRatedPlayerEver = playerStats.allPlayers.reduce(function (previous, current) {
+            if (current.highestRatingEver > previous.highestRatingEver) {
+                return current;
+            } else {
+                return previous;
+            }
+        });
+
+        return highestRatedPlayerEver;
+    }
+
     loadStats() {
         this.leadingTeam = this.teamStats.allTeams[0];
         this.leadingPlayer = this.playerStats.allPlayers[0];
@@ -500,6 +524,8 @@ class GlobalStats {
         this.longestPlayerStreak = this.findLongestPlayerStreak(this.playerStats);
         this.bestKeeper = this.findBestKeeper(this.playerStats);
         this.bestDefense = this.findBestDefense(this.teamStats);
+        this.highestRatedTeamEver = this.findHighestRatedTeamEver(this.teamStats);
+        this.highestRatedPlayerEver = this.findHighestRatedPlayerEver(this.playerStats);
     }
 }
 

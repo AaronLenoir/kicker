@@ -429,6 +429,14 @@ const Overview = {
                 <span >{{ app.analysis.stats.globalStats.bestDefense.team.getTeamId() }}</span>
                 <div class="small-note">Average goals allowed (at least 5 games)</div>
             </div>
+            <h3>
+                Highest team rating ever
+            </h3>
+            <div>
+                <span class="streak">{{ app.analysis.stats.globalStats.highestRatedTeamEver.highestRatingEver.toFixed() }}</span>
+                <span >{{ app.analysis.stats.globalStats.highestRatedTeamEver.team.getTeamId() }}</span>
+                <div class="small-note">Current rating: {{ app.analysis.stats.globalStats.highestRatedTeamEver.eloRating.rating.toFixed() }} </div>
+            </div>
         </div>
         <div class="pure-u-1 pure-u-lg-1-2">
             <h3>
@@ -453,6 +461,14 @@ const Overview = {
                 <span class="streak">{{ app.analysis.stats.globalStats.bestKeeper.averageGoalsAllowed.toFixed(2) }}</span>
                 <span >{{ app.analysis.stats.globalStats.bestKeeper.name }}</span>
                 <div class="small-note">Average goals allowed (at least 10 games as keeper)</div>
+            </div>
+            <h3>
+                Highest player rating ever
+            </h3>
+            <div>
+                <span class="streak">{{ app.analysis.stats.globalStats.highestRatedPlayerEver.highestRatingEver.toFixed() }}</span>
+                <span >{{ app.analysis.stats.globalStats.highestRatedPlayerEver.name }}</span>
+                <div class="small-note">Current rating: {{ app.analysis.stats.globalStats.highestRatedPlayerEver.eloRating.rating.toFixed() }} </div>
             </div>
         </div>
     </div>
