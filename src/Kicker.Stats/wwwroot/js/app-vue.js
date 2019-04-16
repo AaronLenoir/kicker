@@ -91,7 +91,7 @@ const TeamRanking = {
             <tr>
                 <th>Rank</th>
                 <th style="width: 200px">Keeper - Striker</th>
-                <th>Rating <a href="#ratingInfo">(?)</a></th>
+                <th>Rating <router-link to="/about">(?)</router-link></th>
             </tr>
         </thead>
         <tbody>
@@ -138,7 +138,7 @@ const TeamStatsComponent = {
                 <th>Longest streak</th>
                 <th>Avg. goals allowed</th>
                 <th>Highest rating ever</th>
-                <th>Rating <a href="#ratingInfo">(?)</a></th>
+                <th>Rating <router-link to="/about">(?)</router-link></th>
             </tr>
         </thead>
         <tbody>
@@ -195,7 +195,7 @@ const PlayerRanking = {
             <tr>
                 <th>Rank</th>
                 <th style="width: 200px">Player</th>
-                <th>Rating <a href="#ratingInfo">(?)</a></th>
+                <th>Rating <router-link to="/about">(?)</router-link></th>
             </tr>
         </thead>
         <tbody>
@@ -243,7 +243,7 @@ const PlayerStatsComponent = {
             <th>Highest ranking team</th>
             <th>Avg. goals allowed</th>
             <th>Preferred position</th>
-            <th>Best position <a href="#positionInfo">(?)</a></th>
+            <th>Best position <router-link to="/about">(?)</router-link></th>
             <th>Highest rating ever</th>
             <th>Rating</th>
         </tr>
@@ -476,6 +476,55 @@ const Overview = {
 `
 };
 
+const About = {
+    template: `
+    <div>
+        <h2><a name="ratingInfo">Rating info</a></h2>
+        <div>
+            <h3>Team rating</h3>
+            <p class="note">
+                The rating is calculated using the "<a href="https://en.wikipedia.org/wiki/Elo_rating_system">Elo Rating</a>" algorithm. In the chart it is rounded to an integer.
+            </p>
+            <p class="note">
+                Based on the rating of two teams, it calculates the expected result, compares it to the actual result and adjusts the ratings accordingly. This means winning from a team with a higher rating than you is more benificial than winning from a team with a lower rating.
+            </p>
+            <p class="note">
+                The expected result is a value between 0 and 1. But in the case of kicker, a game has four possible results per team:
+                <ul class="note">
+                    <li>1.00: Clean win (10 - 0)</li>
+                    <li>0.75: Win</li>
+                    <li>0.25: Loss</li>
+                    <li>0.00: Clean loss (0 - 10)</li>
+                </ul>
+            </p>
+            <p class="note">
+                More information: <a href="https://en.wikipedia.org/wiki/Elo_rating_system">Wikipedia: Elo rating system</a>
+            </p>
+            <h3>Player rating</h3>
+            <p class="note">
+                The individual player rating uses the "<a href="https://en.wikipedia.org/wiki/Elo_rating_system">Elo Rating</a>" in a similar way as the Team Rating.
+            </p>
+            <p class="note">
+                Instead of comparing both team ratings, the combined average individual rating of both team members is used. Then the individual rating of each player is adjusted by the same amount, according to the elo calculation.
+            </p>
+        </div>
+
+        <h2><a name="positionInfo">Best position</a></h2>
+        <div>
+            <p class="note">
+                If teams where the player is keeper perform better on average, then the best position is keeper.
+            </p>
+            <p class="note">
+                If teams where the player is striker perform better on average, then the best position is striker.
+            </p>
+            <p class="note">
+                "Performance" is the average rating of those teams, shown in brackets in the table.
+            </p>
+        </div>
+    </div>
+`
+};
+
 /*
  * Routing 
  */
@@ -488,7 +537,8 @@ const routes = [
     { path: '/player-ranking', component: PlayerRanking },
     { path: '/player-stats', component: PlayerStatsComponent },
     { path: '/player-stats/:name', component: Player },
-    { path: '/game-history', component: GameOverview }
+    { path: '/game-history', component: GameOverview },
+    { path: '/about', component: About }
 ];
 
 const router = new VueRouter({
