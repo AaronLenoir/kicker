@@ -182,7 +182,6 @@ const PlayerDetails = {
     </div>
 
     <div>
-        {{ stats.globalStats.findGamesForPlayer() }}
         <game-overview v-bind:rawdata="stats.globalStats.findGamesForPlayer(playerStat.name)" />
     </div>
 </div>
