@@ -2,90 +2,189 @@
  * Components 
  */
 
+const GameOverview = {
+    props: ['rawdata'],
+    data: function () {
+        return {
+            showRating: true
+        };
+    },
+    methods: {
+        toggleRatings: function () {
+            this.showRating = !this.showRating;
+        }
+    },
+    template: `
+<div>
+    <h2>Game history ({{ rawdata.length }} games)</h2>
+    
+    <p>
+        <span v-if="!showRating" v-on:click="toggleRatings" class="button-small pure-button">Show ratings</span>
+        <span v-if="showRating" v-on:click="toggleRatings" class="button-small pure-button">Hide ratings</span>
+    </p>
+
+    <table class="pure-table pure-table-bordered">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Team A (keeper - striker)</th>
+                <th>Score</th>
+                <th>Team B (keeper - striker)</th>
+                <th v-if="showRating">Team points</th>
+                <th v-if="showRating">Team A</th>
+                <th v-if="showRating">Team B</th>
+                <th v-if="showRating">Player points</th>
+                <th v-if="showRating">Keeper team A</th>
+                <th v-if="showRating">Striker team A</th>
+                <th v-if="showRating">Keeper team B</th>
+                <th v-if="showRating">Striker team B</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(game, index) in rawdata" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+                <td>{{ game.date }}</td>
+                <td v-bind:style="game.scoreA > game.scoreB ? { background: '#d2ff62' } : {}">
+                    <span>{{ game.keeperA }}</span>
+                    -
+                    <span>{{ game.strikerA }}</span>
+                </td>
+                <td v-bind:style="game.scoreA === 0 || game.scoreB === 0 ? { background: 'black', color: 'white' } : {}">
+                    <span>{{ game.scoreA }}</span> - <span>{{ game.scoreB }}</span>
+                </td>
+                <td v-bind:style="game.scoreB > game.scoreA ? { background: '#d2ff62' } : {}">
+                    <span>{{ game.keeperB }}</span>
+                    -
+                    <span>{{ game.strikerB }}</span>
+                </td>
+                <td v-if="showRating">
+                    <span class="ratingDelta">{{ Math.abs(game.ratings.deltaTeamA.toFixed()) }}</span>
+                </td>
+                <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                    <span>{{ game.ratings.oldTeamA.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamA.toFixed() }}</span>
+                </td>
+                <td v-if="showRating" v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                    <span>{{ game.ratings.oldTeamB.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamB.toFixed() }}</span>
+                </td>
+                <td v-if="showRating">
+                    <span class="ratingDelta">{{ Math.abs(game.ratings.deltaTeamAKeeper.toFixed()) }}</span>
+                </td>
+                <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                    <span>{{ game.ratings.oldTeamAKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAKeeper.toFixed() }}</span>
+                    (<span>{{ game.keeperA }}</span>)
+                </td>
+                <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                    <span>{{ game.ratings.oldTeamAStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAStriker.toFixed() }}</span>
+                    (<span>{{ game.strikerA }}</span>)
+                </td>
+                <td v-if="showRating" v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                    <span>{{ game.ratings.oldTeamBKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBKeeper.toFixed() }}</span>
+                    (<span>{{ game.keeperB }}</span>)
+                </td>
+                <td v-if="showRating" v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                    <span>{{ game.ratings.oldTeamBStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBStriker.toFixed() }}</span>
+                    (<span>{{ game.strikerB }}</span>)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+`
+};
+
 const PlayerDetails = {
     props: ['stats', 'playerStat'],
+    components: {
+        'game-overview': GameOverview
+    },
     template: `
-<div class="pure-g">
-    <div class="pure-u-1 pure-u-md-5-5 stat" >
-        <h3>Ranking</h3>
-        <div>
-            <span class="stat-number">
-                {{ stats.playerStats.getPlayerRanking(playerStat.name) > 0 ? stats.playerStats.getPlayerRanking(playerStat.name) : 'N/A' }}
-                /    
-                {{ stats.playerStats.getTotalRankedPlayers() }}
-            </span>
-            <div class="small-note">Only players with at least 10 games have a ranking</div>
+<div>
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-md-5-5 stat" >
+            <h3>Ranking</h3>
+            <div>
+                <span class="stat-number">
+                    {{ stats.playerStats.getPlayerRanking(playerStat.name) > 0 ? stats.playerStats.getPlayerRanking(playerStat.name) : 'N/A' }}
+                    /    
+                    {{ stats.playerStats.getTotalRankedPlayers() }}
+                </span>
+                <div class="small-note">Only players with at least 10 games have a ranking</div>
+            </div>
         </div>
+
+        <div class="pure-u-1 pure-u-md-1-5 stat">
+            <h3>Rating</h3>
+            <div>
+                <span class="stat-number">{{ playerStat.eloRating.rating.toFixed() }}</span>
+                <div class="small-note">{{ playerStat.eloRating.rating.toFixed(5) }}</div>
+            </div>
+        </div>
+
+        <div class="pure-u-1 pure-u-md-1-5 stat">
+            <h3>Highest rating ever</h3>
+            <div>
+                <span class="stat-number">{{ playerStat.highestRatingEver.toFixed() }}</span>
+                <div class="small-note">{{ playerStat.highestRatingEver.toFixed(5) }}</div>
+            </div>
+        </div>
+
+        <div class="pure-u-1 pure-u-md-3-5 stat">
+            <h3>Average team rating</h3>
+            <div>
+                <span class="stat-number">{{ playerStat.averageTeamRating.toFixed() }}</span>
+                <div class="small-note">{{ playerStat.averageTeamRating.toFixed(5) }}</div>
+            </div>
+        </div>
+
+        <div class="pure-u-1 pure-u-md-1-5 stat">
+            <h3>Longest streak</h3>
+            <div>
+                <span class="stat-number">{{ playerStat.longestStreak }}</span>
+                <div class="small-note">Current streak: {{ playerStat.currentStreak }}</div>
+            </div>
+        </div>
+
+        <div class="pure-u-1 pure-u-md-1-5 stat">
+            <h3>Win ratio</h3>
+            <div>
+                <span class="stat-number">{{ (playerStat.winRatio * 100).toFixed(2) }} %</span>
+                <div class="small-note">{{ playerStat.gamesWon }} of {{ playerStat.gamesPlayed }} games won</div>
+            </div>
+        </div>
+
+        <div class="pure-u-1 pure-u-md-3-5 stat">
+            <h3>Goals allowed</h3>
+            <div>
+                <span class="stat-number">{{ playerStat.averageGoalsAllowed.toFixed(2) }} %</span>
+                <div class="small-note">Allowed {{ playerStat.totalGoalsAllowed }} in {{ playerStat.timesPlayedAsKeeper }} games as keeper</div>
+            </div>
+        </div>
+
+        <div class="pure-u-1 pure-u-md-1-5 stat">
+            <h3>Preferred position</h3>
+            <div>
+                <span class="stat-number">{{ playerStat.preferredPosition.position }}</span>
+                <div class="small-note">Played {{ (playerStat.preferredPosition.ratio * 100).toFixed(2) }} % of all matches as {{ playerStat.preferredPosition.position }}</div>
+            </div>
+        </div>
+
+        <div class="pure-u-1 pure-u-md-3-5 stat">
+            <h3>Best position</h3>
+            <div>
+                <span class="stat-number">{{ playerStat.bestPosition.position }}</span>
+                <div class="small-note">Average team rating {{ (playerStat.bestPosition.averageTeamRating).toFixed() }}</div>
+            </div>
+        </div>
+        <!--
+        <div class="pure-u-1 pure-u-md-1-5">
+        {{ playerStat }}
+        </div>
+        -->
     </div>
 
-    <div class="pure-u-1 pure-u-md-1-5 stat">
-        <h3>Rating</h3>
-        <div>
-            <span class="stat-number">{{ playerStat.eloRating.rating.toFixed() }}</span>
-            <div class="small-note">{{ playerStat.eloRating.rating.toFixed(5) }}</div>
-        </div>
+    <div>
+        {{ stats.globalStats.findGamesForPlayer() }}
+        <game-overview v-bind:rawdata="stats.globalStats.findGamesForPlayer(playerStat.name)" />
     </div>
-
-    <div class="pure-u-1 pure-u-md-1-5 stat">
-        <h3>Highest rating ever</h3>
-        <div>
-            <span class="stat-number">{{ playerStat.highestRatingEver.toFixed() }}</span>
-            <div class="small-note">{{ playerStat.highestRatingEver.toFixed(5) }}</div>
-        </div>
-    </div>
-
-    <div class="pure-u-1 pure-u-md-3-5 stat">
-        <h3>Average team rating</h3>
-        <div>
-            <span class="stat-number">{{ playerStat.averageTeamRating.toFixed() }}</span>
-            <div class="small-note">{{ playerStat.averageTeamRating.toFixed(5) }}</div>
-        </div>
-    </div>
-
-    <div class="pure-u-1 pure-u-md-1-5 stat">
-        <h3>Longest streak</h3>
-        <div>
-            <span class="stat-number">{{ playerStat.longestStreak }}</span>
-            <div class="small-note">Current streak: {{ playerStat.currentStreak }}</div>
-        </div>
-    </div>
-
-    <div class="pure-u-1 pure-u-md-1-5 stat">
-        <h3>Win ratio</h3>
-        <div>
-            <span class="stat-number">{{ (playerStat.winRatio * 100).toFixed(2) }} %</span>
-            <div class="small-note">{{ playerStat.gamesWon }} of {{ playerStat.gamesPlayed }} games won</div>
-        </div>
-    </div>
-
-    <div class="pure-u-1 pure-u-md-3-5 stat">
-        <h3>Goals allowed</h3>
-        <div>
-            <span class="stat-number">{{ playerStat.averageGoalsAllowed.toFixed(2) }} %</span>
-            <div class="small-note">Allowed {{ playerStat.totalGoalsAllowed }} in {{ playerStat.timesPlayedAsKeeper }} games as keeper</div>
-        </div>
-    </div>
-
-    <div class="pure-u-1 pure-u-md-1-5 stat">
-        <h3>Preferred position</h3>
-        <div>
-            <span class="stat-number">{{ playerStat.preferredPosition.position }}</span>
-            <div class="small-note">Played {{ (playerStat.preferredPosition.ratio * 100).toFixed(2) }} % of all matches as {{ playerStat.preferredPosition.position }}</div>
-        </div>
-    </div>
-
-    <div class="pure-u-1 pure-u-md-3-5 stat">
-        <h3>Best position</h3>
-        <div>
-            <span class="stat-number">{{ playerStat.bestPosition.position }}</span>
-            <div class="small-note">Average team rating {{ (playerStat.bestPosition.averageTeamRating).toFixed() }}</div>
-        </div>
-    </div>
-    <!--
-    <div class="pure-u-1 pure-u-md-1-5">
-    {{ playerStat }}
-    </div>
-    -->
 </div>
 `
 };
@@ -329,95 +428,6 @@ const PlayerStatsComponent = {
             </td>
         </tr>
     </tbody>
-    </table>
-</div>
-`
-};
-
-const GameOverview = {
-    props: ['rawdata'],
-    data: function () {
-        return {
-            showRating: true
-        };
-    },
-    methods: {
-        toggleRatings: function () {
-            this.showRating = !this.showRating;
-        }
-    },
-    template: `
-<div>
-    <h2>Game history ({{ rawdata.length }} games)</h2>
-    
-    <p>
-        <span v-if="!showRating" v-on:click="toggleRatings" class="button-small pure-button">Show ratings</span>
-        <span v-if="showRating" v-on:click="toggleRatings" class="button-small pure-button">Hide ratings</span>
-    </p>
-
-    <table class="pure-table pure-table-bordered">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Team A (keeper - striker)</th>
-                <th>Score</th>
-                <th>Team B (keeper - striker)</th>
-                <th v-if="showRating">Team points</th>
-                <th v-if="showRating">Team A</th>
-                <th v-if="showRating">Team B</th>
-                <th v-if="showRating">Player points</th>
-                <th v-if="showRating">Keeper team A</th>
-                <th v-if="showRating">Striker team A</th>
-                <th v-if="showRating">Keeper team B</th>
-                <th v-if="showRating">Striker team B</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(game, index) in rawdata" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
-                <td>{{ game.date }}</td>
-                <td v-bind:style="game.scoreA > game.scoreB ? { background: '#d2ff62' } : {}">
-                    <span>{{ game.keeperA }}</span>
-                    -
-                    <span>{{ game.strikerA }}</span>
-                </td>
-                <td v-bind:style="game.scoreA === 0 || game.scoreB === 0 ? { background: 'black', color: 'white' } : {}">
-                    <span>{{ game.scoreA }}</span> - <span>{{ game.scoreB }}</span>
-                </td>
-                <td v-bind:style="game.scoreB > game.scoreA ? { background: '#d2ff62' } : {}">
-                    <span>{{ game.keeperB }}</span>
-                    -
-                    <span>{{ game.strikerB }}</span>
-                </td>
-                <td v-if="showRating">
-                    <span class="ratingDelta">{{ Math.abs(game.ratings.deltaTeamA.toFixed()) }}</span>
-                </td>
-                <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
-                    <span>{{ game.ratings.oldTeamA.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamA.toFixed() }}</span>
-                </td>
-                <td v-if="showRating" v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
-                    <span>{{ game.ratings.oldTeamB.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamB.toFixed() }}</span>
-                </td>
-                <td v-if="showRating">
-                    <span class="ratingDelta">{{ Math.abs(game.ratings.deltaTeamAKeeper.toFixed()) }}</span>
-                </td>
-                <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
-                    <span>{{ game.ratings.oldTeamAKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAKeeper.toFixed() }}</span>
-                    (<span>{{ game.keeperA }}</span>)
-                </td>
-                <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
-                    <span>{{ game.ratings.oldTeamAStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAStriker.toFixed() }}</span>
-                    (<span>{{ game.strikerA }}</span>)
-                </td>
-                <td v-if="showRating" v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
-                    <span>{{ game.ratings.oldTeamBKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBKeeper.toFixed() }}</span>
-                    (<span>{{ game.keeperB }}</span>)
-                </td>
-                <td v-if="showRating" v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
-                    <span>{{ game.ratings.oldTeamBStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBStriker.toFixed() }}</span>
-                    (<span>{{ game.strikerB }}</span>)
-                </td>
-            </tr>
-        </tbody>
     </table>
 </div>
 `

@@ -520,6 +520,10 @@ class GlobalStats {
         return highestRatedPlayerEver;
     }
 
+    findGamesForPlayer(name) {
+        return this.rawData.filter((game) => game.keeperA === name || game.strikerA === name || game.keeperB === name || game.strikerB === name);
+    }
+
     loadStats() {
         this.leadingTeam = this.teamStats.allTeams[0];
         this.leadingPlayer = this.playerStats.allPlayers[0];
