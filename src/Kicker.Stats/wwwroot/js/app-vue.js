@@ -5,52 +5,87 @@
 const PlayerDetails = {
     props: ['stats', 'playerStat'],
     template: `
-<div>
-    <h3>Ranking</h3>
-    <div>
-        <span class="stat-number">
-            {{ stats.playerStats.getPlayerRanking(playerStat.name) > 0 ? stats.playerStats.getPlayerRanking(playerStat.name) : 'N/A' }}
-        </span>
-        <div class="small-note">Only players with at least 10 games have a ranking</div>
+<div class="pure-g">
+    <div class="pure-u-1 pure-u-md-5-5 stat" >
+        <h3>Ranking</h3>
+        <div>
+            <span class="stat-number">
+                {{ stats.playerStats.getPlayerRanking(playerStat.name) > 0 ? stats.playerStats.getPlayerRanking(playerStat.name) : 'N/A' }}
+                /    
+                {{ stats.playerStats.getTotalRankedPlayers() }}
+            </span>
+            <div class="small-note">Only players with at least 10 games have a ranking</div>
+        </div>
     </div>
 
-    <h3>Rating</h3>
-    <div>
-        <span class="stat-number">{{ playerStat.eloRating.rating.toFixed() }}</span>
-        <div class="small-note">{{ playerStat.eloRating.rating.toFixed(5) }}</div>
+    <div class="pure-u-1 pure-u-md-1-5 stat">
+        <h3>Rating</h3>
+        <div>
+            <span class="stat-number">{{ playerStat.eloRating.rating.toFixed() }}</span>
+            <div class="small-note">{{ playerStat.eloRating.rating.toFixed(5) }}</div>
+        </div>
     </div>
 
-    <h3>Highest rating ever</h3>
-    <div>
-        <span class="stat-number">{{ playerStat.highestRatingEver.toFixed() }}</span>
-        <div class="small-note">{{ playerStat.highestRatingEver.toFixed(5) }}</div>
+    <div class="pure-u-1 pure-u-md-1-5 stat">
+        <h3>Highest rating ever</h3>
+        <div>
+            <span class="stat-number">{{ playerStat.highestRatingEver.toFixed() }}</span>
+            <div class="small-note">{{ playerStat.highestRatingEver.toFixed(5) }}</div>
+        </div>
     </div>
 
-    <h3>Win ratio</h3>
-    <div>
-        <span class="stat-number">{{ (playerStat.winRatio * 100).toFixed(2) }} %</span>
-        <div class="small-note">{{ playerStat.gamesWon }} of {{ playerStat.gamesPlayed }} games won</div>
+    <div class="pure-u-1 pure-u-md-3-5 stat">
+        <h3>Average team rating</h3>
+        <div>
+            <span class="stat-number">{{ playerStat.averageTeamRating.toFixed() }}</span>
+            <div class="small-note">{{ playerStat.averageTeamRating.toFixed(5) }}</div>
+        </div>
     </div>
 
-    <h3>Longest streak</h3>
-    <div>
-        <span class="stat-number">{{ playerStat.longestStreak }}</span>
-        <div class="small-note">Current streak: {{ playerStat.currentStreak }}</div>
+    <div class="pure-u-1 pure-u-md-1-5 stat">
+        <h3>Longest streak</h3>
+        <div>
+            <span class="stat-number">{{ playerStat.longestStreak }}</span>
+            <div class="small-note">Current streak: {{ playerStat.currentStreak }}</div>
+        </div>
     </div>
 
-    <h3>Preferred position</h3>
-    <div>
-        <span class="stat-number">{{ playerStat.preferredPosition.position }}</span>
-        <div class="small-note">Played {{ (playerStat.preferredPosition.ratio * 100).toFixed(2) }} % of all matches as {{ playerStat.preferredPosition.position }}</div>
+    <div class="pure-u-1 pure-u-md-1-5 stat">
+        <h3>Win ratio</h3>
+        <div>
+            <span class="stat-number">{{ (playerStat.winRatio * 100).toFixed(2) }} %</span>
+            <div class="small-note">{{ playerStat.gamesWon }} of {{ playerStat.gamesPlayed }} games won</div>
+        </div>
     </div>
 
-    <h3>Goals allowed</h3>
-    <div>
-        <span class="stat-number">{{ playerStat.averageGoalsAllowed.toFixed(2) }} %</span>
-        <div class="small-note">Allowed {{ playerStat.totalGoalsAllowed }} in {{ playerStat.timesPlayedAsKeeper }} games as keeper</div>
+    <div class="pure-u-1 pure-u-md-3-5 stat">
+        <h3>Goals allowed</h3>
+        <div>
+            <span class="stat-number">{{ playerStat.averageGoalsAllowed.toFixed(2) }} %</span>
+            <div class="small-note">Allowed {{ playerStat.totalGoalsAllowed }} in {{ playerStat.timesPlayedAsKeeper }} games as keeper</div>
+        </div>
     </div>
 
+    <div class="pure-u-1 pure-u-md-1-5 stat">
+        <h3>Preferred position</h3>
+        <div>
+            <span class="stat-number">{{ playerStat.preferredPosition.position }}</span>
+            <div class="small-note">Played {{ (playerStat.preferredPosition.ratio * 100).toFixed(2) }} % of all matches as {{ playerStat.preferredPosition.position }}</div>
+        </div>
+    </div>
+
+    <div class="pure-u-1 pure-u-md-3-5 stat">
+        <h3>Best position</h3>
+        <div>
+            <span class="stat-number">{{ playerStat.bestPosition.position }}</span>
+            <div class="small-note">Average team rating {{ (playerStat.bestPosition.averageTeamRating).toFixed() }}</div>
+        </div>
+    </div>
+    <!--
+    <div class="pure-u-1 pure-u-md-1-5">
     {{ playerStat }}
+    </div>
+    -->
 </div>
 `
 };

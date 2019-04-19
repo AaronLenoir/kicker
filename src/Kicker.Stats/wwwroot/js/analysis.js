@@ -407,6 +407,10 @@ class PlayerStats {
         let frequentPlayers = this.allPlayers.filter((playerStat) => playerStat.gamesPlayed >= 10);
         return frequentPlayers.findIndex((stat) => stat.name === name) + 1;
     }
+
+    getTotalRankedPlayers() {
+        return this.allPlayers.filter((playerStat) => playerStat.gamesPlayed >= 10).length;
+    }
 }
 
 class GlobalStats {
