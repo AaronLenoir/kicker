@@ -70,19 +70,19 @@ const GameOverview = {
                 </td>
                 <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
                     <span>{{ game.ratings.oldTeamAKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAKeeper.toFixed() }}</span>
-                    (<span>{{ game.keeperA }}</span>)
+                    (<router-link :to="{path: '/player-stats/' + game.keeperA}">{{ game.keeperA }}</router-link>)
                 </td>
                 <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
                     <span>{{ game.ratings.oldTeamAStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAStriker.toFixed() }}</span>
-                    (<span>{{ game.strikerA }}</span>)
+                    (<router-link :to="{path: '/player-stats/' + game.strikerA}">{{ game.strikerA }}</router-link>)
                 </td>
                 <td v-if="showRating" v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
                     <span>{{ game.ratings.oldTeamBKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBKeeper.toFixed() }}</span>
-                    (<span>{{ game.keeperB }}</span>)
+                    (<router-link :to="{path: '/player-stats/' + game.keeperB}">{{ game.keeperB }}</router-link>)
                 </td>
                 <td v-if="showRating" v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
                     <span>{{ game.ratings.oldTeamBStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBStriker.toFixed() }}</span>
-                    (<span>{{ game.strikerB }}</span>)
+                    (<router-link :to="{path: '/player-stats/' + game.strikerB}">{{ game.strikerB }}</router-link>)
                 </td>
             </tr>
         </tbody>
@@ -337,7 +337,7 @@ const PlayerRanking = {
                     <span>{{ index + 1 }}</span>
                 </td>
                 <td>
-                    <span>{{ playerStat.name }}</span>
+                    <router-link :to="{path: 'player-stats/' + playerStat.name}">{{ playerStat.name }}</router-link>
                 </td>
                 <td>
                     <span>{{ playerStat.eloRating.rating.toFixed() }}</span>
@@ -383,7 +383,9 @@ const PlayerStatsComponent = {
     </thead>
     <tbody>
         <tr v-for="(playerStat, index) in stats.playerStats.allPlayers" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
-            <td>{{ playerStat.name }}</td>
+            <td>
+                <router-link :to="{path: 'player-stats/' + playerStat.name}">{{ playerStat.name }}</router-link>
+            </td>
             <td>
                 <span>{{ playerStat.gamesWon }}</span>
                 /
@@ -495,7 +497,7 @@ const Overview = {
             </h3>
             <div>
                 <span class="streak">{{ app.analysis.stats.globalStats.longestPlayerStreak.streak }}</span>
-                <span v-for="(playerStat, index) in app.analysis.stats.globalStats.longestPlayerStreak.players">{{ index > 0 ? ', ' : '' }} {{ playerStat.name }}</span>
+                <span v-for="(playerStat, index) in app.analysis.stats.globalStats.longestPlayerStreak.players">{{ index > 0 ? ', ' : '' }} <router-link :to="{path: 'player-stats/' + playerStat.name}">{{ playerStat.name }}</router-link></span>
                 <div class="small-note">Consecutive wins</div>
             </div>
             <h3 v-if="app.analysis.stats.globalStats.bestKeeper">
@@ -503,7 +505,7 @@ const Overview = {
             </h3>
             <div v-if="app.analysis.stats.globalStats.bestKeeper">
                 <span class="streak">{{ app.analysis.stats.globalStats.bestKeeper.averageGoalsAllowed.toFixed(2) }}</span>
-                <span >{{ app.analysis.stats.globalStats.bestKeeper.name }}</span>
+                <span><router-link :to="{path: 'player-stats/' + app.analysis.stats.globalStats.bestKeeper.name}">{{ app.analysis.stats.globalStats.bestKeeper.name }}</router-link></span>
                 <div class="small-note">Average goals allowed (at least 10 games as keeper)</div>
             </div>
             <h3>
@@ -511,7 +513,7 @@ const Overview = {
             </h3>
             <div>
                 <span class="streak">{{ app.analysis.stats.globalStats.highestRatedPlayerEver.highestRatingEver.toFixed() }}</span>
-                <span >{{ app.analysis.stats.globalStats.highestRatedPlayerEver.name }}</span>
+                <span><router-link :to="{path: 'player-stats/' + app.analysis.stats.globalStats.highestRatedPlayerEver.name}">{{ app.analysis.stats.globalStats.highestRatedPlayerEver.name }}</router-link></span>
                 <div class="small-note">Current rating: {{ app.analysis.stats.globalStats.highestRatedPlayerEver.eloRating.rating.toFixed() }} </div>
             </div>
         </div>
