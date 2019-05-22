@@ -154,7 +154,7 @@ const PlayerDetails = {
         <div class="pure-u-1 pure-u-md-3-5 stat">
             <h3>Goals allowed</h3>
             <div>
-                <span class="stat-number">{{ playerStat.averageGoalsAllowed.toFixed(2) }} %</span>
+                <span class="stat-number">{{ playerStat.averageGoalsAllowed.toFixed(2) }}</span>
                 <div class="small-note">Allowed {{ playerStat.totalGoalsAllowed }} in {{ playerStat.timesPlayedAsKeeper }} games as keeper</div>
             </div>
         </div>
