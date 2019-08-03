@@ -57,7 +57,7 @@ const GameOverview = {
                     <span>{{ game.strikerB }}</span>
                 </td>
                 <td v-if="showRating">
-                    <span class="ratingDelta">{{ Math.abs(game.ratings.deltaTeamA.toFixed()) }}</span>
+                    <span class="ratingDelta">{{ game.scoreA > game.scoreB ? game.ratings.deltaTeamA.toFixed() : game.ratings.deltaTeamB.toFixed() }}</span>
                 </td>
                 <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
                     <span>{{ game.ratings.oldTeamA.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamA.toFixed() }}</span>
@@ -66,7 +66,7 @@ const GameOverview = {
                     <span>{{ game.ratings.oldTeamB.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamB.toFixed() }}</span>
                 </td>
                 <td v-if="showRating">
-                    <span class="ratingDelta">{{ Math.abs(game.ratings.deltaTeamAKeeper.toFixed()) }}</span>
+                    <span class="ratingDelta">{{ game.scoreA > game.scoreB ? game.ratings.deltaTeamAKeeper.toFixed() : game.ratings.deltaTeamBKeeper.toFixed() }}</span>
                 </td>
                 <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
                     <span>{{ game.ratings.oldTeamAKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAKeeper.toFixed() }}</span>
