@@ -26,7 +26,7 @@
             if (ourScore > 0) { ourResult += 0.25; }
         }
 
-        this.rating += this._kFactor * (ourResult - ourExpectedResult);
+        this.rating += Math.round(this._kFactor * (ourResult - ourExpectedResult));
     }
 }
 
