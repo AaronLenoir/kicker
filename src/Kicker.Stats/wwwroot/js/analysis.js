@@ -185,11 +185,11 @@ class PlayerStat {
         this.highestRatingEver = 0;
 
         this.preferredPosition = {
-            position: "unknown",
+            position: 'unknown',
             ratio: 0
         };
         this.bestPosition = {
-            position: "unknown",
+            position: 'unknown',
             averageTeamRating: 0
         };
         this.timesPlayedAsKeeper = 0;
@@ -205,19 +205,22 @@ class PlayerStat {
         this.currentStreak = 0;
     }
 
-    updatePreferredPosition(positionPlayed) {
-        if (positionPlayed === "keeper") { this.timesPlayedAsKeeper++; }
-        if (positionPlayed === "striker") { this.timesPlayedAsStriker++; }
+    addPosition(positionPlayed) {
+        if (positionPlayed === 'keeper') { this.timesPlayedAsKeeper++; }
+        if (positionPlayed === 'striker') { this.timesPlayedAsStriker++; }
+    }
+
+    updatePreferredPositionRatio() {
         if (this.timesPlayedAsKeeper > this.timesPlayedAsStriker) {
-            this.preferredPosition.position = "keeper";
+            this.preferredPosition.position = 'keeper';
             this.preferredPosition.ratio = this.timesPlayedAsKeeper / (this.timesPlayedAsStriker + this.timesPlayedAsKeeper);
         }
         if (this.timesPlayedAsKeeper < this.timesPlayedAsStriker) {
-            this.preferredPosition.position = "striker";
+            this.preferredPosition.position = 'striker';
             this.preferredPosition.ratio = this.timesPlayedAsStriker / (this.timesPlayedAsStriker + this.timesPlayedAsKeeper);
         }
         if (this.timesPlayedAsKeeper === this.timesPlayedAsStriker) {
-            this.preferredPosition.position = "both";
+            this.preferredPosition.position = 'both';
             this.preferredPosition.ratio = 0.5;
         }
     }
@@ -284,11 +287,11 @@ class PlayerStats {
 
         playerStat.winRatio = playerStat.gamesWon / playerStat.gamesPlayed;
 
-        playerStat.updatePreferredPosition(position);
+        playerStat.addPosition(position);
 
-        if (position === "keeper") {
+        if (position === 'keeper') {
             playerStat.totalGoalsAllowed += otherScore;
-            playerStat.averageGoalsAllowed = playerStat.totalGoalsAllowed / playerStat.timesPlayedAsKeeper;
+            //playerStat.averageGoalsAllowed = playerStat.totalGoalsAllowed / playerStat.timesPlayedAsKeeper;
         }
     }
 
@@ -338,10 +341,10 @@ class PlayerStats {
     }
 
     addGame(game) {
-        this.updatePlayer(game.keeperA, "keeper", game.scoreA, game.scoreB);
-        this.updatePlayer(game.strikerA, "striker", game.scoreA, game.scoreB);
-        this.updatePlayer(game.keeperB, "keeper", game.scoreB, game.scoreA);
-        this.updatePlayer(game.strikerB, "striker", game.scoreB, game.scoreA);
+        this.updatePlayer(game.keeperA, 'keeper', game.scoreA, game.scoreB);
+        this.updatePlayer(game.strikerA, 'striker', game.scoreA, game.scoreB);
+        this.updatePlayer(game.keeperB, 'keeper', game.scoreB, game.scoreA);
+        this.updatePlayer(game.strikerB, 'striker', game.scoreB, game.scoreA);
 
         this.updatePlayerRatings(game);
     }
@@ -380,25 +383,28 @@ class PlayerStats {
             if (totalStrikerTeams > 0) { player.averageStrikerTeamRating = totalStrikerRating / totalStrikerTeams; }
 
             if (player.averageKeeperTeamRating > player.averageStrikerTeamRating) {
-                player.bestPosition.position = "keeper";
+                player.bestPosition.position = 'keeper';
                 player.bestPosition.averageTeamRating = player.averageKeeperTeamRating;
             }
 
             if (player.averageKeeperTeamRating < player.averageStrikerTeamRating) {
-                player.bestPosition.position = "striker";
+                player.bestPosition.position = 'striker';
                 player.bestPosition.averageTeamRating = player.averageStrikerTeamRating;
             }
 
             if (player.averageKeeperTeamRating === player.averageStrikerTeamRating) {
-                player.bestPosition.position = "both";
+                player.bestPosition.position = 'both';
                 player.bestPosition.averageTeamRating = player.averageKeeperTeamRating;
             }
         }
     }
 
-    updateParticipation(totalGames) {
+    updateRatios(totalGames) {
         for (let i = 0; i < this.allPlayers.length; i++) {
-            this.allPlayers[i].participationRatio = this.allPlayers[i].gamesPlayed / totalGames;
+            let playerStat = this.allPlayers[i];
+            playerStat.participationRatio = this.allPlayers[i].gamesPlayed / totalGames;
+            playerStat.updatePreferredPositionRatio();
+            playerStat.averageGoalsAllowed = playerStat.totalGoalsAllowed / playerStat.timesPlayedAsKeeper;
         }
     }
 
@@ -564,7 +570,7 @@ class KickerStatsAnalysis {
         playerStats.sortByRating();
 
         playerStats.updateWithTeamStats(teamStats);
-        playerStats.updateParticipation(rawData.length);
+        playerStats.updateRatios(rawData.length);
 
         let globalStats = new GlobalStats(rawData, playerStats, teamStats);
 
