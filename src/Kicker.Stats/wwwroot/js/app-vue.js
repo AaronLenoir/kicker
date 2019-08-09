@@ -456,7 +456,7 @@ const Overview = {
                 Leading team
             </h3>
             <div class="leader">
-                {{ app.analysis.stats.globalStats.leadingTeam.team.getTeamId() }} ({{ app.analysis.stats.globalStats.leadingTeam.eloRating.rating.toFixed() }})
+                {{ app.analysis.stats.globalStats.leadingTeam.team.teamId }} ({{ app.analysis.stats.globalStats.leadingTeam.eloRating.rating.toFixed() }})
             </div>
             <team-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
             <h3>
@@ -464,7 +464,7 @@ const Overview = {
             </h3>
             <div>
                 <span class="streak">{{ app.analysis.stats.globalStats.longestTeamStreak.streak }}</span>
-                <span v-for="(teamStat, index) in app.analysis.stats.globalStats.longestTeamStreak.teams">{{ index > 0 ? ' ; ' : '' }}{{ teamStat.team.getTeamId() }}</span>
+                <span v-for="(teamStat, index) in app.analysis.stats.globalStats.longestTeamStreak.teams">{{ index > 0 ? ' ; ' : '' }}{{ teamStat.team.teamId }}</span>
                 <div class="small-note">Consecutive wins</div>
             </div>
             <h3 v-if="app.analysis.stats.globalStats.bestDefense">
@@ -472,7 +472,7 @@ const Overview = {
             </h3>
             <div v-if="app.analysis.stats.globalStats.bestDefense">
                 <span class="streak">{{ app.analysis.stats.globalStats.bestDefense.averageGoalsAllowed.toFixed(2) }}</span>
-                <span >{{ app.analysis.stats.globalStats.bestDefense.team.getTeamId() }}</span>
+                <span >{{ app.analysis.stats.globalStats.bestDefense.team.teamId }}</span>
                 <div class="small-note">Average goals allowed (at least 5 games)</div>
             </div>
             <h3>
@@ -480,7 +480,7 @@ const Overview = {
             </h3>
             <div>
                 <span class="streak">{{ app.analysis.stats.globalStats.highestRatedTeamEver.highestRatingEver.toFixed() }}</span>
-                <span >{{ app.analysis.stats.globalStats.highestRatedTeamEver.team.getTeamId() }}</span>
+                <span >{{ app.analysis.stats.globalStats.highestRatedTeamEver.team.teamId }}</span>
                 <div class="small-note">Current rating: {{ app.analysis.stats.globalStats.highestRatedTeamEver.eloRating.rating.toFixed() }} </div>
             </div>
         </div>

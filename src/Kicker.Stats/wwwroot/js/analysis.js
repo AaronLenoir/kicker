@@ -38,10 +38,11 @@ class Team {
     constructor(keeper, striker) {
         this.keeper = keeper;
         this.striker = striker;
+        this.teamId = keeper + ' - ' + striker;
     }
 
     getTeamId() {
-        return `${this.keeper} - ${this.striker}`;
+        return this.teamId;
     }
 }
 
@@ -93,8 +94,8 @@ class TeamStats {
         let teamA = new Team(game.keeperA, game.strikerA);
         let teamB = new Team(game.keeperB, game.strikerB);
 
-        let teamAStat = this.allTeams.find((teamStat) => teamStat.team.getTeamId() === teamA.getTeamId());
-        let teamBStat = this.allTeams.find((teamStat) => teamStat.team.getTeamId() === teamB.getTeamId());
+        let teamAStat = this.allTeams.find((teamStat) => teamStat.team.teamId === teamA.teamId);
+        let teamBStat = this.allTeams.find((teamStat) => teamStat.team.teamId === teamB.teamId);
 
         if (!teamAStat) {
             teamAStat = new TeamStat(teamA);
@@ -149,6 +150,9 @@ class TeamStats {
 
         game.ratings.deltaTeamA = game.ratings.newTeamA - game.ratings.oldTeamA;
         game.ratings.deltaTeamB = game.ratings.newTeamB - game.ratings.oldTeamB;
+
+        game.teamA = teamA;
+        game.teamB = teamB;
     }
 }
 
@@ -357,7 +361,7 @@ class PlayerStats {
                 let team = teamStat.team;
                 let teamRank = j + 1;
 
-                if (team.getTeamId().indexOf(player.name) > -1) {
+                if (team.teamId.indexOf(player.name) > -1) {
                     if (player.highestRankingTeam.ranking === 0 || player.highestRankingTeam.ranking > teamRank) {
                         player.highestRankingTeam.team = team;
                         player.highestRankingTeam.ranking = teamRank;
