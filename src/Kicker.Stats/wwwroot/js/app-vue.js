@@ -6,16 +6,12 @@ const GameOverview = {
     props: ['rawdata'],
     data: function () {
         return {
-            showRating: true,
             pageSize: 100,
             showItems: 100,
             showAddPage: true
         };
     },
     methods: {
-        toggleRatings: function () {
-            this.showRating = !this.showRating;
-        },
         addPage: function () {
             this.showItems += this.pageSize;
             if (this.showItems >= this.rawdata.length) {
@@ -33,8 +29,6 @@ const GameOverview = {
     <h2>Game history (Showing {{ showItems }} of {{ rawdata.length }} games)</h2>
     
     <p>
-        <span v-if="!showRating" v-on:click="toggleRatings" class="button-small pure-button">Show ratings</span>
-        <span v-if="showRating" v-on:click="toggleRatings" class="button-small pure-button">Hide ratings</span>
         <span v-if="showAddPage" v-on:click="showAll" class="button-small pure-button">Show all ...</span>
     </p>
 
@@ -45,14 +39,14 @@ const GameOverview = {
                 <th>Team A (keeper - striker)</th>
                 <th>Score</th>
                 <th>Team B (keeper - striker)</th>
-                <th v-if="showRating">Team points</th>
-                <th v-if="showRating">Team A</th>
-                <th v-if="showRating">Team B</th>
-                <th v-if="showRating">Player points</th>
-                <th v-if="showRating">Keeper team A</th>
-                <th v-if="showRating">Striker team A</th>
-                <th v-if="showRating">Keeper team B</th>
-                <th v-if="showRating">Striker team B</th>
+                <th>Team points</th>
+                <th>Team A</th>
+                <th>Team B</th>
+                <th>Player points</th>
+                <th>Keeper team A</th>
+                <th>Striker team A</th>
+                <th>Keeper team B</th>
+                <th>Striker team B</th>
             </tr>
         </thead>
         <tbody>
@@ -71,31 +65,31 @@ const GameOverview = {
                     -
                     <span>{{ game.strikerB }}</span>
                 </td>
-                <td v-if="showRating">
+                <td>
                     <span class="ratingDelta">{{ game.scoreA > game.scoreB ? game.ratings.deltaTeamA.toFixed() : game.ratings.deltaTeamB.toFixed() }}</span>
                 </td>
-                <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                <td v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
                     <span>{{ game.ratings.oldTeamA.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamA.toFixed() }}</span>
                 </td>
-                <td v-if="showRating" v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                <td v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
                     <span>{{ game.ratings.oldTeamB.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamB.toFixed() }}</span>
                 </td>
-                <td v-if="showRating">
+                <td>
                     <span class="ratingDelta">{{ game.scoreA > game.scoreB ? game.ratings.deltaTeamAKeeper.toFixed() : game.ratings.deltaTeamBKeeper.toFixed() }}</span>
                 </td>
-                <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                <td v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
                     <span>{{ game.ratings.oldTeamAKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAKeeper.toFixed() }}</span>
                     (<router-link :to="{path: '/player-stats/' + game.keeperA}">{{ game.keeperA }}</router-link>)
                 </td>
-                <td v-if="showRating" v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                <td v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
                     <span>{{ game.ratings.oldTeamAStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAStriker.toFixed() }}</span>
                     (<router-link :to="{path: '/player-stats/' + game.strikerA}">{{ game.strikerA }}</router-link>)
                 </td>
-                <td v-if="showRating" v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                <td v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
                     <span>{{ game.ratings.oldTeamBKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBKeeper.toFixed() }}</span>
                     (<router-link :to="{path: '/player-stats/' + game.keeperB}">{{ game.keeperB }}</router-link>)
                 </td>
-                <td v-if="showRating" v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                <td v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
                     <span>{{ game.ratings.oldTeamBStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBStriker.toFixed() }}</span>
                     (<router-link :to="{path: '/player-stats/' + game.strikerB}">{{ game.strikerB }}</router-link>)
                 </td>
