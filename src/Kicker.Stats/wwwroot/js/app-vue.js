@@ -6,21 +6,36 @@ const GameOverview = {
     props: ['rawdata'],
     data: function () {
         return {
-            showRating: true
+            showRating: true,
+            pageSize: 100,
+            showItems: 100,
+            showAddPage: true
         };
     },
     methods: {
         toggleRatings: function () {
             this.showRating = !this.showRating;
+        },
+        addPage: function () {
+            this.showItems += this.pageSize;
+            if (this.showItems >= this.rawdata.length) {
+                this.showItems = this.rawdata.length;
+                this.showAddPage = false;
+            }
+        },
+        showAll: function () {
+            this.showItems = this.rawdata.length;
+            this.showAddPage = false;
         }
     },
     template: `
 <div>
-    <h2>Game history ({{ rawdata.length }} games)</h2>
+    <h2>Game history (Showing {{ showItems }} of {{ rawdata.length }} games)</h2>
     
     <p>
         <span v-if="!showRating" v-on:click="toggleRatings" class="button-small pure-button">Show ratings</span>
         <span v-if="showRating" v-on:click="toggleRatings" class="button-small pure-button">Hide ratings</span>
+        <span v-if="showAddPage" v-on:click="showAll" class="button-small pure-button">Show all ...</span>
     </p>
 
     <table class="pure-table pure-table-bordered">
@@ -41,7 +56,7 @@ const GameOverview = {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(game, index) in rawdata" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+            <tr v-for="(game, index) in rawdata" v-if="index < showItems" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
                 <td>{{ game.date }}</td>
                 <td v-bind:style="game.scoreA > game.scoreB ? { background: '#d2ff62' } : {}">
                     <span>{{ game.keeperA }}</span>
@@ -87,6 +102,11 @@ const GameOverview = {
             </tr>
         </tbody>
     </table>
+
+    <p>
+        <span v-if="showAddPage" v-on:click="addPage" class="button-small pure-button">Show {{ pageSize }} more ...</span>
+        <span v-if="showAddPage" v-on:click="showAll" class="button-small pure-button">Show all ...</span>
+    </p>
 </div>
 `
 };
