@@ -14,6 +14,17 @@ namespace Kicker.Stats.Services
 {
     public class GoogleDocsRepository : IGameRepository
     {
+        private class Column
+        {
+            public const int Date = 0;
+            public const int KeeperA = 1;
+            public const int StrikerA = 2;
+            public const int ScoreA = 3;
+            public const int ScoreB = 4;
+            public const int KeeperB = 5;
+            public const int StrikerB = 6;
+        }
+
         static readonly string[] _scopes = { SheetsService.Scope.SpreadsheetsReadonly };
 
         private readonly IMemoryCache _cache;
@@ -67,14 +78,14 @@ namespace Kicker.Stats.Services
             {
                 if (row.Count < 7) { continue; }
 
-                if (!int.TryParse(row[5].ToString(), out int scoreA)) { continue; }
-                if (!int.TryParse(row[6].ToString(), out int scoreB)) { continue; }
+                if (!int.TryParse(row[Column.ScoreA].ToString(), out int scoreA)) { continue; }
+                if (!int.TryParse(row[Column.ScoreB].ToString(), out int scoreB)) { continue; }
 
-                result.Add(new GameResult(row[0].ToString(),
-                                          row[1].ToString(),
-                                          row[2].ToString(),
-                                          row[3].ToString(),
-                                          row[4].ToString(),
+                result.Add(new GameResult(row[Column.Date].ToString(),
+                                          row[Column.KeeperA].ToString(),
+                                          row[Column.StrikerA].ToString(),
+                                          row[Column.KeeperB].ToString(),
+                                          row[Column.StrikerB].ToString(),
                                           scoreA,
                                           scoreB));
             }
