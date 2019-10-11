@@ -129,7 +129,7 @@ const PlayerDetails = {
             <h3>Rating</h3>
             <div>
                 <span class="stat-number">{{ playerStat.eloRating.rating.toFixed() }}</span>
-                <div class="small-note">{{ playerStat.eloRating.rating.toFixed(5) }}</div>
+                <div class="small-note">{{ playerStat.eloRating.rating.toFixed() }}</div>
             </div>
         </div>
 
@@ -137,7 +137,7 @@ const PlayerDetails = {
             <h3>Highest rating ever</h3>
             <div>
                 <span class="stat-number">{{ playerStat.highestRatingEver.toFixed() }}</span>
-                <div class="small-note">{{ playerStat.highestRatingEver.toFixed(5) }}</div>
+                <div class="small-note">{{ playerStat.highestRatingEver.toFixed() }}</div>
             </div>
         </div>
 
@@ -168,8 +168,10 @@ const PlayerDetails = {
         <div class="pure-u-1 pure-u-md-3-5 stat">
             <h3>Goals allowed</h3>
             <div>
-                <span class="stat-number">{{ playerStat.averageGoalsAllowed.toFixed(2) }}</span>
-                <div class="small-note">Allowed {{ playerStat.totalGoalsAllowed }} in {{ playerStat.timesPlayedAsKeeper }} games as keeper</div>
+                <span v-if="playerStat.timesPlayedAsKeeper > 0" class="stat-number">{{ playerStat.averageGoalsAllowed.toFixed(2) }}</span>
+                <span v-if="playerStat.timesPlayedAsKeeper === 0" class="stat-number">N/A</span>
+                <div v-if="playerStat.timesPlayedAsKeeper > 0" class="small-note">Allowed {{ playerStat.totalGoalsAllowed }} in {{ playerStat.timesPlayedAsKeeper }} games as keeper</div>
+                <div v-if="playerStat.timesPlayedAsKeeper === 0" class="small-note">No games played as keeper</div>
             </div>
         </div>
 
