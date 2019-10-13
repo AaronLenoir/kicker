@@ -129,7 +129,6 @@ const PlayerDetails = {
             <h3>Rating</h3>
             <div>
                 <span class="stat-number">{{ playerStat.eloRating.rating.toFixed() }}</span>
-                <div class="small-note">{{ playerStat.eloRating.rating.toFixed() }}</div>
             </div>
         </div>
 
@@ -137,7 +136,6 @@ const PlayerDetails = {
             <h3>Highest rating ever</h3>
             <div>
                 <span class="stat-number">{{ playerStat.highestRatingEver.toFixed() }}</span>
-                <div class="small-note">{{ playerStat.highestRatingEver.toFixed() }}</div>
             </div>
         </div>
 
