@@ -120,8 +120,6 @@ const PlayerDetails = {
         loadChart () {
                 let playerGames = this.stats.globalStats.findGamesForPlayer(this.playerStat.name);
 
-                console.log(playerGames);
-
                 let findPlayerRating = function (game, playerName) {
                     if (game.keeperA === playerName) { return game.ratings.newTeamAKeeper; }
                     if (game.strikerA === playerName) { return game.ratings.newTeamAStriker; }
@@ -130,7 +128,6 @@ const PlayerDetails = {
                 }
 
                 let parseDate = function (dateAsString) {
-                    console.log(dateAsString);
                     return Date.UTC(parseInt(dateAsString.substring(6,10)),
                                     parseInt(dateAsString.substring(3,5)) - 1,
                                     parseInt(dateAsString.substring(0,2)));
@@ -146,11 +143,7 @@ const PlayerDetails = {
                     }
                 }
 
-                //let dataPoints = playerGames.map(game => [parseDate(game.date), findPlayerRating(game, this.playerStat.name)]);
-
                 dataPoints.reverse();
-
-                console.log(dataPoints);
 
                 Highcharts.chart('ratingChart', {
                     chart: {
@@ -166,7 +159,6 @@ const PlayerDetails = {
                       type: 'datetime',
                       labels: {
                         formatter() {
-                          console.log(this.value)
                           return Highcharts.dateFormat('%e - %b - %y', this.value)
                         }
                       }
