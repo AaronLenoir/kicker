@@ -132,7 +132,7 @@ const PlayerDetails = {
                 let parseDate = function (dateAsString) {
                     console.log(dateAsString);
                     return Date.UTC(parseInt(dateAsString.substring(6,10)),
-                                    parseInt(dateAsString.substring(3,5)),
+                                    parseInt(dateAsString.substring(3,5)) - 1,
                                     parseInt(dateAsString.substring(0,2)));
                 }
 
