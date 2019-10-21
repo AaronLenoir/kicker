@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kicker stats</title>
 
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
 
@@ -43,9 +47,9 @@
             text-decoration: none;
         }
 
-        a:hover {
-            text-decoration: underline;
-        }
+            a:hover {
+                text-decoration: underline;
+            }
 
         .center {
             justify-content: center;
@@ -129,31 +133,34 @@
                 transition: border-bottom .5s;
                 border-bottom: 1px solid lightgray;
             }
+
             .menu a.icon {
                 padding-left: 0;
             }
 
-                .menu > a:hover {
-                    border-bottom: 1px solid black;
-                }
+            .menu > a:hover {
+                border-bottom: 1px solid black;
+            }
 
-                .menu > a.router-link-active {
-                    border-bottom: 1px solid black;
-                }
+            .menu > a.router-link-active {
+                border-bottom: 1px solid black;
+            }
 
         @media screen and (max-width: 800px) {
             .menu a {
                 display: none;
             }
-            .menu a.icon {
-                display: block;
-            }
 
-            .menu a.icon {
-                float: left;
-                margin-right: 5em;
-                border: 0;
-            }
+                .menu a.icon {
+                    display: block;
+                }
+
+                .menu a.icon {
+                    float: left;
+                    margin-right: 5em;
+                    border: 0;
+                }
+
             .menu > a:hover.icon {
                 border: 0;
             }
@@ -236,7 +243,8 @@
                 x.className = "menu";
             }
         }
-    </script>
+
+/**/</script>
 </head>
 <body>
 

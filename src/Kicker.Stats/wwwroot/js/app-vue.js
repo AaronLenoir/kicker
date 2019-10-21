@@ -6,8 +6,8 @@ const GameOverview = {
     props: ['rawdata'],
     data: function () {
         return {
-            pageSize: 100,
-            showItems: 100,
+            pageSize: 25,
+            showItems: 25,
             showAddPage: true
         };
     },
@@ -110,6 +110,95 @@ const PlayerDetails = {
     components: {
         'game-overview': GameOverview
     },
+    mounted: function () {
+        this.loadChart();
+    },
+    updated: function () {
+        this.loadChart();
+    },
+    methods: {
+        loadChart () {
+                let playerGames = this.stats.globalStats.findGamesForPlayer(this.playerStat.name);
+
+                console.log(playerGames);
+
+                let findPlayerRating = function (game, playerName) {
+                    if (game.keeperA === playerName) { return game.ratings.newTeamAKeeper; }
+                    if (game.strikerA === playerName) { return game.ratings.newTeamAStriker; }
+                    if (game.keeperB === playerName) { return game.ratings.newTeamBKeeper; }
+                    if (game.strikerB === playerName) { return game.ratings.newTeamBStriker; }
+                }
+
+                let parseDate = function (dateAsString) {
+                    console.log(dateAsString);
+                    return Date.UTC(parseInt(dateAsString.substring(6,10)),
+                                    parseInt(dateAsString.substring(3,5)),
+                                    parseInt(dateAsString.substring(0,2)));
+                }
+
+                let dataPoints = [];
+                let lastDate = "";
+                for (let gameIndex = 0; gameIndex < playerGames.length; gameIndex++) {
+                    let game = playerGames[gameIndex];
+                    if (game.date !== lastDate) {
+                        dataPoints.push([parseDate(game.date), findPlayerRating(game, this.playerStat.name)]);
+                        lastDate = game.date;
+                    }
+                }
+
+                //let dataPoints = playerGames.map(game => [parseDate(game.date), findPlayerRating(game, this.playerStat.name)]);
+
+                dataPoints.reverse();
+
+                console.log(dataPoints);
+
+                Highcharts.chart('ratingChart', {
+                    chart: {
+                        type: 'spline'
+                    },
+                    title: {
+                        text: 'Rating over time'
+                    },
+                    subtitle: {
+                        text: 'Final rating of each day played'
+                    },
+                    xAxis: {
+                      type: 'datetime',
+                      labels: {
+                        formatter() {
+                          console.log(this.value)
+                          return Highcharts.dateFormat('%e - %b - %y', this.value)
+                        }
+                      }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Rating'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{series.name}</b><br>',
+                        pointFormat: '{point.x:%e. %b}: {point.y:.0f}'
+                    },
+                    plotOptions: {
+                        series: {
+                            marker: {
+                                enabled: true,
+                                radius: 3
+                            },
+                            shadow: true
+                        }
+                    },
+
+                    colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
+
+                    series: [{
+                        name: "Rating",
+                        data: dataPoints
+                    }]
+                });
+            }
+    },
     template: `
 <div>
     <div class="pure-g">
@@ -194,6 +283,8 @@ const PlayerDetails = {
         </div>
         -->
     </div>
+
+    <div id="ratingChart"></div>
 
     <div>
         <game-overview v-bind:rawdata="stats.globalStats.findGamesForPlayer(playerStat.name)" />
