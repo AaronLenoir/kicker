@@ -117,60 +117,60 @@ const PlayerDetails = {
         this.loadChart();
     },
     methods: {
-        loadChart () {
-                dataPoints = this.stats.globalStats.getHistoricAnalysisForPlayer(this.playerStat.name).ratingPerDay;
+        loadChart() {
+            dataPoints = this.stats.globalStats.getHistoricAnalysisForPlayer(this.playerStat.name).ratingPerDay;
 
-                Highcharts.chart('ratingChart', {
-                    chart: {
-                        type: 'spline'
-                    },
-                    title: {
-                        text: 'Rating over time'
-                    },
-                    subtitle: {
-                        text: 'Final rating of each day played'
-                    },
-                    xAxis: {
-                      type: 'datetime',
-                      labels: {
+            Highcharts.chart('ratingChart', {
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Rating over time'
+                },
+                subtitle: {
+                    text: 'Final rating of each day played'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    labels: {
                         formatter() {
                             return Highcharts.dateFormat('%e - %b - %y', this.value);
                         }
-                      }
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Rating'
                     },
-                    yAxis: {
-                        title: {
-                            text: 'Rating'
-                        },
-                        plotLines: [{
-                            color: 'red', // Color value
-                            dashStyle: 'longdashdot', // Style of the plot line. Default to solid
-                            value: 400, // Value of where the line will appear
-                            width: 2 // Width of the line
-                        }]
-                    },
-                    tooltip: {
-                        headerFormat: '<b>{series.name}</b><br>',
-                        pointFormat: '{point.x:%e. %b}: {point.y:.0f}'
-                    },
-                    plotOptions: {
-                        series: {
-                            marker: {
-                                enabled: true,
-                                radius: 3
-                            },
-                            shadow: true
-                        }
-                    },
-
-                    colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
-
-                    series: [{
-                        name: "Rating",
-                        data: dataPoints
+                    plotLines: [{
+                        color: 'red', // Color value
+                        dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+                        value: 400, // Value of where the line will appear
+                        width: 2 // Width of the line
                     }]
-                });
-            }
+                },
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%e. %b}: {point.y:.0f}'
+                },
+                plotOptions: {
+                    series: {
+                        marker: {
+                            enabled: true,
+                            radius: 3
+                        },
+                        shadow: true
+                    }
+                },
+
+                colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
+
+                series: [{
+                    name: "Rating",
+                    data: dataPoints
+                }]
+            });
+        }
     },
     template: `
 <div>
@@ -271,7 +271,7 @@ const Player = {
     data: function () {
         return {
             myName: name
-        }
+        };
     },
     components: {
         'player-details': PlayerDetails
@@ -391,7 +391,7 @@ const TeamStatsComponent = {
 const PlayerRanking = {
     props: {
         stats: {
-            type: Object,
+            type: Object
         },
         top: {
             type: Number,
@@ -671,7 +671,7 @@ const router = new VueRouter({
 
 /*
  * App
- */ 
+ */
 
 const kickerStatsApp = new Vue({
     el: '#app',
