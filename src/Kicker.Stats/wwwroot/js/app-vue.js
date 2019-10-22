@@ -159,14 +159,20 @@ const PlayerDetails = {
                       type: 'datetime',
                       labels: {
                         formatter() {
-                          return Highcharts.dateFormat('%e - %b - %y', this.value)
+                            return Highcharts.dateFormat('%e - %b - %y', this.value);
                         }
                       }
                     },
                     yAxis: {
                         title: {
                             text: 'Rating'
-                        }
+                        },
+                        plotLines: [{
+                            color: 'red', // Color value
+                            dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+                            value: 400, // Value of where the line will appear
+                            width: 2 // Width of the line
+                        }]
                     },
                     tooltip: {
                         headerFormat: '<b>{series.name}</b><br>',
