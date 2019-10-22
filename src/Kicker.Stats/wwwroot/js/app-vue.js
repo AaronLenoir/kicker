@@ -118,32 +118,7 @@ const PlayerDetails = {
     },
     methods: {
         loadChart () {
-                let playerGames = this.stats.globalStats.findGamesForPlayer(this.playerStat.name);
-
-                let findPlayerRating = function (game, playerName) {
-                    if (game.keeperA === playerName) { return game.ratings.newTeamAKeeper; }
-                    if (game.strikerA === playerName) { return game.ratings.newTeamAStriker; }
-                    if (game.keeperB === playerName) { return game.ratings.newTeamBKeeper; }
-                    if (game.strikerB === playerName) { return game.ratings.newTeamBStriker; }
-                }
-
-                let parseDate = function (dateAsString) {
-                    return Date.UTC(parseInt(dateAsString.substring(6,10)),
-                                    parseInt(dateAsString.substring(3,5)) - 1,
-                                    parseInt(dateAsString.substring(0,2)));
-                }
-
-                let dataPoints = [];
-                let lastDate = "";
-                for (let gameIndex = 0; gameIndex < playerGames.length; gameIndex++) {
-                    let game = playerGames[gameIndex];
-                    if (game.date !== lastDate) {
-                        dataPoints.push([parseDate(game.date), findPlayerRating(game, this.playerStat.name)]);
-                        lastDate = game.date;
-                    }
-                }
-
-                dataPoints.reverse();
+                dataPoints = this.stats.globalStats.getHistoricAnalysisForPlayer(this.playerStat.name).ratingPerDay;
 
                 Highcharts.chart('ratingChart', {
                     chart: {

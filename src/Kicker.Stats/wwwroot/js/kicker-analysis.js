@@ -534,6 +534,39 @@ class GlobalStats {
         return this.rawData.filter((game) => game.keeperA === name || game.strikerA === name || game.keeperB === name || game.strikerB === name);
     }
 
+    getHistoricAnalysisForPlayer(name) {
+        let playerGames = this.findGamesForPlayer(name);
+
+        let findPlayerRating = function (game, playerName) {
+            if (game.keeperA === playerName) { return game.ratings.newTeamAKeeper; }
+            if (game.strikerA === playerName) { return game.ratings.newTeamAStriker; }
+            if (game.keeperB === playerName) { return game.ratings.newTeamBKeeper; }
+            if (game.strikerB === playerName) { return game.ratings.newTeamBStriker; }
+        };
+
+        let parseDate = function (dateAsString) {
+            return Date.UTC(parseInt(dateAsString.substring(6, 10)),
+                parseInt(dateAsString.substring(3, 5)) - 1,
+                parseInt(dateAsString.substring(0, 2)));
+        };
+
+        let ratingPerDay = [];
+        let lastDate = "";
+        for (let gameIndex = 0; gameIndex < playerGames.length; gameIndex++) {
+            let game = playerGames[gameIndex];
+            if (game.date !== lastDate) {
+                ratingPerDay.push([parseDate(game.date), findPlayerRating(game, name)]);
+                lastDate = game.date;
+            }
+        };
+
+        ratingPerDay.reverse();
+
+        return {
+            ratingPerDay: ratingPerDay
+        };
+    }
+
     loadStats() {
         this.leadingTeam = this.teamStats.allTeams[0];
         this.leadingPlayer = this.playerStats.allPlayers[0];
