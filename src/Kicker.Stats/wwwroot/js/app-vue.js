@@ -613,13 +613,24 @@ const About = {
                 Based on the rating of two teams, it calculates the expected result, compares it to the actual result and adjusts the ratings accordingly. This means winning from a team with a higher rating than you is more benificial than winning from a team with a lower rating.
             </p>
             <p class="note">
-                The expected result is a value between 0 and 1. But in the case of kicker, a game has four possible results per team:
+                The expected result is either 0 (loss) or 1 (win).
+            </p>
+            <p class="note">
+                To calculate a new rating for a team, the following calculation is done:
+                <div class="math">qa = 10<sup>(x/400)</sup></div>
+                <div class="math">qb = 10<sup>(y/400)</sup></div>
+                <div class="math">a = qa / (qa + qb)</div>
+                <div class="math">z = x + (32 * (b - a))</div>
                 <ul class="note">
-                    <li>1.00: Clean win (10 - 0)</li>
-                    <li>0.75: Win</li>
-                    <li>0.25: Loss</li>
-                    <li>0.00: Clean loss (0 - 10)</li>
+                    <li>x: current rating</li>
+                    <li>y: current rating opponent</li>
+                    <li>a: expected result</li>
+                    <li>b: actual result</li>
+                    <li>z: new rating</li>
                 </ul>
+            </p>
+            <p class="note">
+                For the individual ratings, the average of the two player's individual ratings is used as the current rating. Both players receive the same correction of the rating.
             </p>
             <p class="note">
                 More information: <a href="https://en.wikipedia.org/wiki/Elo_rating_system">Wikipedia: Elo rating system</a>

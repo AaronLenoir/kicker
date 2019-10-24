@@ -15,16 +15,7 @@
 
         let ourResult = 0.0;
 
-        if (ourScore > theirScore) {
-            // We won
-            ourResult += 0.75;
-            if (theirScore === 0) { ourResult += 0.25; }
-        }
-
-        if (theirScore > ourScore) {
-            // We lost
-            if (ourScore > 0) { ourResult += 0.25; }
-        }
+        if (ourScore > theirScore) { ourResult = 1; }
 
         this.rating += Math.round(this._kFactor * (ourResult - ourExpectedResult));
     }
