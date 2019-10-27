@@ -145,6 +145,10 @@ class TeamStats {
         game.teamA = teamA;
         game.teamB = teamB;
     }
+
+    getTeamRanking(teamId) {
+        return this.allTeams.findIndex((team) => team.teamId === teamId) + 1;
+    }
 }
 
 /*
@@ -399,11 +403,6 @@ class PlayerStats {
         }
     }
 
-    getPlayerStat(name) {
-        let playerStat = this.allPlayers.find((playerStat) => playerStat.name === name);
-        return playerStat;
-    }
-
     getPlayerRanking(name) {
         let frequentPlayers = this.allPlayers.filter((playerStat) => playerStat.gamesPlayed >= 10);
         return frequentPlayers.findIndex((stat) => stat.name === name) + 1;
@@ -525,6 +524,12 @@ class GlobalStats {
         return this.rawData.filter((game) => game.keeperA === name || game.strikerA === name || game.keeperB === name || game.strikerB === name);
     }
 
+    findGamesForTeam(keeper, striker) {
+        console.log(keeper);
+        console.log(striker);
+        return this.rawData.filter((game) => (game.keeperA === keeper && game.strikerA === striker) || (game.keeperB === keeper && game.strikerB === striker));
+    }
+
     getHistoricAnalysisForPlayer(name) {
         let playerGames = this.findGamesForPlayer(name);
 
@@ -604,6 +609,9 @@ class KickerStatsAnalysis {
             globalStats: globalStats,
             getPlayerStat: function (name) {
                 return playerStats.allPlayers.find((playerStat) => playerStat.name === name);
+            },
+            getTeamStat: function (teamId) {
+                return teamStats.allTeams.find((teamStat) => teamStat.team.teamId === teamId);
             }
         };
     }

@@ -53,17 +53,21 @@ const GameOverview = {
             <tr v-for="(game, index) in rawdata" v-if="index < showItems" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
                 <td>{{ game.date }}</td>
                 <td v-bind:style="game.scoreA > game.scoreB ? { background: '#d2ff62' } : {}">
-                    <span>{{ game.keeperA }}</span>
-                    -
-                    <span>{{ game.strikerA }}</span>
+                    <router-link :to="{path: '/team-stats/' + game.keeperA + ' - ' + game.strikerA}">
+                        <span>{{ game.keeperA }}</span>
+                        <span>-</span>
+                        <span>{{ game.strikerA }}</span>
+                    </router-link>
                 </td>
                 <td v-bind:style="game.scoreA === 0 || game.scoreB === 0 ? { background: 'black', color: 'white' } : {}">
                     <span>{{ game.scoreA }}</span> - <span>{{ game.scoreB }}</span>
                 </td>
                 <td v-bind:style="game.scoreB > game.scoreA ? { background: '#d2ff62' } : {}">
-                    <span>{{ game.keeperB }}</span>
-                    -
-                    <span>{{ game.strikerB }}</span>
+                    <router-link :to="{path: '/team-stats/' + game.keeperB + ' - ' + game.strikerB}">
+                        <span>{{ game.keeperB }}</span>
+                        <span>-</span>
+                        <span>{{ game.strikerB }}</span>
+                    </router-link>
                 </td>
                 <td>
                     <span class="ratingDelta">{{ game.scoreA > game.scoreB ? game.ratings.deltaTeamA.toFixed() : game.ratings.deltaTeamB.toFixed() }}</span>
@@ -101,6 +105,33 @@ const GameOverview = {
         <span v-if="showAddPage" v-on:click="addPage" class="button-small pure-button">Show {{ pageSize }} more ...</span>
         <span v-if="showAddPage" v-on:click="showAll" class="button-small pure-button">Show all ...</span>
     </p>
+</div>
+`
+};
+
+const TeamDetails = {
+    props: ['stats', 'teamStat'],
+    components: {
+        'game-overview': GameOverview
+    },
+    template: `
+<div>
+    <div class="pure-g">
+        <div class="pure-u-1 pure-u-md-5-5 stat" >
+            <h3>Ranking</h3>
+            <div>
+                <span class="stat-number">
+                    {{ stats.teamStats.getTeamRanking(teamStat.teamId) > 0 ? stats.teamStats.getTeamRanking(teamStat.teamId) : 'N/A' }}
+                    /    
+                    {{ stats.teamStats.allTeams.length }}
+                </span>
+            </div>
+        </div>
+
+        <div>
+            <game-overview v-bind:rawdata="stats.globalStats.findGamesForTeam(teamStat.team.keeper, teamStat.team.striker)" />
+        </div>
+    </div>
 </div>
 `
 };
@@ -266,6 +297,24 @@ const PlayerDetails = {
 `
 };
 
+const TeamComponent = {
+    props: ['stats'],
+    data: function () {
+        return {
+            myName: name
+        };
+    },
+    components: {
+        'team-details': TeamDetails
+    },
+    template: `
+<div>
+    <h2>Team: <b>{{ $route.params.name }}</b></h2>
+    <team-details v-bind:stats="stats" v-bind:teamStat="stats.getTeamStat($route.params.name)" />
+</div>
+`
+};
+
 const Player = {
     props: ['stats'],
     data: function () {
@@ -311,9 +360,11 @@ const TeamRanking = {
                     <a v-bind:name="'rank_' + (index + 1)"><span>{{ index + 1 }}</span></a>
                 </td>
                 <td>
-                    <span>{{ teamStat.team.keeper }}</span>
-                    <span>-</span>
-                    <span>{{ teamStat.team.striker }}</span>
+                    <router-link :to="{path: 'team-stats/' + teamStat.team.keeper + ' - ' + teamStat.team.striker}">
+                        <span>{{ teamStat.team.keeper }}</span>
+                        <span>-</span>
+                        <span>{{ teamStat.team.striker }}</span>
+                    </router-link>
                 </td>
                 <td>
                     <span>{{ teamStat.eloRating.rating.toFixed() }}</span>
@@ -358,9 +409,11 @@ const TeamStatsComponent = {
                     <span>{{ index + 1 }}</span>
                 </td>
                 <td>
-                    <span>{{ teamStat.team.keeper }}</span>
-                    -
-                    <span>{{ teamStat.team.striker }}</span>
+                    <router-link :to="{path: 'team-stats/' + teamStat.team.keeper + ' - ' + teamStat.team.striker}">
+                        <span>{{ teamStat.team.keeper }}</span>
+                        <span>-</span>
+                        <span>{{ teamStat.team.striker }}</span>
+                    </router-link>
                 </td>
                 <td>
                     <span>{{ teamStat.gamesWon }}</span>
@@ -534,7 +587,10 @@ const Overview = {
                 Leading team
             </h3>
             <div class="leader">
-                {{ app.analysis.stats.globalStats.leadingTeam.team.teamId }} ({{ app.analysis.stats.globalStats.leadingTeam.eloRating.rating.toFixed() }})
+                <router-link :to="{path: '/team-stats/' + app.analysis.stats.globalStats.leadingTeam.team.teamId}">
+                    <span>{{ app.analysis.stats.globalStats.leadingTeam.team.teamId }}</span>
+                </router-link>
+                <span>({{ app.analysis.stats.globalStats.leadingTeam.eloRating.rating.toFixed() }})</span>
             </div>
             <team-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
             <h3>
@@ -542,7 +598,10 @@ const Overview = {
             </h3>
             <div>
                 <span class="streak">{{ app.analysis.stats.globalStats.longestTeamStreak.streak }}</span>
-                <span v-for="(teamStat, index) in app.analysis.stats.globalStats.longestTeamStreak.teams">{{ index > 0 ? ' ; ' : '' }}{{ teamStat.team.teamId }}</span>
+                <span v-for="(teamStat, index) in app.analysis.stats.globalStats.longestTeamStreak.teams">
+                    {{ index > 0 ? ' ; ' : '' }}
+                    <router-link :to="{path: '/team-stats/' + teamStat.team.teamId}">{{ teamStat.team.teamId }}</router-link>
+                </span>
                 <div class="small-note">Consecutive wins</div>
             </div>
             <h3 v-if="app.analysis.stats.globalStats.bestDefense">
@@ -550,7 +609,7 @@ const Overview = {
             </h3>
             <div v-if="app.analysis.stats.globalStats.bestDefense">
                 <span class="streak">{{ app.analysis.stats.globalStats.bestDefense.averageGoalsAllowed.toFixed(2) }}</span>
-                <span >{{ app.analysis.stats.globalStats.bestDefense.team.teamId }}</span>
+                <router-link :to="{path: '/team-stats/' + app.analysis.stats.globalStats.bestDefense.team.teamId}">{{ app.analysis.stats.globalStats.bestDefense.team.teamId }}</router-link>
                 <div class="small-note">Average goals allowed (at least 5 games)</div>
             </div>
             <h3>
@@ -558,7 +617,7 @@ const Overview = {
             </h3>
             <div>
                 <span class="streak">{{ app.analysis.stats.globalStats.highestRatedTeamEver.highestRatingEver.toFixed() }}</span>
-                <span >{{ app.analysis.stats.globalStats.highestRatedTeamEver.team.teamId }}</span>
+                <router-link :to="{path: '/team-stats/' + app.analysis.stats.globalStats.highestRatedTeamEver.team.teamId}">{{ app.analysis.stats.globalStats.highestRatedTeamEver.team.teamId }}</router-link>
                 <div class="small-note">Current rating: {{ app.analysis.stats.globalStats.highestRatedTeamEver.eloRating.rating.toFixed() }} </div>
             </div>
         </div>
@@ -669,6 +728,7 @@ const routes = [
     { path: '/overview', component: Overview },
     { path: '/team-ranking', component: TeamRanking },
     { path: '/team-stats', component: TeamStatsComponent },
+    { path: '/team-stats/:name', component: TeamComponent },
     { path: '/player-ranking', component: PlayerRanking },
     { path: '/player-stats', component: PlayerStatsComponent },
     { path: '/player-stats/:name', component: Player },
