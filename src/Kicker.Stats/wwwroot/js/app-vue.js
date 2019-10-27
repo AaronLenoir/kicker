@@ -197,10 +197,18 @@ const TeamDetails = {
             </div>
         </div>
 
-        <div class="pure-u-1 pure-u-md-4-5 stat">
+        <div class="pure-u-1 pure-u-md-1-5 stat">
             <h3>Highest rating ever</h3>
             <div>
                 <span class="stat-number">{{ teamStat.highestRatingEver.toFixed() }}</span>
+            </div>
+        </div>
+
+        <div class="pure-u-1 pure-u-md-3-5 stat">
+            <h3>Goals allowed</h3>
+            <div>
+                <span class="stat-number">{{ teamStat.averageGoalsAllowed.toFixed(2) }}</span>
+                <div class="small-note">Allowed {{ teamStat.totalGoalsAllowed }} goals in {{ teamStat.gamesPlayed }} games</div>
             </div>
         </div>
 
@@ -212,19 +220,11 @@ const TeamDetails = {
             </div>
         </div>
 
-        <div class="pure-u-1 pure-u-md-1-5 stat">
+        <div class="pure-u-1 pure-u-md-4-5 stat">
             <h3>Win ratio</h3>
             <div>
                 <span class="stat-number">{{ (teamStat.winRatio * 100).toFixed(2) }} %</span>
                 <div class="small-note">{{ teamStat.gamesWon }} of {{ teamStat.gamesPlayed }} games won</div>
-            </div>
-        </div>
-
-        <div class="pure-u-1 pure-u-md-3-5 stat">
-            <h3>Goals allowed</h3>
-            <div>
-                <span class="stat-number">{{ teamStat.averageGoalsAllowed.toFixed(2) }}</span>
-                <div class="small-note">Allowed {{ teamStat.totalGoalsAllowed }} goals in {{ teamStat.gamesPlayed }} games</div>
             </div>
         </div>
     </div>

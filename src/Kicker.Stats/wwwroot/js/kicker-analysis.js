@@ -566,7 +566,7 @@ class GlobalStats {
     getHistoricAnalysisForTeam(keeper, striker) {
         let teamGames = this.findGamesForTeam(keeper, striker);
 
-        let findTeamRating = function (game, playerName) {
+        let findTeamRating = function (game, keeper, striker) {
             if (game.teamA.keeper === keeper && game.teamA.striker === striker) { return game.ratings.newTeamA; }
             if (game.teamB.keeper === keeper && game.teamB.striker === striker) { return game.ratings.newTeamB; }
         };
@@ -582,7 +582,7 @@ class GlobalStats {
         for (let gameIndex = 0; gameIndex < teamGames.length; gameIndex++) {
             let game = teamGames[gameIndex];
             if (game.date !== lastDate) {
-                ratingPerDay.push([parseDate(game.date), findTeamRating(game, name)]);
+                ratingPerDay.push([parseDate(game.date), findTeamRating(game, keeper, striker)]);
                 lastDate = game.date;
             }
         }
