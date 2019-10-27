@@ -26,7 +26,7 @@ const GameOverview = {
     },
     template: `
 <div>
-    <h2>Game history (Showing {{ showItems }} of {{ rawdata.length }} games)</h2>
+    <h2>Game history ({{ showItems <= rawdata.length ? 'showing ' + showItems + ' of ' : '' }}{{ rawdata.length }} {{ rawdata.length > 1 ? 'games' : 'game' }})</h2>
     
     <p>
         <span v-if="showAddPage" v-on:click="showAll" class="button-small pure-button">Show all ...</span>
