@@ -147,7 +147,7 @@ class TeamStats {
     }
 
     getTeamRanking(teamId) {
-        return this.allTeams.findIndex((team) => team.teamId === teamId) + 1;
+        return this.allTeams.findIndex((team) => team.team.teamId === teamId) + 1;
     }
 }
 

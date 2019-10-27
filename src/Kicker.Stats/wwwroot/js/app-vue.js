@@ -121,7 +121,7 @@ const TeamDetails = {
             <h3>Ranking</h3>
             <div>
                 <span class="stat-number">
-                    {{ stats.teamStats.getTeamRanking(teamStat.teamId) > 0 ? stats.teamStats.getTeamRanking(teamStat.teamId) : 'N/A' }}
+                    {{ stats.teamStats.getTeamRanking(teamStat.team.teamId) > 0 ? stats.teamStats.getTeamRanking(teamStat.team.teamId) : 'N/A' }}
                     /    
                     {{ stats.teamStats.allTeams.length }}
                 </span>
