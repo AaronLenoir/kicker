@@ -25,7 +25,9 @@
 
         h1 {
             letter-spacing: .1em;
-            font-weight: 100
+            font-weight: 100;
+            margin: 0;
+            padding: .67em 0;
         }
 
         h2 {
@@ -123,8 +125,8 @@
             }
 
             .menu > a {
-                padding-left: 1em;
-                padding-right: 1em;
+                padding-left: 0em;
+                margin-right: 2em;
                 padding-top: .5em;
                 padding-bottom: .5em;
                 line-height: 2.5em;
@@ -229,6 +231,11 @@
     </style>
     <!-- Additional pure css -->
     <style>
+        .refresh-button {
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
         .pure-button {
             color: white;
             border-radius: 4px;
@@ -255,27 +262,29 @@
 <body>
 
     <div id="app" class="content">
-        <div class="menu" id="menu">
-            <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
-                <i class="hamburger"></i>
-            </a>
-            <router-link to="/overview" onclick="toggleMenu()">overview</router-link>
-            <router-link to="/team-ranking" onclick="toggleMenu()">team ranking</router-link>
-            <router-link to="/team-stats" onclick="toggleMenu()">team stats</router-link>
-            <router-link to="/player-ranking" onclick="toggleMenu()">player ranking</router-link>
-            <router-link to="/player-stats" onclick="toggleMenu()">player stats</router-link>
-            <router-link to="/game-history" onclick="toggleMenu()">game history</router-link>
-            <router-link to="/about" onclick="toggleMenu()">about</router-link>
-        </div>
+
+        <h1>
+            <span>{{ appName }}</span>
+
+            <span v-if="refreshing" class="refresh-button" title="Refreshing">...</span>
+
+            <span v-if="!refreshing" v-on:click="refreshData" class="refresh-button" title="Refresh data ...">&#8635;</span>
+        </h1>
 
         <div>
-            <h1>
-                <span>{{ appName }}</span>
-            </h1>
 
-            <div v-if="refreshing" class="pure-button pure-button-disabled">Loading data ...</div>
-
-            <div v-if="!refreshing" v-on:click="refreshData" class="pure-button">Refresh data</div>
+            <div class="menu" id="menu">
+                <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
+                    <i class="hamburger"></i>
+                </a>
+                <router-link to="/overview" onclick="toggleMenu()">overview</router-link>
+                <router-link to="/team-ranking" onclick="toggleMenu()">team ranking</router-link>
+                <router-link to="/team-stats" onclick="toggleMenu()">team stats</router-link>
+                <router-link to="/player-ranking" onclick="toggleMenu()">player ranking</router-link>
+                <router-link to="/player-stats" onclick="toggleMenu()">player stats</router-link>
+                <router-link to="/game-history" onclick="toggleMenu()">game history</router-link>
+                <router-link to="/about" onclick="toggleMenu()">about</router-link>
+            </div>
 
             <router-view v-if="!loading" @refresh-data="refreshData" :app="$data" :stats="analysis.stats" :rawdata="analysis.rawData"></router-view>
         </div>
