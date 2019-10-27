@@ -114,6 +114,68 @@ const TeamDetails = {
     components: {
         'game-overview': GameOverview
     },
+    mounted: function () {
+        this.loadChart();
+    },
+    updated: function () {
+        this.loadChart();
+    },
+    methods: {
+        loadChart() {
+            dataPoints = this.stats.globalStats.getHistoricAnalysisForTeam(this.teamStat.team.keeper, this.teamStat.team.striker).ratingPerDay;
+
+            Highcharts.chart('teamRatingChart', {
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Rating over time'
+                },
+                subtitle: {
+                    text: 'Final rating of each day played'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    labels: {
+                        formatter() {
+                            return Highcharts.dateFormat('%e - %b - %y', this.value);
+                        }
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Rating'
+                    },
+                    plotLines: [{
+                        color: 'red', // Color value
+                        dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+                        value: 400, // Value of where the line will appear
+                        width: 2 // Width of the line
+                    }]
+                },
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%e. %b}: {point.y:.0f}'
+                },
+                plotOptions: {
+                    series: {
+                        marker: {
+                            enabled: true,
+                            radius: 3
+                        },
+                        shadow: true
+                    }
+                },
+
+                colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
+
+                series: [{
+                    name: "Rating",
+                    data: dataPoints
+                }]
+            });
+        }
+    },
     template: `
 <div>
     <div class="pure-g">
@@ -128,9 +190,49 @@ const TeamDetails = {
             </div>
         </div>
 
-        <div>
-            <game-overview v-bind:rawdata="stats.globalStats.findGamesForTeam(teamStat.team.keeper, teamStat.team.striker)" />
+        <div class="pure-u-1 pure-u-md-1-5 stat">
+            <h3>Rating</h3>
+            <div>
+                <span class="stat-number">{{ teamStat.eloRating.rating.toFixed() }}</span>
+            </div>
         </div>
+
+        <div class="pure-u-1 pure-u-md-4-5 stat">
+            <h3>Highest rating ever</h3>
+            <div>
+                <span class="stat-number">{{ teamStat.highestRatingEver.toFixed() }}</span>
+            </div>
+        </div>
+
+        <div class="pure-u-1 pure-u-md-1-5 stat">
+            <h3>Longest streak</h3>
+            <div>
+                <span class="stat-number">{{ teamStat.longestStreak }}</span>
+                <div class="small-note">Current streak: {{ teamStat.currentStreak }}</div>
+            </div>
+        </div>
+
+        <div class="pure-u-1 pure-u-md-1-5 stat">
+            <h3>Win ratio</h3>
+            <div>
+                <span class="stat-number">{{ (teamStat.winRatio * 100).toFixed(2) }} %</span>
+                <div class="small-note">{{ teamStat.gamesWon }} of {{ teamStat.gamesPlayed }} games won</div>
+            </div>
+        </div>
+
+        <div class="pure-u-1 pure-u-md-3-5 stat">
+            <h3>Goals allowed</h3>
+            <div>
+                <span class="stat-number">{{ teamStat.averageGoalsAllowed.toFixed(2) }}</span>
+                <div class="small-note">Allowed {{ teamStat.totalGoalsAllowed }} goals in {{ teamStat.gamesPlayed }} games</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="teamRatingChart"></div>
+
+    <div>
+        <game-overview v-bind:rawdata="stats.globalStats.findGamesForTeam(teamStat.team.keeper, teamStat.team.striker)" />
     </div>
 </div>
 `
@@ -205,7 +307,7 @@ const PlayerDetails = {
     },
     template: `
 <div>
-    <div class="pure-g">
+     <div class="pure-g">
         <div class="pure-u-1 pure-u-md-5-5 stat" >
             <h3>Ranking</h3>
             <div>

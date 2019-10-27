@@ -554,7 +554,38 @@ class GlobalStats {
                 ratingPerDay.push([parseDate(game.date), findPlayerRating(game, name)]);
                 lastDate = game.date;
             }
+        }
+
+        ratingPerDay.reverse();
+
+        return {
+            ratingPerDay: ratingPerDay
         };
+    }
+
+    getHistoricAnalysisForTeam(keeper, striker) {
+        let teamGames = this.findGamesForTeam(keeper, striker);
+
+        let findTeamRating = function (game, playerName) {
+            if (game.teamA.keeper === keeper && game.teamA.striker === striker) { return game.ratings.newTeamA; }
+            if (game.teamB.keeper === keeper && game.teamB.striker === striker) { return game.ratings.newTeamB; }
+        };
+
+        let parseDate = function (dateAsString) {
+            return Date.UTC(parseInt(dateAsString.substring(6, 10)),
+                parseInt(dateAsString.substring(3, 5)) - 1,
+                parseInt(dateAsString.substring(0, 2)));
+        };
+
+        let ratingPerDay = [];
+        let lastDate = "";
+        for (let gameIndex = 0; gameIndex < teamGames.length; gameIndex++) {
+            let game = teamGames[gameIndex];
+            if (game.date !== lastDate) {
+                ratingPerDay.push([parseDate(game.date), findTeamRating(game, name)]);
+                lastDate = game.date;
+            }
+        }
 
         ratingPerDay.reverse();
 
