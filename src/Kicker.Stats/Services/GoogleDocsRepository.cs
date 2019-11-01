@@ -36,29 +36,33 @@ namespace Kicker.Stats.Services
             _cache = cache;
         }
 
-        public IEnumerable<GameResult> GetResults()
+        public IEnumerable<GameResult> GetResults(string year)
         {
-            return GetResults(true);
+            return GetResults(true, year);
         }
 
-        public IEnumerable<GameResult> GetResults(bool useCache)
+        public IEnumerable<GameResult> GetResults(bool useCache, string year)
         {
+            if(!IsYear(year)) { year = DateTime.UtcNow.Year.ToString(); }
+
+            var cacheKey = $"{_cacheKey}_{year}";
+
             IEnumerable<GameResult> result;
 
             if (!useCache) {
-                _cache.Remove(_cacheKey);
+                _cache.Remove(cacheKey);
             }
 
-            if (!_cache.TryGetValue(_cacheKey, out result))
+            if (!_cache.TryGetValue(cacheKey, out result))
             {
-                result = GetResultsFromServer();
-                _cache.Set(_cacheKey, result, TimeSpan.FromMinutes(30));
+                result = GetResultsFromServer(year);
+                _cache.Set(cacheKey, result, TimeSpan.FromMinutes(30));
             }
 
             return result;
         }
 
-        private IEnumerable<GameResult> GetResultsFromServer()
+        private IEnumerable<GameResult> GetResultsFromServer(string year)
         {
             var result = new List<GameResult>();
 
@@ -68,7 +72,7 @@ namespace Kicker.Stats.Services
 
             var metadata = service.Spreadsheets.DeveloperMetadata;
 
-            var request = GetRequest(service);
+            var request = GetRequest(service, year);
 
             ValueRange response = request.Execute();
 
@@ -93,10 +97,10 @@ namespace Kicker.Stats.Services
             return result;
         }
 
-        private SpreadsheetsResource.ValuesResource.GetRequest GetRequest(SheetsService service)
+        private SpreadsheetsResource.ValuesResource.GetRequest GetRequest(SheetsService service, string year)
         {
             String spreadsheetId = "1MVQfSWt6WOAq0c_4zIWS4sAUnRj7GhVHrYtk_wLDy8c";
-            String range = "data!A2:G";
+            String range = $"{year}!A2:G";
             return service.Spreadsheets.Values.Get(spreadsheetId, range);
         }
 
@@ -117,6 +121,15 @@ namespace Kicker.Stats.Services
                 return GoogleCredential.FromStream(stream)
                     .CreateScoped(_scopes);
             }
+        }
+
+        private bool IsYear(string year)
+        {
+            int yearNumber;
+
+            if (year == null || year.Length != 4) { return false; }
+
+            return int.TryParse(year, out yearNumber);
         }
 
     }

@@ -19,9 +19,9 @@ namespace Kicker.Stats.Controllers
 
         // GET api/results
         [HttpGet]
-        public IEnumerable<GameResult> Get(bool useCache)
+        public IEnumerable<GameResult> Get(bool useCache, string year)
         {
-            return _gameRepository.GetResults(useCache);
+            return _gameRepository.GetResults(useCache, year);
         }
     }
 }

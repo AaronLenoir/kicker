@@ -5,8 +5,8 @@ namespace Kicker.Stats.Services
 {
     public interface IGameRepository
     {
-        IEnumerable<GameResult> GetResults();
+        IEnumerable<GameResult> GetResults(string year);
 
-        IEnumerable<GameResult> GetResults(bool useCache);
+        IEnumerable<GameResult> GetResults(bool useCache, string year);
     }
 }
