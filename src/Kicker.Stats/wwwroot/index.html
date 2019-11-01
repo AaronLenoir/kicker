@@ -191,6 +191,10 @@
             color: #777777;
             font-family:Georgia,"Times New Roman",Times,serif;
         }
+
+        .yearPicker {
+            margin-bottom: 1.5em;
+        }
     </style>
     <!-- Specific styling -->
     <style>
@@ -264,12 +268,16 @@
     <div id="app" class="content">
 
         <h1>
-            <span>{{ appName }}</span>
+            <span>{{ appName }} - {{ yearTitle }}</span>
 
             <span v-if="refreshing" class="refresh-button" title="Refreshing">...</span>
 
             <span v-if="!refreshing" v-on:click="refreshData" class="refresh-button" title="Refresh data ...">&#8635;</span>
         </h1>
+
+        <div class="yearPicker">
+            Show stats for: <a href="#" v-on:click="changeYear(2019)">2019</a>, <a href="#" v-on:click="changeYear('all', 'All Time')">All time</a>
+        </div>
 
         <div>
 

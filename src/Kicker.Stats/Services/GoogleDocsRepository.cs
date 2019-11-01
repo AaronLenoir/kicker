@@ -29,6 +29,8 @@ namespace Kicker.Stats.Services
 
         private readonly IMemoryCache _cache;
 
+        private const String _spreadsheetId = "1MVQfSWt6WOAq0c_4zIWS4sAUnRj7GhVHrYtk_wLDy8c";
+
         static readonly string _cacheKey = "kickerStats";
 
         public GoogleDocsRepository(IMemoryCache cache)
@@ -43,7 +45,7 @@ namespace Kicker.Stats.Services
 
         public IEnumerable<GameResult> GetResults(bool useCache, string year)
         {
-            if(!IsYear(year)) { year = DateTime.UtcNow.Year.ToString(); }
+            if(!IsYear(year) && year != "all") { year = DateTime.UtcNow.Year.ToString(); }
 
             var cacheKey = $"{_cacheKey}_{year}";
 
@@ -72,11 +74,17 @@ namespace Kicker.Stats.Services
 
             var metadata = service.Spreadsheets.DeveloperMetadata;
 
-            var request = GetRequest(service, year);
+            IList<IList<object>> values;
 
-            ValueRange response = request.Execute();
+            if (year == "all")
+            {
+                values = GetValuesOfAllTime(service);
+            } else
+            {
+                values = GetRequest(service, year).Execute().Values;
+            }
 
-            var values = response.Values;
+            if (values == null) { return result; }
 
             foreach (var row in values)
             {
@@ -97,11 +105,27 @@ namespace Kicker.Stats.Services
             return result;
         }
 
+        private IList<IList<Object>> GetValuesOfAllTime(SheetsService service)
+        {
+            var result = (IList<IList<object>>)new List<IList<Object>>();
+            var sheets = service.Spreadsheets.Get(_spreadsheetId).Execute().Sheets;
+
+            foreach(var sheet in sheets)
+            {
+                var values = GetRequest(service, sheet.Properties.Title).Execute().Values;
+                foreach(var row in values)
+                {
+                    result.Add(row);
+                }
+            }
+
+            return result;
+        }
+
         private SpreadsheetsResource.ValuesResource.GetRequest GetRequest(SheetsService service, string year)
         {
-            String spreadsheetId = "1MVQfSWt6WOAq0c_4zIWS4sAUnRj7GhVHrYtk_wLDy8c";
             String range = $"{year}!A2:G";
-            return service.Spreadsheets.Values.Get(spreadsheetId, range);
+            return service.Spreadsheets.Values.Get(_spreadsheetId, range);
         }
 
         private SheetsService GetService(GoogleCredential credential)

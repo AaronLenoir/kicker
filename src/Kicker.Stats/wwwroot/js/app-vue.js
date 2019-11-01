@@ -853,21 +853,30 @@ const kickerStatsApp = new Vue({
         appName: "Kicker Stats",
         loading: true,
         refreshing: false,
+        year: new Date().getFullYear(),
+        yearTitle: new Date().getFullYear(),
         analysis: {}
     },
     created: function () {
-        kickerStatsDataService.fetchData(true, function (data) {
+        kickerStatsDataService.fetchData(true, this.year, function (data) {
             kickerStatsApp.loadData(data);
             kickerStatsApp.loading = false;
         });
     },
     methods: {
+        changeYear: function (year, title) {
+            if (title === undefined) { title = year; }
+
+            this.year = year;
+            this.yearTitle = title;
+            this.refreshData();
+        },
         loadData: function (data) {
             kickerStatsApp.analysis = new KickerStatsAnalysis(data);
         },
         refreshData: function () {
             kickerStatsApp.refreshing = true;
-            kickerStatsDataService.fetchData(false, function (data) {
+            kickerStatsDataService.fetchData(false, this.year, function (data) {
                 kickerStatsApp.loadData(data);
                 kickerStatsApp.refreshing = false;
             });
