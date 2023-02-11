@@ -25,20 +25,16 @@ namespace Kicker.Stats
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(x => x.EnableEndpointRouting = false);
 
             services.AddSingleton<IMemoryCache, MemoryCache>();
             services.AddSingleton<IGameRepository, GoogleDocsRepository>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             // Will ensure files from wwwroot are served
             app.UseDefaultFiles();
             app.UseStaticFiles();

@@ -838,24 +838,29 @@ const routes = [
     { path: '/about', component: About }
 ];
 
-const router = new VueRouter({
-    routes // short for `routes: routes`
+const router = VueRouter.createRouter({
+    history: VueRouter.createWebHashHistory(),
+    routes 
 });
 
 /*
  * App
  */
 
-const kickerStatsApp = new Vue({
+const { createApp } = Vue;
+
+createApp({
     el: '#app',
     router,
-    data: {
-        appName: "Kicker Stats",
-        loading: true,
-        refreshing: false,
-        year: new Date().getFullYear(),
-        yearTitle: new Date().getFullYear(),
-        analysis: {}
+    data() {
+        return {
+            appName: "Kicker Stats",
+            loading: true,
+            refreshing: false,
+            year: new Date().getFullYear(),
+            yearTitle: new Date().getFullYear(),
+            analysis: {}
+        };
     },
     created: function () {
         kickerStatsDataService.fetchData(true, this.year, function (data) {
@@ -882,4 +887,42 @@ const kickerStatsApp = new Vue({
             });
         }
     }
-}).$mount('#app');
+}).mount('#app');
+
+//const kickerStatsApp = new Vue({
+//    el: '#app',
+//    router,
+//    data: {
+//        appName: "Kicker Stats",
+//        loading: true,
+//        refreshing: false,
+//        year: new Date().getFullYear(),
+//        yearTitle: new Date().getFullYear(),
+//        analysis: {}
+//    },
+//    created: function () {
+//        kickerStatsDataService.fetchData(true, this.year, function (data) {
+//            kickerStatsApp.loadData(data);
+//            kickerStatsApp.loading = false;
+//        });
+//    },
+//    methods: {
+//        changeYear: function (year, title) {
+//            if (title === undefined) { title = year; }
+
+//            this.year = year;
+//            this.yearTitle = title;
+//            this.refreshData();
+//        },
+//        loadData: function (data) {
+//            kickerStatsApp.analysis = new KickerStatsAnalysis(data);
+//        },
+//        refreshData: function () {
+//            kickerStatsApp.refreshing = true;
+//            kickerStatsDataService.fetchData(false, this.year, function (data) {
+//                kickerStatsApp.loadData(data);
+//                kickerStatsApp.refreshing = false;
+//            });
+//        }
+//    }
+//}).$mount('#app');
