@@ -273,10 +273,18 @@
             <span v-if="refreshing" class="refresh-button" title="Refreshing">...</span>
 
             <span v-if="!refreshing" v-on:click="refreshData" class="refresh-button" title="Refresh data ...">&#8635;</span>
+
+            <span v-if="noDataFound" title="No data found">(no data found)</span>
         </h1>
 
         <div class="yearPicker">
-            Show stats for: <a href="#" v-on:click="changeYear(2020)">2020</a>, <a href="#" v-on:click="changeYear(2019)">2019</a>, <a href="#" v-on:click="changeYear('all', 'All Time')">All time</a>
+            Show stats for:
+            <a href="#" v-on:click="changeYear(2023)">2023</a>,
+            <a href="#" v-on:click="changeYear(2022)">2022</a>,
+            <a href="#" v-on:click="changeYear(2021)">2021</a>,
+            <a href="#" v-on:click="changeYear(2020)">2020</a>,
+            <a href="#" v-on:click="changeYear(2019)">2019</a>,
+            <a href="#" v-on:click="changeYear('all', 'All Time')">All time</a>
         </div>
 
         <div>

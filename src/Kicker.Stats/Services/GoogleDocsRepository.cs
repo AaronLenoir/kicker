@@ -113,6 +113,9 @@ namespace Kicker.Stats.Services
             foreach(var sheet in sheets)
             {
                 var values = GetRequest(service, sheet.Properties.Title).Execute().Values;
+                
+                if (values == null) { continue; };
+
                 foreach(var row in values)
                 {
                     result.Add(row);

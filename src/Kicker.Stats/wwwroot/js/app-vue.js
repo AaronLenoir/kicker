@@ -25,7 +25,7 @@ const GameOverview = {
         }
     },
     template: `
-<div>
+<div v-if="rawdata">
     <h2>Game history ({{ showItems <= rawdata.length ? 'showing ' + showItems + ' of ' : '' }}{{ rawdata.length }} {{ rawdata.length > 1 ? 'games' : 'game' }})</h2>
     
     <p>
@@ -50,54 +50,56 @@ const GameOverview = {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(game, index) in rawdata" v-if="index < showItems" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
-                <td>{{ game.date }}</td>
-                <td v-bind:style="game.scoreA > game.scoreB ? { background: '#d2ff62' } : {}">
-                    <router-link :to="{path: '/team-stats/' + game.keeperA + ' - ' + game.strikerA}">
-                        <span>{{ game.keeperA }}</span>
-                        <span>-</span>
-                        <span>{{ game.strikerA }}</span>
-                    </router-link>
-                </td>
-                <td v-bind:style="game.scoreA === 0 || game.scoreB === 0 ? { background: 'black', color: 'white' } : {}">
-                    <span>{{ game.scoreA }}</span> - <span>{{ game.scoreB }}</span>
-                </td>
-                <td v-bind:style="game.scoreB > game.scoreA ? { background: '#d2ff62' } : {}">
-                    <router-link :to="{path: '/team-stats/' + game.keeperB + ' - ' + game.strikerB}">
-                        <span>{{ game.keeperB }}</span>
-                        <span>-</span>
-                        <span>{{ game.strikerB }}</span>
-                    </router-link>
-                </td>
-                <td>
-                    <span class="ratingDelta">{{ game.scoreA > game.scoreB ? game.ratings.deltaTeamA.toFixed() : game.ratings.deltaTeamB.toFixed() }}</span>
-                </td>
-                <td v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
-                    <span>{{ game.ratings.oldTeamA.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamA.toFixed() }}</span>
-                </td>
-                <td v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
-                    <span>{{ game.ratings.oldTeamB.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamB.toFixed() }}</span>
-                </td>
-                <td>
-                    <span class="ratingDelta">{{ game.scoreA > game.scoreB ? game.ratings.deltaTeamAKeeper.toFixed() : game.ratings.deltaTeamBKeeper.toFixed() }}</span>
-                </td>
-                <td v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
-                    <span>{{ game.ratings.oldTeamAKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAKeeper.toFixed() }}</span>
-                    (<router-link :to="{path: '/player-stats/' + game.keeperA}">{{ game.keeperA }}</router-link>)
-                </td>
-                <td v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
-                    <span>{{ game.ratings.oldTeamAStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAStriker.toFixed() }}</span>
-                    (<router-link :to="{path: '/player-stats/' + game.strikerA}">{{ game.strikerA }}</router-link>)
-                </td>
-                <td v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
-                    <span>{{ game.ratings.oldTeamBKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBKeeper.toFixed() }}</span>
-                    (<router-link :to="{path: '/player-stats/' + game.keeperB}">{{ game.keeperB }}</router-link>)
-                </td>
-                <td v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
-                    <span>{{ game.ratings.oldTeamBStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBStriker.toFixed() }}</span>
-                    (<router-link :to="{path: '/player-stats/' + game.strikerB}">{{ game.strikerB }}</router-link>)
-                </td>
-            </tr>
+            <template v-for="(game, index) in rawdata">
+                <tr v-if="1 < showItems" v-bind:style="index % 2 === index ? { background: '#F8F8F8' } : {}">
+                    <td>{{ game.date }}</td>
+                    <td v-bind:style="game.scoreA > game.scoreB ? { background: '#d2ff62' } : {}">
+                        <router-link :to="{path: '/team-stats/' + game.keeperA + ' - ' + game.strikerA}">
+                            <span>{{ game.keeperA }}</span>
+                            <span>-</span>
+                            <span>{{ game.strikerA }}</span>
+                        </router-link>
+                    </td>
+                    <td v-bind:style="game.scoreA === 0 || game.scoreB === 0 ? { background: 'black', color: 'white' } : {}">
+                        <span>{{ game.scoreA }}</span> - <span>{{ game.scoreB }}</span>
+                    </td>
+                    <td v-bind:style="game.scoreB > game.scoreA ? { background: '#d2ff62' } : {}">
+                        <router-link :to="{path: '/team-stats/' + game.keeperB + ' - ' + game.strikerB}">
+                            <span>{{ game.keeperB }}</span>
+                            <span>-</span>
+                            <span>{{ game.strikerB }}</span>
+                        </router-link>
+                    </td>
+                    <td>
+                        <span class="ratingDelta">{{ game.scoreA > game.scoreB ? game.ratings.deltaTeamA.toFixed() : game.ratings.deltaTeamB.toFixed() }}</span>
+                    </td>
+                    <td v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                        <span>{{ game.ratings.oldTeamA.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamA.toFixed() }}</span>
+                    </td>
+                    <td v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                        <span>{{ game.ratings.oldTeamB.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamB.toFixed() }}</span>
+                    </td>
+                    <td>
+                        <span class="ratingDelta">{{ game.scoreA > game.scoreB ? game.ratings.deltaTeamAKeeper.toFixed() : game.ratings.deltaTeamBKeeper.toFixed() }}</span>
+                    </td>
+                    <td v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                        <span>{{ game.ratings.oldTeamAKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAKeeper.toFixed() }}</span>
+                       (<router-link :to="{path: '/player-stats/' + game.keeperA}">{{ game.keeperA }}</router-link>)
+                    </td>
+                    <td v-bind:style="game.scoreA > game.scoreB ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                        <span>{{ game.ratings.oldTeamAStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamAStriker.toFixed() }}</span>
+                        (<router-link :to="{path: '/player-stats/' + game.strikerA}">{{ game.strikerA }}</router-link>)
+                    </td>
+                    <td v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                        <span>{{ game.ratings.oldTeamBKeeper.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBKeeper.toFixed() }}</span>
+                        (<router-link :to="{path: '/player-stats/' + game.keeperB}">{{ game.keeperB }}</router-link>)
+                    </td>
+                    <td v-bind:style="game.scoreB > game.scoreA ? { 'border-bottom': '6px solid #d2ff62' } : { 'border-bottom': '6px solid #ff8989' }">
+                        <span>{{ game.ratings.oldTeamBStriker.toFixed() }}</span>&rarr;<span>{{ game.ratings.newTeamBStriker.toFixed() }}</span>
+                        (<router-link :to="{path: '/player-stats/' + game.strikerB}">{{ game.strikerB }}</router-link>)
+                    </td>
+                </tr>
+            </template>
         </tbody>
     </table>
 
@@ -177,7 +179,7 @@ const TeamDetails = {
         }
     },
     template: `
-<div>
+<div v-if="!stats.noDataFound">
     <div class="pure-g">
         <div class="pure-u-1 pure-u-md-5-5 stat" >
             <h3>Ranking</h3>
@@ -306,7 +308,7 @@ const PlayerDetails = {
         }
     },
     template: `
-<div>
+<div v-if="!stats.noDataFound">
      <div class="pure-g">
         <div class="pure-u-1 pure-u-md-5-5 stat" >
             <h3>Ranking</h3>
@@ -410,7 +412,7 @@ const TeamComponent = {
         'team-details': TeamDetails
     },
     template: `
-<div>
+<div v-if="!stats.noDataFound">
     <h2>Team: <b>{{ $route.params.name }}</b></h2>
     <team-details v-bind:stats="stats" v-bind:teamStat="stats.getTeamStat($route.params.name)" />
 </div>
@@ -428,7 +430,7 @@ const Player = {
         'player-details': PlayerDetails
     },
     template: `
-<div>
+<div v-if="!stats.noDataFound">
     <h2>Player: <b>{{ $route.params.name }}</b></h2>
     <player-details v-bind:stats="stats" v-bind:playerStat="stats.getPlayerStat($route.params.name)" />
 </div>
@@ -446,7 +448,7 @@ const TeamRanking = {
         }
     },
     template: `
-<div>
+<div v-if="!stats.noDataFound">
     <h2>Team ranking {{ top ? '(top ' + top + ')' : '(all)' }}</h2>
     <table class="pure-table pure-table-bordered">
         <thead>
@@ -483,7 +485,7 @@ const TeamRanking = {
 const TeamStatsComponent = {
     props: ['stats'],
     template: `
-<div>
+<div v-if="!stats.noDataFound">
     <h2>Team stats ({{ stats.teamStats.allTeams.length }} teams)</h2>
     <div style="margin-bottom: 2em">
         <span style="line-height: 2em; height: 2em; padding: .5em; background-color: orange">Orange: a team breaking its own winning streak record</span>
@@ -511,7 +513,7 @@ const TeamStatsComponent = {
                     <span>{{ index + 1 }}</span>
                 </td>
                 <td>
-                    <router-link :to="{path: 'team-stats/' + teamStat.team.keeper + ' - ' + teamStat.team.striker}">
+                    <router-link :to="{path: '/team-stats/' + teamStat.team.keeper + ' - ' + teamStat.team.striker}">
                         <span>{{ teamStat.team.keeper }}</span>
                         <span>-</span>
                         <span>{{ teamStat.team.striker }}</span>
@@ -554,7 +556,7 @@ const PlayerRanking = {
         }
     },
     template: `
-<div>
+<div v-if="!stats.noDataFound">
     <h2>Player ranking {{ top ? '(top ' + top + ')' : '' }}</h2>
     <table class="pure-table pure-table-bordered">
         <thead>
@@ -588,7 +590,7 @@ const PlayerRanking = {
 const PlayerStatsComponent = {
     props: ['stats'],
     template: `
-<div>
+<div v-if="!stats.noDataFound">
     <h2>Player stats ({{ stats.playerStats.allPlayers.length }} players)</h2>
     <div style="margin-bottom: 2em">
         <span style="line-height: 2em; height: 2em; padding: .5em; background-color: orange">Orange: a player breaking a personal winning streak record</span>
@@ -683,7 +685,7 @@ const Overview = {
     },
     template: `
 <div>
-    <div v-if="!app.loading" class="pure-g" style="margin-right: 1em">
+    <div v-if="!app.loading && !app.analysis.stats.noDataFound" class="pure-g" style="margin-right: 1em">
         <div class="pure-u-1 pure-u-lg-1-2">
             <h3>
                 Leading team
@@ -849,14 +851,14 @@ const router = VueRouter.createRouter({
 
 const { createApp } = Vue;
 
-createApp({
+const kickerStatsApp = createApp({
     el: '#app',
-    router,
     data() {
         return {
             appName: "Kicker Stats",
             loading: true,
             refreshing: false,
+            noDataFound: true,
             year: new Date().getFullYear(),
             yearTitle: new Date().getFullYear(),
             analysis: {}
@@ -866,6 +868,7 @@ createApp({
         kickerStatsDataService.fetchData(true, this.year, function (data) {
             kickerStatsApp.loadData(data);
             kickerStatsApp.loading = false;
+            kickerStatsApp.noDataFound = (data.length === 0);
         });
     },
     methods: {
@@ -884,45 +887,10 @@ createApp({
             kickerStatsDataService.fetchData(false, this.year, function (data) {
                 kickerStatsApp.loadData(data);
                 kickerStatsApp.refreshing = false;
+                kickerStatsApp.noDataFound = (data.length === 0);
             });
         }
     }
-}).mount('#app');
-
-//const kickerStatsApp = new Vue({
-//    el: '#app',
-//    router,
-//    data: {
-//        appName: "Kicker Stats",
-//        loading: true,
-//        refreshing: false,
-//        year: new Date().getFullYear(),
-//        yearTitle: new Date().getFullYear(),
-//        analysis: {}
-//    },
-//    created: function () {
-//        kickerStatsDataService.fetchData(true, this.year, function (data) {
-//            kickerStatsApp.loadData(data);
-//            kickerStatsApp.loading = false;
-//        });
-//    },
-//    methods: {
-//        changeYear: function (year, title) {
-//            if (title === undefined) { title = year; }
-
-//            this.year = year;
-//            this.yearTitle = title;
-//            this.refreshData();
-//        },
-//        loadData: function (data) {
-//            kickerStatsApp.analysis = new KickerStatsAnalysis(data);
-//        },
-//        refreshData: function () {
-//            kickerStatsApp.refreshing = true;
-//            kickerStatsDataService.fetchData(false, this.year, function (data) {
-//                kickerStatsApp.loadData(data);
-//                kickerStatsApp.refreshing = false;
-//            });
-//        }
-//    }
-//}).$mount('#app');
+})
+  .use(router)
+  .mount('#app');

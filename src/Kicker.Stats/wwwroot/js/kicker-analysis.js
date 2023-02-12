@@ -614,6 +614,10 @@ class KickerStatsAnalysis {
     }
 
     getAllStats(rawData) {
+        if (rawData.length === 0) {
+            return { noDataFound: true }
+        }
+
         let playerStats = new PlayerStats();
         let teamStats = new TeamStats(playerStats);
 
