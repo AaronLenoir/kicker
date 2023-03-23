@@ -159,5 +159,9 @@ namespace Kicker.Stats.Services
             return int.TryParse(year, out yearNumber);
         }
 
+        public IEnumerable<string> GetResults()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
