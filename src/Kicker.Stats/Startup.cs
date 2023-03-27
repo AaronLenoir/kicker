@@ -18,6 +18,8 @@ namespace Kicker.Stats
 {
     public class Startup
     {
+        private const string CorsPolicyName = "allowCors";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -39,6 +41,15 @@ namespace Kicker.Stats
             services.AddSingleton<IMemoryCache, MemoryCache>();
             services.AddSingleton<IGameRepository, GoogleDocsRepository>();
             services.AddSingleton<IGameRepositoryCsvStream, GoogleDocsStreamRepository>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: CorsPolicyName,
+                                      policy =>
+                                      {
+                                          policy.WithOrigins("https://kicker-stats.aaronlenoir.com");
+                                      });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +59,8 @@ namespace Kicker.Stats
             // Will ensure files from wwwroot are served
             app.UseDefaultFiles();
             app.UseStaticFiles();
+
+            app.UseCors();
 
             app.UseMvc();
 

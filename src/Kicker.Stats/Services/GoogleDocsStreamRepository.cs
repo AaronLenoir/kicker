@@ -49,6 +49,7 @@ namespace Kicker.Stats.Services
                     if (!value.EndsWith(";"))
                     {
                         yield return line.ToString();
+
                         line.Clear();
                     }
                 }

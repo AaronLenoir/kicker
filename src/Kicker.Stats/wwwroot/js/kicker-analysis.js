@@ -608,12 +608,12 @@ class GlobalStats {
 }
 
 class KickerStatsAnalysis {
-    constructor(data) {
+    constructor(data, newStats) {
         this.rawData = data.reverse();
-        this.stats = this.getAllStats(this.rawData);
+        this.stats = this.getAllStats(this.rawData, newStats);
     }
 
-    getAllStats(rawData) {
+    getAllStats(rawData, newStats) {
         if (rawData.length === 0) {
             return { noDataFound: true }
         }
@@ -647,7 +647,8 @@ class KickerStatsAnalysis {
             },
             getTeamStat: function (teamId) {
                 return teamStats.allTeams.find((teamStat) => teamStat.team.teamId === teamId);
-            }
+            },
+            newStats: newStats
         };
     }
 }

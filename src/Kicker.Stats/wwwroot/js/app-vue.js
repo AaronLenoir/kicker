@@ -442,6 +442,9 @@ const TeamRanking = {
         stats: {
             type: Object,
         },
+        newStats: {
+            type: Object,
+        },
         top: {
             type: Number,
             default: undefined
@@ -459,19 +462,17 @@ const TeamRanking = {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(teamStat, index) in stats.teamStats.allTeams.slice(0, top)" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+            <tr v-for="(teamStat, index) in stats.newStats.overview.team_ranking.slice(0, top)" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
                 <td>
                     <a v-bind:name="'rank_' + (index + 1)"><span>{{ index + 1 }}</span></a>
                 </td>
                 <td>
-                    <router-link :to="{path: 'team-stats/' + teamStat.team.keeper + ' - ' + teamStat.team.striker}">
-                        <span>{{ teamStat.team.keeper }}</span>
-                        <span>-</span>
-                        <span>{{ teamStat.team.striker }}</span>
+                    <router-link :to="{path: 'team-stats/' + teamStat.team}">
+                        <span>{{ teamStat.team }}</span>
                     </router-link>
                 </td>
                 <td>
-                    <span>{{ teamStat.eloRating.rating.toFixed() }}</span>
+                    <span>{{ teamStat.rating.toFixed() }}</span>
                 </td>
             </tr>
         </tbody>
@@ -550,6 +551,9 @@ const PlayerRanking = {
         stats: {
             type: Object
         },
+        newStats: {
+            type: Object
+        },
         top: {
             type: Number,
             default: undefined
@@ -567,15 +571,15 @@ const PlayerRanking = {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(playerStat, index) in stats.playerStats.allPlayers.filter(function (playerStat) { return playerStat.gamesPlayed >= 10; }).slice(0, top)" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+            <tr v-for="(playerStat, index) in stats.newStats.overview.player_ranking.slice(0, top)" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
                 <td>
                     <span>{{ index + 1 }}</span>
                 </td>
                 <td>
-                    <router-link :to="{path: 'player-stats/' + playerStat.name}">{{ playerStat.name }}</router-link>
+                    <router-link :to="{path: 'player-stats/' + playerStat.name}">{{ playerStat.player }}</router-link>
                 </td>
                 <td>
-                    <span>{{ playerStat.eloRating.rating.toFixed() }}</span>
+                    <span>{{ playerStat.rating.toFixed() }}</span>
                 </td>
             </tr>
         </tbody>
@@ -696,7 +700,7 @@ const Overview = {
                 </router-link>
                 <span>({{ app.analysis.stats.globalStats.leadingTeam.eloRating.rating.toFixed() }})</span>
             </div>
-            <team-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
+            <team-ranking v-bind:stats="app.analysis.stats" v-bind:newStats="app.analysis.newStats" v-bind:top="10" />
             <h3>
                 Longest team streak
             </h3>
@@ -732,7 +736,7 @@ const Overview = {
             <div class="leader">
                 {{ app.analysis.stats.globalStats.leadingPlayer.name }} ({{ app.analysis.stats.globalStats.leadingPlayer.eloRating.rating.toFixed() }})
             </div>
-            <player-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
+            <player-ranking v-bind:stats="app.analysis.stats" v-bind:newStats="app.analysis.newStats" v-bind:top="10" />
             <h3>
                 Longest player streak
             </h3>
@@ -865,10 +869,12 @@ const kickerStatsApp = createApp({
         };
     },
     created: function () {
-        kickerStatsDataService.fetchData(true, this.year, function (data) {
-            kickerStatsApp.loadData(data);
-            kickerStatsApp.loading = false;
-            kickerStatsApp.noDataFound = (data.length === 0);
+        kickerStatsDataService.fetchData(true, this.year, function (rawData) {
+            kickerStatsDataService.fetchStats(kickerStatsApp.year, function (newStats) {
+                kickerStatsApp.loadData(rawData, newStats);
+                kickerStatsApp.loading = false;
+                kickerStatsApp.noDataFound = (rawData.length === 0);
+            });
         });
     },
     methods: {
@@ -879,15 +885,17 @@ const kickerStatsApp = createApp({
             this.yearTitle = title;
             this.refreshData();
         },
-        loadData: function (data) {
-            kickerStatsApp.analysis = new KickerStatsAnalysis(data);
+        loadData: function (data, newStats) {
+            kickerStatsApp.analysis = new KickerStatsAnalysis(data, newStats);
         },
         refreshData: function () {
             kickerStatsApp.refreshing = true;
-            kickerStatsDataService.fetchData(false, this.year, function (data) {
-                kickerStatsApp.loadData(data);
-                kickerStatsApp.refreshing = false;
-                kickerStatsApp.noDataFound = (data.length === 0);
+            kickerStatsDataService.fetchData(false, this.year, function (rawData) {
+                kickerStatsDataService.fetchStats(kickerStatsApp.year, function (newStats) {
+                    kickerStatsApp.loadData(rawData, newStats);
+                    kickerStatsApp.refreshing = false;
+                    kickerStatsApp.noDataFound = (rawData.length === 0);
+                });
             });
         }
     }
