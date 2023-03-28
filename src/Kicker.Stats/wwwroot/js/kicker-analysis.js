@@ -525,8 +525,6 @@ class GlobalStats {
     }
 
     findGamesForTeam(keeper, striker) {
-        console.log(keeper);
-        console.log(striker);
         return this.rawData.filter((game) => (game.keeperA === keeper && game.strikerA === striker) || (game.keeperB === keeper && game.strikerB === striker));
     }
 

@@ -576,7 +576,7 @@ const PlayerRanking = {
                     <span>{{ index + 1 }}</span>
                 </td>
                 <td>
-                    <router-link :to="{path: 'player-stats/' + playerStat.name}">{{ playerStat.player }}</router-link>
+                    <router-link :to="{path: 'player-stats/' + playerStat.player}">{{ playerStat.player }}</router-link>
                 </td>
                 <td>
                     <span>{{ playerStat.rating.toFixed() }}</span>
@@ -695,10 +695,10 @@ const Overview = {
                 Leading team
             </h3>
             <div class="leader">
-                <router-link :to="{path: '/team-stats/' + app.analysis.stats.globalStats.leadingTeam.team.teamId}">
-                    <span>{{ app.analysis.stats.globalStats.leadingTeam.team.teamId }}</span>
+                <router-link :to="{path: '/team-stats/' + app.analysis.stats.newStats.overview.team_ranking[0]?.team}">
+                    <span>{{ app.analysis.stats.newStats.overview.team_ranking[0]?.team ??  'Nobody yet' }}</span>
                 </router-link>
-                <span>({{ app.analysis.stats.globalStats.leadingTeam.eloRating.rating.toFixed() }})</span>
+                <span> ({{ app.analysis.stats.newStats.overview.team_ranking[0]?.rating.toFixed() }})</span>
             </div>
             <team-ranking v-bind:stats="app.analysis.stats" v-bind:newStats="app.analysis.newStats" v-bind:top="10" />
             <h3>
@@ -734,7 +734,10 @@ const Overview = {
                 Leading player
             </h3>
             <div class="leader">
-                {{ app.analysis.stats.globalStats.leadingPlayer.name }} ({{ app.analysis.stats.globalStats.leadingPlayer.eloRating.rating.toFixed() }})
+                <router-link :to="{path: '/player-stats/' + app.analysis.stats.newStats.overview.player_ranking[0]?.player}">
+                    <span>{{ app.analysis.stats.newStats.overview.player_ranking[0]?.player ??  'Nobody yet' }}</span>
+                </router-link>
+                <span> ({{ app.analysis.stats.newStats.overview.player_ranking[0]?.rating.toFixed() }})</span>
             </div>
             <player-ranking v-bind:stats="app.analysis.stats" v-bind:newStats="app.analysis.newStats" v-bind:top="10" />
             <h3>
