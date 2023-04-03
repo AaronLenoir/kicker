@@ -606,9 +606,9 @@ class GlobalStats {
 }
 
 class KickerStatsAnalysis {
-    constructor(data, newStats) {
+    constructor(data) {
         this.rawData = data.reverse();
-        this.stats = this.getAllStats(this.rawData, newStats);
+        this.stats = this.getAllStats(this.rawData);
     }
 
     getAllStats(rawData, newStats) {

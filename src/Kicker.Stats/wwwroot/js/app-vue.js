@@ -462,17 +462,19 @@ const TeamRanking = {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(teamStat, index) in stats.newStats.overview.team_ranking.slice(0, top)" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+            <tr v-for="(teamStat, index) in stats.teamStats.allTeams.slice(0, top)" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
                 <td>
                     <a v-bind:name="'rank_' + (index + 1)"><span>{{ index + 1 }}</span></a>
                 </td>
                 <td>
-                    <router-link :to="{path: 'team-stats/' + teamStat.team}">
-                        <span>{{ teamStat.team }}</span>
+                    <router-link :to="{path: 'team-stats/' + teamStat.team.keeper + ' - ' + teamStat.team.striker}">
+                        <span>{{ teamStat.team.keeper }}</span>
+                        <span>-</span>
+                        <span>{{ teamStat.team.striker }}</span>
                     </router-link>
                 </td>
                 <td>
-                    <span>{{ teamStat.rating.toFixed() }}</span>
+                    <span>{{ teamStat.eloRating.rating.toFixed() }}</span>
                 </td>
             </tr>
         </tbody>
@@ -571,15 +573,15 @@ const PlayerRanking = {
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(playerStat, index) in stats.newStats.overview.player_ranking.slice(0, top)" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
+            <tr v-for="(playerStat, index) in stats.playerStats.allPlayers.filter(function (playerStat) { return playerStat.gamesPlayed >= 10; }).slice(0, top)" v-bind:style="index % 2 === 1 ? { background: '#F8F8F8' } : {}">
                 <td>
                     <span>{{ index + 1 }}</span>
                 </td>
                 <td>
-                    <router-link :to="{path: 'player-stats/' + playerStat.player}">{{ playerStat.player }}</router-link>
+                    <router-link :to="{path: 'player-stats/' + playerStat.name}">{{ playerStat.name }}</router-link>
                 </td>
                 <td>
-                    <span>{{ playerStat.rating.toFixed() }}</span>
+                    <span>{{ playerStat.eloRating.rating.toFixed() }}</span>
                 </td>
             </tr>
         </tbody>
@@ -695,12 +697,12 @@ const Overview = {
                 Leading team
             </h3>
             <div class="leader">
-                <router-link :to="{path: '/team-stats/' + app.analysis.stats.newStats.overview.team_ranking[0]?.team}">
-                    <span>{{ app.analysis.stats.newStats.overview.team_ranking[0]?.team ??  'Nobody yet' }}</span>
+                <router-link :to="{path: '/team-stats/' + app.analysis.stats.globalStats.leadingTeam.team.teamId}">
+                    <span>{{ app.analysis.stats.globalStats.leadingTeam.team.teamId }}</span>
                 </router-link>
-                <span> ({{ app.analysis.stats.newStats.overview.team_ranking[0]?.rating.toFixed() }})</span>
+                <span>({{ app.analysis.stats.globalStats.leadingTeam.eloRating.rating.toFixed() }})</span>
             </div>
-            <team-ranking v-bind:stats="app.analysis.stats" v-bind:newStats="app.analysis.newStats" v-bind:top="10" />
+            <team-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
             <h3>
                 Longest team streak
             </h3>
@@ -734,12 +736,9 @@ const Overview = {
                 Leading player
             </h3>
             <div class="leader">
-                <router-link :to="{path: '/player-stats/' + app.analysis.stats.newStats.overview.player_ranking[0]?.player}">
-                    <span>{{ app.analysis.stats.newStats.overview.player_ranking[0]?.player ??  'Nobody yet' }}</span>
-                </router-link>
-                <span> ({{ app.analysis.stats.newStats.overview.player_ranking[0]?.rating.toFixed() }})</span>
+                {{ app.analysis.stats.globalStats.leadingPlayer.name }} ({{ app.analysis.stats.globalStats.leadingPlayer.eloRating.rating.toFixed() }})
             </div>
-            <player-ranking v-bind:stats="app.analysis.stats" v-bind:newStats="app.analysis.newStats" v-bind:top="10" />
+            <player-ranking v-bind:stats="app.analysis.stats" v-bind:top="10" />
             <h3>
                 Longest player streak
             </h3>
@@ -849,7 +848,7 @@ const routes = [
 
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),
-    routes 
+    routes
 });
 
 /*
@@ -903,5 +902,5 @@ const kickerStatsApp = createApp({
         }
     }
 })
-  .use(router)
-  .mount('#app');
+    .use(router)
+    .mount('#app');
