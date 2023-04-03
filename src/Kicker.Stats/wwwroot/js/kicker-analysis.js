@@ -105,7 +105,7 @@ class TeamStats {
         teamBStat.totalGoalsAllowed += game.scoreA;
         teamBStat.averageGoalsAllowed = teamBStat.totalGoalsAllowed / teamBStat.gamesPlayed;
 
-        if (game.scoreA === 10) {
+        if (game.scoreA > game.scoreB) {
             teamAStat.gamesWon++;
             teamAStat.updateStreak();
             teamBStat.endStreak();
